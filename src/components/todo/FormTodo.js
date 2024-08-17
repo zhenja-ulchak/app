@@ -13,23 +13,7 @@ const TodoApp = () => {
   const [punch, setPunch] = useState(false);
   const [close, setClose] = useState(false);
 
-  const WhiteTextField = styled(TextField)({
-    '& .MuiInputBase-input': {
-      color: 'white', // Колір тексту всередині поля
-    },
-    '& .MuiOutlinedInput-root': {
-      '& fieldset': {
-        borderColor: 'white', // Колір рамки поля
-      },
-
-      '&.Mui-focused fieldset': {
-        borderColor: 'white', // Колір рамки при фокусі
-      },
-    },
-    '& .MuiFormLabel-root': {
-      color: 'white', // Колір етикетки
-    },
-  });
+  
 
   const marginButton = {
     marginTop: '8px',
@@ -135,10 +119,21 @@ const TodoApp = () => {
               </Button>
             </Typography>
 
-            <WhiteTextField
+            <TextField
               label="Update Todo"
               variant="outlined"
-              sx={{ ...UpdateInput }}
+              sx={{
+                width:'84%',
+                marginBottom:'20px',
+                marginLeft: '15px',
+                '& .MuiOutlinedInput-root': {
+                  backgroundColor: '#f0f0f0', // Задній фон
+                  borderRadius: '8px', // Радіус бордера
+                  '&:hover': {
+                    border: '2px solid #fff', // Бордер при наведенні
+                  },
+                },
+              }}
               value={editTodo.task}
               onChange={(e) => setEditTodo({ ...editTodo, task: e.target.value })}
             />
