@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { fetchTodos, createToDoList, updateToDoList, deleteToDoList } from '../../api/ToDoApiProvaider';
-import { styled } from '@mui/material/styles';
-import { Container, TextField, Button, List, ListItem, ListItemText, IconButton, Box, Typography } from '@mui/material';
+import {
+  Container, TextField, Button, Box, Typography, IconButton,
+  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
+} from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CloseIcon from '@mui/icons-material/Close';
 import EditIcon from '@mui/icons-material/Edit';
+import { useTable } from 'react-table';
 
 const TodoApp = () => {
   const [todos, setTodos] = useState([]);
   const [newTodo, setNewTodo] = useState('');
   const [editTodo, setEditTodo] = useState({ id: null, task: '' });
   const [punch, setPunch] = useState(false);
-  const [close, setClose] = useState(false);
-
-  
 
   const marginButton = {
     marginTop: '8px',
@@ -25,45 +25,26 @@ const TodoApp = () => {
     position: 'fixed',
     top: '0',
     marginTop: '70px',
-
     zIndex: '9999',
     background: '#878787'
-
-
-  }
-  const updateDialog = {
-    marginTop: '200px',
-    width: '100%',
-
-    zIndex: '9999',
-
-  }
-  const UpdateInput = {
-    width: '83%',
-    marginBottom: '40px',
-    marginLeft: '10px'
-  }
+  };
   const wInput = {
     width: '85%',
   };
   const conteinerW = {
-    width: '86.5%',
+    width: '100%',
+    
     marginTop: '200px',
     marginLeft: '22%'
-  }
+  };
+
   useEffect(() => {
     const loadTodos = async () => {
       const data = await fetchTodos();
-      const task = data.data["customer_todo"]
-      setTodos(task.map((i) => {
-        return i
-      }));
+      const task = data.data["customer_todo"];
+      setTodos(task.map((i) => i));
     };
-
-
     loadTodos();
-
-
   }, [punch]);
 
   const addTodo = async () => {
@@ -90,47 +71,122 @@ const TodoApp = () => {
     } catch (error) {
       console.error("Failed to update todo:", error);
     }
-    setPunch(true)
+    setPunch(true);
   };
+
   const handleDelete = async (id) => {
     await deleteToDoList(id);
     setTodos(todos.filter(todo => todo.id !== id));
   };
 
+  // Налаштування таблиці для відображення завдань
+  const data = React.useMemo(
+    () => todos.map(todo => ({
+      col1: todo.task,
+      col2: todo.status,
+      col3: todo.start_date,
+      col4: todo.end_date,
+      col5: todo.diff_time,
+      col6: todo.lastchange,
+      col7: todo.lastchange_by,
+      col8: todo.created,
+      col9: todo.created_by,
+
+      col11: (
+        <>
+          <IconButton edge="end" aria-label="edit" onClick={() => handleEditClick(todo)}>
+            <EditIcon />
+          </IconButton>
+          <IconButton edge="end" aria-label="delete" onClick={() => handleDelete(todo.id)}>
+            <DeleteIcon />
+          </IconButton>
+        </>
+      ),
+    })),
+    [todos]
+  );
+
+  const columns = React.useMemo(
+    () => [
+      {
+        Header: 'Task',
+        accessor: 'col1', 
+      },
+      {
+        Header: 'Status',
+        accessor: 'col2', 
+      },
+      {
+        Header: 'Start date',
+        accessor: 'col3', 
+      },
+      {
+        Header: 'End date',
+        accessor: 'col4', 
+      },
+      {
+        Header: 'Diff time',
+        accessor: 'col5', 
+      },
+      {
+        Header: 'Last change',
+        accessor: 'col6', 
+      },
+      {
+        Header: 'Last change by',
+        accessor: 'col7', 
+      },
+      {
+        Header: 'Created',
+        accessor: 'col8', 
+      },
+      {
+        Header: 'Created by',
+        accessor: 'col9', 
+      },
+
+      {
+        Header: 'Actions',
+        accessor: 'col11', 
+      },
+    ],
+    []
+  );
+
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow,
+  } = useTable({ columns, data });
+
   return (
     <>
-
-      <Container
-        sx={{ ...conteinerW }}
-      >
+      <Container sx={{ ...conteinerW }}>
         {editTodo.id && (
-
-
-
           <Box sx={{ ...updateBox }}>
-
             <Typography sx={{ marginBottom: '40px', color: '#ffffff' }} variant="h6" noWrap component="p">
-              Fix case   
+              Fix case
               <Button
                 sx={{ color: '#000000' }}
-                onClick={() => setClose(true)}
+                onClick={() => setEditTodo({ id: null, task: '' })}
               >
                 <CloseIcon />
               </Button>
             </Typography>
-
             <TextField
               label="Update Todo"
               variant="outlined"
               sx={{
-                width:'84%',
-                marginBottom:'20px',
+                width: '84%',
+                marginBottom: '20px',
                 marginLeft: '15px',
                 '& .MuiOutlinedInput-root': {
-                  backgroundColor: '#f0f0f0', // Задній фон
-                  borderRadius: '8px', // Радіус бордера
+                  backgroundColor: '#f0f0f0',
+                  borderRadius: '8px',
                   '&:hover': {
-                    border: '2px solid #fff', // Бордер при наведенні
+                    border: '2px solid #fff',
                   },
                 },
               }}
@@ -141,8 +197,6 @@ const TodoApp = () => {
               Update
             </Button>
           </Box>
-
-
         )}
         <h1>Add case</h1>
         <TextField
@@ -155,25 +209,52 @@ const TodoApp = () => {
         <Button sx={marginButton} variant="contained" color="primary" onClick={addTodo}>
           Add
         </Button>
-        <List>
-          {todos.map((todo) => (
-            <ListItem
-              key={todo.id}
-              secondaryAction={
-                <>
-                  <IconButton edge="end" aria-label="edit" onClick={() => handleEditClick(todo)}>
-                    <EditIcon />
-                  </IconButton>
-                  <IconButton edge="end" aria-label="delete" onClick={() => handleDelete(todo.id)}>
-                    <DeleteIcon />
-                  </IconButton>
-                </>
-              }
-            >
-              <ListItemText primary={todo.task} />
-            </ListItem>
-          ))}
-        </List>
+        <TableContainer component={Paper} sx={{ marginTop: '20px', maxWidth: '100%', overflowX: 'auto',   maxHeight: '500px' }}>
+          <table {...getTableProps()} style={{ marginTop: '20px' }}>
+            <thead>
+              {headerGroups.map(headerGroup => (              
+                <tr {...headerGroup.getHeaderGroupProps()}>
+                  {headerGroup.headers.map(column => (
+                    <th
+                      {...column.getHeaderProps()}
+                      style={{
+                      
+                        background: '#fff',
+                        color: 'black',
+                        fontWeight: 'bold',
+                      }}
+                    >
+                      {column.render('Header')}
+                    </th>
+                  ))}
+                </tr>
+              ))}
+            </thead>
+            <tbody {...getTableBodyProps()} >
+              {rows.map(row => {
+                prepareRow(row);
+                return (
+                  <tr {...row.getRowProps()}>
+                    {row.cells.map(cell => (
+                      <td
+                        {...cell.getCellProps()}
+                        style={{
+                          padding: '10px',
+                          
+                          background: '#fff',
+                          minWidth: '300px',
+                          
+                        }}
+                      >
+                        {cell.render('Cell')}
+                      </td>
+                    ))}
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </TableContainer>
       </Container>
     </>
   );
