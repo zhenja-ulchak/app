@@ -12,9 +12,6 @@ const Debug = ({ open }) => {
   const [count, setCount] = useState(client.fa2_key_timeout || 0);
   const navigate = useNavigate();
 
-
-
-
   const styleButton = {
     // marginLeft: '238px' ,
     background: '#1976d2',
@@ -55,19 +52,16 @@ const Debug = ({ open }) => {
 
   if (count === 1) {
     navigate('/');
+    // визвати метод логаут шоб повністю вийти
   }
 
   return (
-
-
     <>
-
       {
         count <= 150
           ?
           (
             <>
-
               <Alert severity="warning" sx={{ width: '86%', marginLeft: '256px', position: "fixed", top: '80px' }}>
                 Ваш час сесіїї закінчується !!!!!!!!!!!!!!!!!!!!!!!!!!!!
               </Alert>
@@ -87,7 +81,6 @@ const Debug = ({ open }) => {
               </Box>
             </>
 
-
           )
           :
           (<Box sx={{ ...styleButton }}>
@@ -104,8 +97,6 @@ const Debug = ({ open }) => {
               </Grid>
             </Grid>
           </Box>)
-
-
       }
 
     </>
