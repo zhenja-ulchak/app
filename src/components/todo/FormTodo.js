@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { fetchTodos, createToDoList, updateToDoList, deleteToDoList } from '../../api/ToDoApiProvaider';
 import {
   Container, TextField, Button, Box, Typography, IconButton,
@@ -11,17 +11,26 @@ import { useTable } from 'react-table';
 import { FaCheck } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 import { useNavigate } from 'react-router-dom';
+import { FaRegEye } from "react-icons/fa";
+import { FaPlus } from "react-icons/fa6";
 
 const TodoApp = () => {
   const [todos, setTodos] = useState([]);
   const [newTodo, setNewTodo] = useState('');
   const [editTodo, setEditTodo] = useState({ id: null, task: '' });
   const [punch, setPunch] = useState(false);
+  const [visibleOpen, setVisibleOpen] = useState(false);
+  const [visibleAddOpen, setAddVisibleOpen] = useState(false);
+  const navigate = useNavigate();
+  const menuRef = useRef(null);
+
+
+  const [visibleColumns, setVisibleColumns] = useState([
+    'col1', 'colNumber', 'colCheck', 'col2', 'col3', 'col4', 'col11'
+  ]);
 
   const marginButton = {
     marginTop: '8px',
-  
-  
   };
   const updateBox = {
     width: '50%',
@@ -31,15 +40,15 @@ const TodoApp = () => {
     zIndex: '9999',
     background: '#878787'
   };
-  const wInput = {
-    width: '30%',
+  const wBox = {
+    width: '87%',
     marginRight: '20px',
-    marginLeft:'20%'
+    marginLeft: '13%'
   };
   const conteinerW = {
     width: '100%',
 
-    marginTop: '200px',
+    marginTop: '400px',
 
   };
 
@@ -93,8 +102,8 @@ const TodoApp = () => {
       colNumber: todo.number,
       colCheck: (
         <>
-        <FaCheck />
-        {/* <IoClose /> */}
+          <FaCheck size={30} />
+          {/* <IoClose /> */}
         </>
 
       ),
@@ -133,7 +142,7 @@ const TodoApp = () => {
         accessor: 'colNumber',
       },
       {
-        Header: 'Number',
+        Header: 'Check',
         accessor: 'colCheck',
       },
       {
@@ -176,16 +185,19 @@ const TodoApp = () => {
     ],
     []
   );
-
+  const filteredColumns = React.useMemo(
+    () => columns.filter(column => visibleColumns.includes(column.accessor)),
+    [visibleColumns, columns]
+  );
   const {
     getTableProps,
     getTableBodyProps,
     headerGroups,
     rows,
     prepareRow,
-  } = useTable({ columns, data });
+  } = useTable({ columns: filteredColumns, data });
 
-  const navigate = useNavigate();
+
 
   const handleCellClick = (todoId) => {
     if (todoId) {
@@ -194,8 +206,37 @@ const TodoApp = () => {
     } else {
       console.error("Todo ID is undefined");
     }
-    
+
   }
+
+
+  const handleToggleColumn = (columnId) => {
+    setVisibleColumns((prev) =>
+      prev.includes(columnId)
+        ? prev.filter((col) => col !== columnId)
+        : [...prev, columnId]
+    );
+  };
+
+
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setVisibleOpen(false); // Закриваємо меню
+      }
+    };
+    const handleClickOutsideAddButton = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setAddVisibleOpen(false); // Закриваємо меню
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [menuRef]);
   return (
     <>
       <div sx={{ ...conteinerW }}>
@@ -233,63 +274,98 @@ const TodoApp = () => {
             </Button>
           </Box>
         )}
-        <h1>Add case</h1>
-        <TextField
-          sx={{ ...wInput }}
-          label="New Todo"
-          variant="outlined"
-          value={newTodo}
-          onChange={(e) => setNewTodo(e.target.value)}
-        />
-        <Button sx={marginButton} variant="contained" color="primary" onClick={addTodo}>
-          Add
-        </Button>
-        <div style={{ maxHeight: '500px', overflowY: 'auto', overflowX: 'auto', marginTop: '20px', marginLeft: '20%' }}>      
-              <table {...getTableProps()} style={{ marginTop: '20px' }}>
-          <thead>
-            {headerGroups.map(headerGroup => (
-              <tr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map((column) => (
-                  <th
-                    {...column.getHeaderProps()}
-                    style={{
 
-                      background: '#fff',
-                      color: 'black',
-                      fontWeight: 'bold',
-                    }}
-                  >
-                    {column.render('Header')}
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody {...getTableBodyProps()} >
-            {rows.map(row => {
-              prepareRow(row);
-              return (
-                <tr {...row.getRowProps()}>
-                  {row.cells.map(cell => (
-                    <td
-                      {...cell.getCellProps()}
+        <Box sx={{ ...wBox }}>
+ 
+          <Button style={{ float: 'right' }} onClick={() => setAddVisibleOpen(!visibleOpen)}>
+            <FaPlus  size={30} />
+          </Button>
+
+          {visibleAddOpen ?
+         
+              ( <Box  ref={menuRef}>
+       
+                <TextField
+                  sx={{ width: '30%' }}
+                  label="New Todo"
+                  variant="outlined"
+                  value={newTodo}
+                  onChange={(e) => setNewTodo(e.target.value)} />
+                <Button sx={marginButton} variant="contained" color="primary" onClick={addTodo}>
+                  Add
+                </Button>
+              </Box>)
+              :
+              (<Box></Box>)
+          
+          }
+
+
+          <Button style={{ float: 'right' }} onClick={() => setVisibleOpen(!visibleOpen)}>
+            <FaRegEye size={30} />
+          </Button>
+          {visibleOpen
+            ?
+            (<Box ref={menuRef} style={{ float: 'right' }}>
+              {columns.map((column) => (
+                <div key={column.accessor}>
+                  <input
+                    type="checkbox"
+                    checked={visibleColumns.includes(column.accessor)}
+                    onChange={() => handleToggleColumn(column.accessor)} />
+                  <label>{column.Header}</label>
+                </div>
+              ))}
+            </Box>)
+            :
+           ( <Box></Box>)}
+
+        </Box>
+        <div style={{ maxHeight: '500px', overflowY: 'auto', overflowX: 'auto', marginTop: '20px', marginLeft: '20%' }}>
+          <table {...getTableProps()} style={{ marginTop: '20px' }}>
+            <thead>
+              {headerGroups.map(headerGroup => (
+                <tr {...headerGroup.getHeaderGroupProps()}>
+                  {headerGroup.headers.map((column) => (
+                    <th
+                      {...column.getHeaderProps()}
                       style={{
-                        padding: '10px',
-                        textAlign: 'center',
                         background: '#fff',
-                        minWidth: '200px',
-
+                        color: 'black',
+                        fontWeight: 'bold',
                       }}
-                      onClick={() => handleCellClick(row.original.id)}
                     >
-                      {cell.render('Cell')}
-                    </td>
+                      {column.render('Header')}
+                    </th>
                   ))}
                 </tr>
-              );
-            })}
-          </tbody>
-        </table>
+              ))}
+            </thead>
+            <tbody {...getTableBodyProps()}>
+              {rows.map(row => {
+                prepareRow(row);
+                console.log("Row data:", row.original.id);
+                return (
+                  <tr {...row.getRowProps()}>
+                    {row.cells.map(cell => (
+                      <td
+                        {...cell.getCellProps()}
+                        style={{
+                          padding: '10px',
+                          textAlign: 'center',
+                          background: '#fff',
+                          minWidth: '200px',
+                        }}
+                        onClick={() => handleCellClick(row.original.id)}
+                      >
+                        {cell.render('Cell')}
+                      </td>
+                    ))}
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         </div>
       </div>
     </>
