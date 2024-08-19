@@ -2,12 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { fetchTodos, createToDoList, updateToDoList, deleteToDoList } from '../../api/ToDoApiProvaider';
 import {
   Container, TextField, Button, Box, Typography, IconButton,
-  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
+
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CloseIcon from '@mui/icons-material/Close';
 import EditIcon from '@mui/icons-material/Edit';
 import { useTable } from 'react-table';
+import { FaCheck } from "react-icons/fa";
+import { IoClose } from "react-icons/io5";
+import { useNavigate } from 'react-router-dom';
 
 const TodoApp = () => {
   const [todos, setTodos] = useState([]);
@@ -17,8 +20,8 @@ const TodoApp = () => {
 
   const marginButton = {
     marginTop: '8px',
-    float: 'right',
-    marginRight: '20px'
+  
+  
   };
   const updateBox = {
     width: '50%',
@@ -29,13 +32,15 @@ const TodoApp = () => {
     background: '#878787'
   };
   const wInput = {
-    width: '85%',
+    width: '30%',
+    marginRight: '20px',
+    marginLeft:'20%'
   };
   const conteinerW = {
     width: '100%',
-    
+
     marginTop: '200px',
-    marginLeft: '22%'
+
   };
 
   useEffect(() => {
@@ -46,6 +51,7 @@ const TodoApp = () => {
     };
     loadTodos();
   }, [punch]);
+
 
   const addTodo = async () => {
     const addedTodo = await createToDoList({ task: `${newTodo}` });
@@ -82,7 +88,16 @@ const TodoApp = () => {
   // Налаштування таблиці для відображення завдань
   const data = React.useMemo(
     () => todos.map(todo => ({
+      id: todo.id,
       col1: todo.task,
+      colNumber: todo.number,
+      colCheck: (
+        <>
+        <FaCheck />
+        {/* <IoClose /> */}
+        </>
+
+      ),
       col2: todo.status,
       col3: todo.start_date,
       col4: todo.end_date,
@@ -97,9 +112,9 @@ const TodoApp = () => {
           <IconButton edge="end" aria-label="edit" onClick={() => handleEditClick(todo)}>
             <EditIcon />
           </IconButton>
-          <IconButton edge="end" aria-label="delete" onClick={() => handleDelete(todo.id)}>
+          {/* <IconButton edge="end" aria-label="delete" onClick={() => handleDelete(todo.id)}>
             <DeleteIcon />
-          </IconButton>
+          </IconButton> */}
         </>
       ),
     })),
@@ -107,47 +122,56 @@ const TodoApp = () => {
   );
 
   const columns = React.useMemo(
+
     () => [
       {
         Header: 'Task',
-        accessor: 'col1', 
+        accessor: 'col1',
+      },
+      {
+        Header: 'Number',
+        accessor: 'colNumber',
+      },
+      {
+        Header: 'Number',
+        accessor: 'colCheck',
       },
       {
         Header: 'Status',
-        accessor: 'col2', 
+        accessor: 'col2',
       },
       {
         Header: 'Start date',
-        accessor: 'col3', 
+        accessor: 'col3',
       },
       {
         Header: 'End date',
-        accessor: 'col4', 
+        accessor: 'col4',
       },
       {
         Header: 'Diff time',
-        accessor: 'col5', 
+        accessor: 'col5',
       },
       {
         Header: 'Last change',
-        accessor: 'col6', 
+        accessor: 'col6',
       },
       {
         Header: 'Last change by',
-        accessor: 'col7', 
+        accessor: 'col7',
       },
       {
         Header: 'Created',
-        accessor: 'col8', 
+        accessor: 'col8',
       },
       {
         Header: 'Created by',
-        accessor: 'col9', 
+        accessor: 'col9',
       },
 
       {
         Header: 'Actions',
-        accessor: 'col11', 
+        accessor: 'col11',
       },
     ],
     []
@@ -161,9 +185,20 @@ const TodoApp = () => {
     prepareRow,
   } = useTable({ columns, data });
 
+  const navigate = useNavigate();
+
+  const handleCellClick = (todoId) => {
+    if (todoId) {
+      navigate(`/details/${todoId}`);
+      console.log(`Navigating to /details/${todoId}`);
+    } else {
+      console.error("Todo ID is undefined");
+    }
+    
+  }
   return (
     <>
-      <Container sx={{ ...conteinerW }}>
+      <div sx={{ ...conteinerW }}>
         {editTodo.id && (
           <Box sx={{ ...updateBox }}>
             <Typography sx={{ marginBottom: '40px', color: '#ffffff' }} variant="h6" noWrap component="p">
@@ -209,53 +244,54 @@ const TodoApp = () => {
         <Button sx={marginButton} variant="contained" color="primary" onClick={addTodo}>
           Add
         </Button>
-        <TableContainer component={Paper} sx={{ marginTop: '20px', maxWidth: '100%', overflowX: 'auto',   maxHeight: '500px' }}>
-          <table {...getTableProps()} style={{ marginTop: '20px' }}>
-            <thead>
-              {headerGroups.map(headerGroup => (              
-                <tr {...headerGroup.getHeaderGroupProps()}>
-                  {headerGroup.headers.map(column => (
-                    <th
-                      {...column.getHeaderProps()}
+        <div style={{ maxHeight: '500px', overflowY: 'auto', overflowX: 'auto', marginTop: '20px', marginLeft: '20%' }}>      
+              <table {...getTableProps()} style={{ marginTop: '20px' }}>
+          <thead>
+            {headerGroups.map(headerGroup => (
+              <tr {...headerGroup.getHeaderGroupProps()}>
+                {headerGroup.headers.map((column) => (
+                  <th
+                    {...column.getHeaderProps()}
+                    style={{
+
+                      background: '#fff',
+                      color: 'black',
+                      fontWeight: 'bold',
+                    }}
+                  >
+                    {column.render('Header')}
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody {...getTableBodyProps()} >
+            {rows.map(row => {
+              prepareRow(row);
+              return (
+                <tr {...row.getRowProps()}>
+                  {row.cells.map(cell => (
+                    <td
+                      {...cell.getCellProps()}
                       style={{
-                      
+                        padding: '10px',
+                        textAlign: 'center',
                         background: '#fff',
-                        color: 'black',
-                        fontWeight: 'bold',
+                        minWidth: '200px',
+
                       }}
+                      onClick={() => handleCellClick(row.original.id)}
                     >
-                      {column.render('Header')}
-                    </th>
+                      {cell.render('Cell')}
+                    </td>
                   ))}
                 </tr>
-              ))}
-            </thead>
-            <tbody {...getTableBodyProps()} >
-              {rows.map(row => {
-                prepareRow(row);
-                return (
-                  <tr {...row.getRowProps()}>
-                    {row.cells.map(cell => (
-                      <td
-                        {...cell.getCellProps()}
-                        style={{
-                          padding: '10px',
-                          
-                          background: '#fff',
-                          minWidth: '300px',
-                          
-                        }}
-                      >
-                        {cell.render('Cell')}
-                      </td>
-                    ))}
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </TableContainer>
-      </Container>
+              );
+            })}
+          </tbody>
+        </table>
+        </div>
+      </div>
     </>
   );
 };
