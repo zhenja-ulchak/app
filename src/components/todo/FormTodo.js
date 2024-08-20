@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { fetchTodos, createToDoList, updateToDoList, deleteToDoList } from '../../api/ToDoApiProvaider';
 import {
-  Grid, TextField, Button, Box, Typography, IconButton,Modal 
+  Grid, TextField, Button, Box, Typography, IconButton, Modal
 
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -18,10 +18,13 @@ import { FaPlus } from "react-icons/fa6";
 const TodoApp = () => {
   const [todos, setTodos] = useState([]);
   const [newTodo, setNewTodo] = useState('');
+  const [updateTodo, setUpdateTodo] = useState(false);
   const [editTodo, setEditTodo] = useState({ id: null, task: '' });
   const [punch, setPunch] = useState(false);
   const [visibleOpen, setVisibleOpen] = useState(false);
   const [visibleAddOpen, setAddVisibleOpen] = useState(false);
+
+
   const navigate = useNavigate();
   const menuRef = useRef(null);
 
@@ -34,14 +37,14 @@ const TodoApp = () => {
     marginTop: '8px',
   };
   const updateBox = {
-    width: '40%', 
+    width: '40%',
     position: 'absolute',
-     zIndex: '9999',
-      right: '553px',
-       top: '291px',
-        background: '#fff',
-         border: '1px solid rgb(177 177 177)',
-          padding: '22px' 
+    zIndex: '9999',
+    right: '553px',
+    top: '291px',
+    background: '#fff',
+    border: '1px solid rgb(177 177 177)',
+    padding: '22px'
   };
   const wBox = {
     width: '87%',
@@ -57,14 +60,14 @@ const TodoApp = () => {
       setTodos(task.map((i) => i));
     };
     loadTodos();
-  }, [punch]);
+  }, [punch, updateTodo]);
 
 
   const addTodo = async () => {
     const addedTodo = await createToDoList({ task: `${newTodo}` });
     setTodos([...todos, addedTodo]);
     console.log(addedTodo);
-    
+
     setNewTodo('');
   };
 
@@ -73,6 +76,7 @@ const TodoApp = () => {
       id: todo.id,
       task: todo.text,
     });
+    setUpdateTodo(true)
   };
 
   const handleUpdate = async () => {
@@ -83,6 +87,9 @@ const TodoApp = () => {
         todo.id === id ? updatedTodo : todo
       ));
       setEditTodo({ id: null, task: '' });
+      setUpdateTodo(false)
+
+
     } catch (error) {
       console.error("Failed to update todo:", error);
     }
@@ -117,8 +124,11 @@ const TodoApp = () => {
       col9: todo.created_by,
 
       col11: (
-        <>
-          <IconButton edge="end" aria-label="edit" onClick={() => handleEditClick(todo)}>
+        <>   
+          <IconButton edge="end" aria-label="edit" onClick={() => {
+            handleEditClick(todo)
+            setUpdateTodo(true)
+          }}>
             <EditIcon />
           </IconButton>
           {/* <IconButton edge="end" aria-label="delete" onClick={() => handleDelete(todo.id)}>
@@ -129,7 +139,7 @@ const TodoApp = () => {
     })),
     [todos]
   );
-console.log(data);
+  console.log(data);
 
   const columns = React.useMemo(
 
@@ -183,7 +193,7 @@ console.log(data);
         Header: 'Actions',
         accessor: 'col11',
         headerStyle: { backgroundColor: '#fff', color: '#000', textAlign: 'center', fontWeight: 'bold', position: 'sticky', right: 0, zIndex: 10 },
-        cellStyle: {  position: 'sticky', right: 0, backgroundColor: '#fff', zIndex: 5  },
+        cellStyle: { position: 'sticky', right: 0, backgroundColor: '#fff', zIndex: 5 },
       },
     ],
     []
@@ -207,7 +217,7 @@ console.log(data);
   const handleCellClick = (todoId) => {
     if (todoId) {
       navigate(`/details/${todoId}`);
-     
+
     } else {
       console.error("Todo ID is undefined");
     }
@@ -227,7 +237,7 @@ console.log(data);
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
         setVisibleOpen(false); // Закриваємо меню
-        setEditTodo(false)
+        setUpdateTodo(false)
         setAddVisibleOpen(false);
       }
     };
@@ -240,44 +250,44 @@ console.log(data);
   return (
     <>
       {editTodo.id && (
-           <Modal
-           open={editTodo}
-    
-           aria-labelledby="modal-modal-title"
-           aria-describedby="modal-modal-description"
-         >
-        <Box sx={{ ...updateBox }}>
-          <Typography sx={{ marginBottom: '40px', color: '#ffffff' }} variant="h6" noWrap component="p">
-            Fix case
-            <Button
-              
-              onClick={() => setEditTodo({ id: null, task: '' })}
-            >
-              <CloseIcon />
-            </Button>
-          </Typography>
-          <TextField
-            label="Update Todo"
-            variant="outlined"
-            sx={{
-              width: '84%',
-              marginBottom: '20px',
-              marginLeft: '15px',
-              '& .MuiOutlinedInput-root': {
-                backgroundColor: '#f0f0f0',
-                borderRadius: '8px',
-                '&:hover': {
-                  border: '2px solid #fff',
+        <Modal
+          open={updateTodo}
+          onClose={() => setUpdateTodo(false)}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={{ ...updateBox }}>
+            <Typography sx={{ marginBottom: '40px', color: '#ffffff' }} variant="h6" noWrap component="p">
+              Fix case
+              <Button
+
+                onClick={() => setEditTodo({ id: null, task: '' })}
+              >
+                <CloseIcon />
+              </Button>
+            </Typography>
+            <TextField
+              label="Update Todo"
+              variant="outlined"
+              sx={{
+                width: '84%',
+                marginBottom: '20px',
+                marginLeft: '15px',
+                '& .MuiOutlinedInput-root': {
+                  backgroundColor: '#f0f0f0',
+                  borderRadius: '8px',
+                  '&:hover': {
+                    border: '2px solid #fff',
+                  },
                 },
-              },
-            }}
-            value={editTodo.task}
-            onChange={(e) => setEditTodo({ ...editTodo, task: e.target.value })}
-          />
-          <Button sx={marginButton} variant="contained" color="primary" onClick={handleUpdate}>
-            Update
-          </Button>
-        </Box>
+              }}
+              value={editTodo.task}
+              onChange={(e) => setEditTodo({ ...editTodo, task: e.target.value })}
+            />
+            <Button sx={marginButton} variant="contained" color="primary" onClick={handleUpdate}>
+              Update
+            </Button>
+          </Box>
         </Modal>
       )}
       <Grid container spacing={2}>
@@ -309,31 +319,31 @@ console.log(data);
             {visibleAddOpen ?
 
               (
-              
+
                 <Modal
-                open={visibleAddOpen}
-         
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-              >
-                   <Box ref={menuRef}
-                sx={{ width: '40%', position: 'absolute', zIndex: '9999', right: '553px', top: '291px', background: '#fff', border: '1px solid rgb(177 177 177)', padding: '22px' }}
-              >
+                  open={visibleAddOpen}
 
-                <TextField
-                  sx={{ width: '83%', marginRight:'20px' }}
-                  label="New Todo"
-                  variant="outlined"
-                  value={newTodo}
-                  onChange={(e) => setNewTodo(e.target.value)} />
-                <Button sx={marginButton} variant="contained" color="primary" onClick={addTodo}>
-                  Add
-                </Button>
-              </Box>
+                  aria-labelledby="modal-modal-title"
+                  aria-describedby="modal-modal-description"
+                >
+                  <Box ref={menuRef}
+                    sx={{ width: '40%', position: 'absolute', zIndex: '9999', right: '553px', top: '291px', background: '#fff', border: '1px solid rgb(177 177 177)', padding: '22px' }}
+                  >
+
+                    <TextField
+                      sx={{ width: '83%', marginRight: '20px' }}
+                      label="New Todo"
+                      variant="outlined"
+                      value={newTodo}
+                      onChange={(e) => setNewTodo(e.target.value)} />
+                    <Button sx={marginButton} variant="contained" color="primary" onClick={addTodo}>
+                      Add
+                    </Button>
+                  </Box>
 
 
-              </Modal>
-           )
+                </Modal>
+              )
               :
               (<Box></Box>)
 
@@ -366,7 +376,7 @@ console.log(data);
               <tbody {...getTableBodyProps()}>
                 {rows.map(row => {
                   prepareRow(row);
-                
+
                   return (
                     <tr {...row.getRowProps()}>
                       {row.cells.map((cell, index) => (
@@ -383,9 +393,9 @@ console.log(data);
                             if (index !== row.cells.length - 1) {
                               handleCellClick(row.original.id);
                               console.log(row.original.id);
-                              
+
                             }
-                      
+
                           }}
                         >
                           {cell.render('Cell')}
@@ -402,7 +412,7 @@ console.log(data);
       </Grid>
 
 
-  
+
 
     </>
   );
