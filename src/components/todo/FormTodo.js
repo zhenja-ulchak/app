@@ -371,7 +371,7 @@ const TodoApp = () => {
                           <Button
                             variant="contained"
                             color="primary"
-                            onClick={() => setEditTodo({ id: null, task: '' })}
+                            onClick={()=>setAddVisibleOpen(false)}
                           >
                             Cancel
                           </Button>
