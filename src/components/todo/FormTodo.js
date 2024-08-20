@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { fetchTodos, createToDoList, updateToDoList, deleteToDoList } from '../../api/ToDoApiProvaider';
 import {
-  Grid, TextField, Button, Box, Typography, IconButton, Modal
+  Grid, TextField, Button, Box, InputLabel, IconButton, Modal
 
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -9,10 +9,11 @@ import CloseIcon from '@mui/icons-material/Close';
 import EditIcon from '@mui/icons-material/Edit';
 import { useTable } from 'react-table';
 import { FaCheck } from "react-icons/fa";
-import { IoClose } from "react-icons/io5";
+
 import { useNavigate } from 'react-router-dom';
 import { FaRegEye } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa6";
+
 
 
 const TodoApp = () => {
@@ -33,9 +34,7 @@ const TodoApp = () => {
     'col1', 'colNumber', 'colCheck', 'col2', 'col3', 'col4', 'col11'
   ]);
 
-  const marginButton = {
-    marginTop: '8px',
-  };
+
   const updateBox = {
     width: '40%',
     position: 'absolute',
@@ -124,7 +123,7 @@ const TodoApp = () => {
       col9: todo.created_by,
 
       col11: (
-        <>   
+        <>
           <IconButton edge="end" aria-label="edit" onClick={() => {
             handleEditClick(todo)
             setUpdateTodo(true)
@@ -257,36 +256,54 @@ const TodoApp = () => {
           aria-describedby="modal-modal-description"
         >
           <Box sx={{ ...updateBox }}>
-            <Typography sx={{ marginBottom: '40px', color: '#ffffff' }} variant="h6" noWrap component="p">
-              Fix case
-              <Button
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <InputLabel
+                  sx={{
+                    display: 'block',
+                    marginBottom: '8px',
+                    marginLeft: '2%',
+                    fontWeight: 'bold',
+                    fontSize: '16px',
+                  }}
+                >
+                  Task
+                </InputLabel>
+                <TextField
+                  label="Update Todo"
+                  variant="outlined"
+                  sx={{
+                    width: '96%',
 
-                onClick={() => setEditTodo({ id: null, task: '' })}
-              >
-                <CloseIcon />
-              </Button>
-            </Typography>
-            <TextField
-              label="Update Todo"
-              variant="outlined"
-              sx={{
-                width: '84%',
-                marginBottom: '20px',
-                marginLeft: '15px',
-                '& .MuiOutlinedInput-root': {
-                  backgroundColor: '#f0f0f0',
-                  borderRadius: '8px',
-                  '&:hover': {
-                    border: '2px solid #fff',
-                  },
-                },
-              }}
-              value={editTodo.task}
-              onChange={(e) => setEditTodo({ ...editTodo, task: e.target.value })}
-            />
-            <Button sx={marginButton} variant="contained" color="primary" onClick={handleUpdate}>
-              Update
-            </Button>
+                    margin: '15px',
+                    '& .MuiOutlinedInput-root': {
+                      backgroundColor: '#f0f0f0',
+                      borderRadius: '8px',
+                      '&:hover': {
+                        border: '2px solid #fff',
+                      },
+                    },
+                  }}
+                  value={editTodo.task}
+                  onChange={(e) => setEditTodo({ ...editTodo, task: e.target.value })}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Box sx={{ float: 'right' }}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => setEditTodo({ id: null, task: '' })}
+                  >
+                    Cancel
+                  </Button>
+                  <Button sx={{ marginLeft: '10px' }} variant="contained" color="primary" onClick={handleUpdate}>
+                    Update
+                  </Button>
+
+                </Box>
+              </Grid>
+            </Grid>
           </Box>
         </Modal>
       )}
@@ -329,19 +346,42 @@ const TodoApp = () => {
                   <Box ref={menuRef}
                     sx={{ width: '40%', position: 'absolute', zIndex: '9999', right: '553px', top: '291px', background: '#fff', border: '1px solid rgb(177 177 177)', padding: '22px' }}
                   >
-
-                    <TextField
-                      sx={{ width: '83%', marginRight: '20px' }}
-                      label="New Todo"
-                      variant="outlined"
-                      value={newTodo}
-                      onChange={(e) => setNewTodo(e.target.value)} />
-                    <Button sx={marginButton} variant="contained" color="primary" onClick={addTodo}>
-                      Add
-                    </Button>
+                    <Grid container spacing={2}>
+                      <Grid item xs={12}>
+                        <InputLabel
+                          sx={{
+                            display: 'block',
+                            marginBottom: '8px',
+                            marginLeft: '2%',
+                            fontWeight: 'bold',
+                            fontSize: '16px',
+                          }}
+                        >
+                          Task
+                        </InputLabel>
+                        <TextField
+                          sx={{ width: '95%', marginRight: '15px', marginLeft: '15px' }}
+                          label="New Todo"
+                          variant="outlined"
+                          value={newTodo}
+                          onChange={(e) => setNewTodo(e.target.value)} />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Box sx={{ float: 'right' }}>
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={() => setEditTodo({ id: null, task: '' })}
+                          >
+                            Cancel
+                          </Button>
+                          <Button sx={{ marginLeft: '10px' }} variant="contained" color="primary" onClick={addTodo}>
+                            Add
+                          </Button>
+                        </Box>
+                      </Grid>
+                    </Grid>
                   </Box>
-
-
                 </Modal>
               )
               :
