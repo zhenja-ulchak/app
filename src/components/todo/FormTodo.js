@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { fetchTodos, createToDoList, updateToDoList, deleteToDoList } from '../../api/ToDoApiProvaider';
 import {
-  Grid, Button, Box, IconButton
+  Grid, Button, Box, IconButton, Checkbox
 
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -91,7 +91,13 @@ const TodoApp = () => {
     await deleteToDoList(id);
     setTodos(todos.filter(todo => todo.id !== id));
   };
-
+  const handleCheckboxChange = (event, id) => {
+    // Логіка для зміни стану вибору чекбокса
+    const updatedTodos = todos.map(todo =>
+      todo.id === id ? { ...todo, isChecked: event.target.checked } : todo
+    );
+    setTodos(updatedTodos);
+  };
   // Налаштування таблиці для відображення завдань
   const data = React.useMemo(
     () => todos.map(todo => ({
@@ -100,8 +106,12 @@ const TodoApp = () => {
       colNumber: todo.number,
       colCheck: (
         <>
-          <FaCheck size={30} />
-          {/* <IoClose /> */}
+          <Checkbox
+            checked={todo.isChecked} // Припустимо, що в `todo` є поле `isChecked`
+            onChange={(e) => handleCheckboxChange(e, todo.id)} // Обробник зміни стану чекбокса
+            size="medium"
+            color="primary"
+          />
         </>
 
       ),
@@ -122,9 +132,7 @@ const TodoApp = () => {
           }}>
             <EditIcon />
           </IconButton>
-          {/* <IconButton edge="end" aria-label="delete" onClick={() => handleDelete(todo.id)}>
-            <DeleteIcon />
-          </IconButton> */}
+
         </>
       ),
     })),
@@ -308,11 +316,16 @@ const TodoApp = () => {
                             ...cell.column.cellStyle
                           }}
                           onClick={() => {
-                            if (index !== row.cells.length - 1) {
+                            // Перевірка `accessor` для колонок, де не потрібно виконувати `handleCellClick`
+                            const excludedAccessors = ['colCheck', 'col11']; // Додайте тут accessors колонок, для яких не потрібно викликати функцію
+
+                            if (!excludedAccessors.includes(cell.column.id)) {
                               handleCellClick(row.original.id);
                               console.log(row.original.id);
-
                             }
+
+
+
 
                           }}
                         >
