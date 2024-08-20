@@ -25,24 +25,21 @@ const TodoApp = () => {
   const [punch, setPunch] = useState(false);
   const [visibleOpen, setVisibleOpen] = useState(false);
   const [visibleAddOpen, setAddVisibleOpen] = useState(false);
-
+  const [color, setColor] = useState(false)
+  const [selectedRowId, setSelectedRowId] = useState(null);
 
   const navigate = useNavigate();
   const menuRef = useRef(null);
 
-
   const [visibleColumns, setVisibleColumns] = useState([
     'col1', 'colNumber', 'colCheck', 'col2', 'col3', 'col4', 'col11'
   ]);
-
-
 
   const wBox = {
     width: '87%',
     marginRight: '20px',
     marginLeft: '13%'
   };
-
 
   useEffect(() => {
     const loadTodos = async () => {
@@ -96,9 +93,10 @@ const TodoApp = () => {
     const updatedTodos = todos.map(todo =>
       todo.id === id ? { ...todo, isChecked: event.target.checked } : todo
     );
+    setColor(true)
     setTodos(updatedTodos);
   };
-  // Налаштування таблиці для відображення завдань
+
   const data = React.useMemo(
     () => todos.map(todo => ({
       id: todo.id,
@@ -107,8 +105,8 @@ const TodoApp = () => {
       colCheck: (
         <>
           <Checkbox
-            checked={todo.isChecked} // Припустимо, що в `todo` є поле `isChecked`
-            onChange={(e) => handleCheckboxChange(e, todo.id)} // Обробник зміни стану чекбокса
+            checked={todo.isChecked}
+            onChange={(e) => handleCheckboxChange(e, todo.id)} 
             size="medium"
             color="primary"
           />
@@ -138,10 +136,8 @@ const TodoApp = () => {
     })),
     [todos]
   );
-  console.log(data);
 
   const columns = React.useMemo(
-
     () => [
       {
         Header: 'Task',
@@ -210,9 +206,6 @@ const TodoApp = () => {
     prepareRow,
   } = useTable({ columns: filteredColumns, data });
 
-
-
-
   const handleCellClick = (todoId) => {
     if (todoId) {
       navigate(`/details/${todoId}`);
@@ -222,7 +215,6 @@ const TodoApp = () => {
     }
 
   }
-
 
   const handleToggleColumn = (columnId) => {
     setVisibleColumns((prev) =>
@@ -246,6 +238,7 @@ const TodoApp = () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [menuRef]);
+
   return (
     <>
       <ModuleUpdate
@@ -301,6 +294,7 @@ const TodoApp = () => {
               </thead>
               <tbody {...getTableBodyProps()}>
                 {rows.map(row => {
+                   const isSelected = row.original.id === selectedRowId;
                   prepareRow(row);
 
                   return (
@@ -313,18 +307,21 @@ const TodoApp = () => {
                             textAlign: 'center',
                             background: '#fff',
                             minWidth: '200px',
+                            cursor: 'pointer',
+                            backgroundColor: isSelected ? '#f0f0f0' : 'inherit',
                             ...cell.column.cellStyle
                           }}
                           onClick={() => {
-                            // Перевірка `accessor` для колонок, де не потрібно виконувати `handleCellClick`
-                            const excludedAccessors = ['colCheck', 'col11']; // Додайте тут accessors колонок, для яких не потрібно викликати функцію
+                           
+                            const excludedAccessors = ['colCheck', 'col11']; 
 
                             if (!excludedAccessors.includes(cell.column.id)) {
                               handleCellClick(row.original.id);
                               console.log(row.original.id);
                             }
-
-
+                            setSelectedRowId(row.original.id);
+                            console.log(index);
+                            
 
 
                           }}
