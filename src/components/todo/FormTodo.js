@@ -34,12 +34,14 @@ const TodoApp = () => {
     marginTop: '8px',
   };
   const updateBox = {
-    width: '50%',
-    position: 'fixed',
-    top: '0',
-    marginTop: '70px',
-    zIndex: '9999',
-    background: '#878787'
+    width: '40%', 
+    position: 'absolute',
+     zIndex: '9999',
+      right: '553px',
+       top: '291px',
+        background: '#fff',
+         border: '1px solid rgb(177 177 177)',
+          padding: '22px' 
   };
   const wBox = {
     width: '87%',
@@ -61,6 +63,8 @@ const TodoApp = () => {
   const addTodo = async () => {
     const addedTodo = await createToDoList({ task: `${newTodo}` });
     setTodos([...todos, addedTodo]);
+    console.log(addedTodo);
+    
     setNewTodo('');
   };
 
@@ -125,6 +129,7 @@ const TodoApp = () => {
     })),
     [todos]
   );
+console.log(data);
 
   const columns = React.useMemo(
 
@@ -177,6 +182,8 @@ const TodoApp = () => {
       {
         Header: 'Actions',
         accessor: 'col11',
+        headerStyle: { backgroundColor: '#fff', color: '#000', textAlign: 'center', fontWeight: 'bold', position: 'sticky', right: 0, zIndex: 10 },
+        cellStyle: {  position: 'sticky', right: 0, backgroundColor: '#fff', zIndex: 5  },
       },
     ],
     []
@@ -185,6 +192,7 @@ const TodoApp = () => {
     () => columns.filter(column => visibleColumns.includes(column.accessor)),
     [visibleColumns, columns]
   );
+
   const {
     getTableProps,
     getTableBodyProps,
@@ -195,10 +203,11 @@ const TodoApp = () => {
 
 
 
+
   const handleCellClick = (todoId) => {
     if (todoId) {
       navigate(`/details/${todoId}`);
-      console.log(`Navigating to /details/${todoId}`);
+     
     } else {
       console.error("Todo ID is undefined");
     }
@@ -214,16 +223,14 @@ const TodoApp = () => {
     );
   };
 
-
-
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
         setVisibleOpen(false); // Закриваємо меню
+        setEditTodo(false)
         setAddVisibleOpen(false);
       }
     };
-
 
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
@@ -232,13 +239,18 @@ const TodoApp = () => {
   }, [menuRef]);
   return (
     <>
-
       {editTodo.id && (
+           <Modal
+           open={editTodo}
+    
+           aria-labelledby="modal-modal-title"
+           aria-describedby="modal-modal-description"
+         >
         <Box sx={{ ...updateBox }}>
           <Typography sx={{ marginBottom: '40px', color: '#ffffff' }} variant="h6" noWrap component="p">
             Fix case
             <Button
-              sx={{ color: '#000000' }}
+              
               onClick={() => setEditTodo({ id: null, task: '' })}
             >
               <CloseIcon />
@@ -266,8 +278,8 @@ const TodoApp = () => {
             Update
           </Button>
         </Box>
+        </Modal>
       )}
-
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Box sx={{ ...wBox }}>
@@ -296,8 +308,16 @@ const TodoApp = () => {
 
             {visibleAddOpen ?
 
-              (<Box ref={menuRef}
-                sx={{ width: '40%', position: 'absolute', zIndex: '9999', right: '60px', top: '229px', background: '#fff', border: '1px solid rgb(177 177 177)', padding: '22px' }}
+              (
+              
+                <Modal
+                open={visibleAddOpen}
+         
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+              >
+                   <Box ref={menuRef}
+                sx={{ width: '40%', position: 'absolute', zIndex: '9999', right: '553px', top: '291px', background: '#fff', border: '1px solid rgb(177 177 177)', padding: '22px' }}
               >
 
                 <TextField
@@ -305,12 +325,15 @@ const TodoApp = () => {
                   label="New Todo"
                   variant="outlined"
                   value={newTodo}
-
                   onChange={(e) => setNewTodo(e.target.value)} />
                 <Button sx={marginButton} variant="contained" color="primary" onClick={addTodo}>
                   Add
                 </Button>
-              </Box>)
+              </Box>
+
+
+              </Modal>
+           )
               :
               (<Box></Box>)
 
@@ -331,6 +354,7 @@ const TodoApp = () => {
                           background: '#fff',
                           color: 'black',
                           fontWeight: 'bold',
+                          ...column.headerStyle
                         }}
                       >
                         {column.render('Header')}
@@ -342,10 +366,10 @@ const TodoApp = () => {
               <tbody {...getTableBodyProps()}>
                 {rows.map(row => {
                   prepareRow(row);
-                  console.log("Row data:", row.original.id);
+                
                   return (
                     <tr {...row.getRowProps()}>
-                      {row.cells.map(cell => (
+                      {row.cells.map((cell, index) => (
                         <td
                           {...cell.getCellProps()}
                           style={{
@@ -353,8 +377,16 @@ const TodoApp = () => {
                             textAlign: 'center',
                             background: '#fff',
                             minWidth: '200px',
+                            ...cell.column.cellStyle
                           }}
-                          onClick={() => handleCellClick(row.original.id)}
+                          onClick={() => {
+                            if (index !== row.cells.length - 1) {
+                              handleCellClick(row.original.id);
+                              console.log(row.original.id);
+                              
+                            }
+                      
+                          }}
                         >
                           {cell.render('Cell')}
                         </td>
@@ -370,7 +402,7 @@ const TodoApp = () => {
       </Grid>
 
 
-
+  
 
     </>
   );
