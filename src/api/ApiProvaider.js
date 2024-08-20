@@ -608,6 +608,7 @@ export const GetLogin = async (username, password) => {
         withCredentials: true 
       });
   
+   console.log(response);
    
       return response;
     } catch (error) {

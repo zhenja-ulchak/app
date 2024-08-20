@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { fetchTodos, createToDoList, updateToDoList, deleteToDoList } from '../../api/ToDoApiProvaider';
 import {
-  Grid, TextField, Button, Box, InputLabel, IconButton, Modal
+  Grid, Button, Box, IconButton
 
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -13,8 +13,9 @@ import { FaCheck } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 import { FaRegEye } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa6";
-
-
+import ModalAdd from './components/ModalAddToDo'
+import ModuleUpdate from './components/ModalUpdateToDo'
+import ColumnTooltip from './components/AddColumnTooltip'
 
 const TodoApp = () => {
   const [todos, setTodos] = useState([]);
@@ -35,16 +36,7 @@ const TodoApp = () => {
   ]);
 
 
-  const updateBox = {
-    width: '40%',
-    position: 'absolute',
-    zIndex: '9999',
-    right: '553px',
-    top: '291px',
-    background: '#fff',
-    border: '1px solid rgb(177 177 177)',
-    padding: '22px'
-  };
+
   const wBox = {
     width: '87%',
     marginRight: '20px',
@@ -248,146 +240,32 @@ const TodoApp = () => {
   }, [menuRef]);
   return (
     <>
-      {editTodo.id && (
-        <Modal
-          open={updateTodo}
-          onClose={() => setUpdateTodo(false)}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
-          <Box sx={{ ...updateBox }}>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <InputLabel
-                  sx={{
-                    display: 'block',
-                    marginBottom: '8px',
-                    marginLeft: '2%',
-                    fontWeight: 'bold',
-                    fontSize: '16px',
-                  }}
-                >
-                  Task
-                </InputLabel>
-                <TextField
-                  label="Update Todo"
-                  variant="outlined"
-                  sx={{
-                    width: '96%',
-
-                    margin: '15px',
-                    '& .MuiOutlinedInput-root': {
-                      backgroundColor: '#f0f0f0',
-                      borderRadius: '8px',
-                      '&:hover': {
-                        border: '2px solid #fff',
-                      },
-                    },
-                  }}
-                  value={editTodo.task}
-                  onChange={(e) => setEditTodo({ ...editTodo, task: e.target.value })}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <Box sx={{ float: 'right' }}>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => setEditTodo({ id: null, task: '' })}
-                  >
-                    Cancel
-                  </Button>
-                  <Button sx={{ marginLeft: '10px' }} variant="contained" color="primary" onClick={handleUpdate}>
-                    Update
-                  </Button>
-
-                </Box>
-              </Grid>
-            </Grid>
-          </Box>
-        </Modal>
-      )}
+      <ModuleUpdate
+        updateTodo={updateTodo}
+        editTodo={editTodo}
+        setUpdateTodo={setUpdateTodo}
+        setEditTodo={setEditTodo}
+        handleUpdate={handleUpdate}
+      />
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Box sx={{ ...wBox }}>
             <Button style={{ float: 'right' }} onClick={() => setVisibleOpen(!visibleOpen)}>
               <FaRegEye size={30} />
             </Button>
-            {visibleOpen
-              ?
-              (<Box ref={menuRef} style={{ float: 'right', position: 'absolute', zIndex: '99999', right: '60px', top: '229px', background: '#fff', border: '1px solid rgb(177 177 177)', padding: '22px' }}>
-                {columns.map((column) => (
-                  <div key={column.accessor}>
-                    <input
-                      type="checkbox"
-                      checked={visibleColumns.includes(column.accessor)}
-                      onChange={() => handleToggleColumn(column.accessor)} />
-                    <label>{column.Header}</label>
-                  </div>
-                ))}
-              </Box>)
-              :
-              (<Box></Box>)}
+            <ColumnTooltip visibleOpen={visibleOpen} menuRef={menuRef} columns={columns} visibleColumns={visibleColumns} handleToggleColumn={handleToggleColumn} />
             <Button style={{ float: 'right', }}
               onClick={() => setAddVisibleOpen(!visibleOpen)}>
               <FaPlus size={30} />
             </Button>
 
-            {visibleAddOpen ?
-
-              (
-
-                <Modal
-                  open={visibleAddOpen}
-
-                  aria-labelledby="modal-modal-title"
-                  aria-describedby="modal-modal-description"
-                >
-                  <Box ref={menuRef}
-                    sx={{ width: '40%', position: 'absolute', zIndex: '9999', right: '553px', top: '291px', background: '#fff', border: '1px solid rgb(177 177 177)', padding: '22px' }}
-                  >
-                    <Grid container spacing={2}>
-                      <Grid item xs={12}>
-                        <InputLabel
-                          sx={{
-                            display: 'block',
-                            marginBottom: '8px',
-                            marginLeft: '2%',
-                            fontWeight: 'bold',
-                            fontSize: '16px',
-                          }}
-                        >
-                          Task
-                        </InputLabel>
-                        <TextField
-                          sx={{ width: '95%', marginRight: '15px', marginLeft: '15px' }}
-                          label="New Todo"
-                          variant="outlined"
-                          value={newTodo}
-                          onChange={(e) => setNewTodo(e.target.value)} />
-                      </Grid>
-                      <Grid item xs={12}>
-                        <Box sx={{ float: 'right' }}>
-                          <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={()=>setAddVisibleOpen(false)}
-                          >
-                            Cancel
-                          </Button>
-                          <Button sx={{ marginLeft: '10px' }} variant="contained" color="primary" onClick={addTodo}>
-                            Add
-                          </Button>
-                        </Box>
-                      </Grid>
-                    </Grid>
-                  </Box>
-                </Modal>
-              )
-              :
-              (<Box></Box>)
-
-            }
+            < ModalAdd
+              visibleAddOpen={visibleAddOpen}
+              setNewTodo={setNewTodo}
+              setAddVisibleOpen={setAddVisibleOpen}
+              menuRef={menuRef}
+              newTodo={newTodo}
+              addTodo={addTodo} />
 
           </Box>
         </Grid>
