@@ -8,6 +8,7 @@ import Container from '@mui/material/Container';
 import ToDoTable from '../components/ToDoTable'
 import Debug from '../components/DebugPanel'
 import useDebugStore from '../store/DebugStore'; 
+import Box from '@mui/material/Box';
 
 const Home = () => {
   const [activeToDoTable, setActiveToDoTable] = useState(false)
@@ -41,9 +42,9 @@ const Home = () => {
       <Container sx={{ ...openToDoTable }}>
         <ToDoTable />
       </Container>
-      <Container sx={{ ...openDashboard }}>
+      <Box sx={{ ...openDashboard }}>
         <TodoDashboard activeTodoDashboard={activeTodoDashboard} />
-      </Container>
+      </Box>
       <Container sx={{ ...openTodoApp }}>
         <DashApp activeTodoApp={activeTodoApp} />
       </Container>

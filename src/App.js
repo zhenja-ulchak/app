@@ -10,6 +10,7 @@ import DashApp from './pages/Dashboard';
 import Tools from './pages/Tools';
 import { Users } from './pages/Users';
 import SettingPage  from '../src/pages/Settings';
+import ToDoDetails from '../src/components/todo/Details'
 
 const App = () => {
   return (
@@ -23,7 +24,8 @@ const App = () => {
           <Route path="/home" element={ <ProtectedRoute> <Home /> </ProtectedRoute> }  />
 
           <Route path="/setting" element={<SettingPage />} />
-       
+          <Route path="/details/:id" element={<ToDoDetails/>} />
+          
           <Route path="/dashboard" element={<DashApp />} />
           <Route path="/tools" element={<Tools />} />
           <Route path="/users" element={<Users />} />

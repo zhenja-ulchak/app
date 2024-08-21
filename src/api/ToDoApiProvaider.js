@@ -41,13 +41,15 @@ export const createToDoList = async (todoList) => {
 
 }
 
-export const getToDoLists = () => {
-    
-}
-
-export const getToDoList = (id) => {
-    
-}
+export const fetchTodoById = async (id) => {
+  try {
+    const response = await axios.get(`${BASE_URL}/user/customer/${id}/contract_status`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching todo by ID:", error);
+    throw error;
+  }
+};
 
 export const updateToDoList = async(id, updatedTodo) => {
   console.log(updatedTodo);

@@ -1,41 +1,44 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { fetchTodos, createToDoList, updateToDoList, deleteToDoList } from '../../api/ToDoApiProvaider';
 import {
-  Container, TextField, Button, Box, Typography, IconButton,
-  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
+  Grid, Button, Box, IconButton, Checkbox
+
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CloseIcon from '@mui/icons-material/Close';
 import EditIcon from '@mui/icons-material/Edit';
 import { useTable } from 'react-table';
+import { FaCheck } from "react-icons/fa";
+
+import { useNavigate } from 'react-router-dom';
+import { FaRegEye } from "react-icons/fa";
+import { FaPlus } from "react-icons/fa6";
+import ModalAdd from './components/ModalAddToDo'
+import ModuleUpdate from './components/ModalUpdateToDo'
+import ColumnTooltip from './components/AddColumnTooltip'
 
 const TodoApp = () => {
   const [todos, setTodos] = useState([]);
   const [newTodo, setNewTodo] = useState('');
+  const [updateTodo, setUpdateTodo] = useState(false);
   const [editTodo, setEditTodo] = useState({ id: null, task: '' });
   const [punch, setPunch] = useState(false);
+  const [visibleOpen, setVisibleOpen] = useState(false);
+  const [visibleAddOpen, setAddVisibleOpen] = useState(false);
+  const [color, setColor] = useState(false)
+  const [selectedRowId, setSelectedRowId] = useState(null);
 
-  const marginButton = {
-    marginTop: '8px',
-    float: 'right',
-    marginRight: '20px'
-  };
-  const updateBox = {
-    width: '50%',
-    position: 'fixed',
-    top: '0',
-    marginTop: '70px',
-    zIndex: '9999',
-    background: '#878787'
-  };
-  const wInput = {
-    width: '85%',
-  };
-  const conteinerW = {
-    width: '100%',
-    
-    marginTop: '200px',
-    marginLeft: '22%'
+  const navigate = useNavigate();
+  const menuRef = useRef(null);
+
+  const [visibleColumns, setVisibleColumns] = useState([
+    'col1', 'colNumber', 'colCheck', 'col2', 'col3', 'col4', 'col11'
+  ]);
+
+  const wBox = {
+    width: '87%',
+    marginRight: '20px',
+    marginLeft: '13%'
   };
 
   useEffect(() => {
@@ -45,11 +48,14 @@ const TodoApp = () => {
       setTodos(task.map((i) => i));
     };
     loadTodos();
-  }, [punch]);
+  }, [punch, updateTodo]);
+
 
   const addTodo = async () => {
     const addedTodo = await createToDoList({ task: `${newTodo}` });
     setTodos([...todos, addedTodo]);
+    console.log(addedTodo);
+
     setNewTodo('');
   };
 
@@ -58,6 +64,7 @@ const TodoApp = () => {
       id: todo.id,
       task: todo.text,
     });
+    setUpdateTodo(true)
   };
 
   const handleUpdate = async () => {
@@ -68,6 +75,9 @@ const TodoApp = () => {
         todo.id === id ? updatedTodo : todo
       ));
       setEditTodo({ id: null, task: '' });
+      setUpdateTodo(false)
+
+
     } catch (error) {
       console.error("Failed to update todo:", error);
     }
@@ -78,11 +88,31 @@ const TodoApp = () => {
     await deleteToDoList(id);
     setTodos(todos.filter(todo => todo.id !== id));
   };
+  const handleCheckboxChange = (event, id) => {
+    // Логіка для зміни стану вибору чекбокса
+    const updatedTodos = todos.map(todo =>
+      todo.id === id ? { ...todo, isChecked: event.target.checked } : todo
+    );
+    setColor(true)
+    setTodos(updatedTodos);
+  };
 
-  // Налаштування таблиці для відображення завдань
   const data = React.useMemo(
     () => todos.map(todo => ({
+      id: todo.id,
       col1: todo.task,
+      colNumber: todo.number,
+      colCheck: (
+        <>
+          <Checkbox
+            checked={todo.isChecked}
+            onChange={(e) => handleCheckboxChange(e, todo.id)} 
+            size="medium"
+            color="primary"
+          />
+        </>
+
+      ),
       col2: todo.status,
       col3: todo.start_date,
       col4: todo.end_date,
@@ -94,12 +124,13 @@ const TodoApp = () => {
 
       col11: (
         <>
-          <IconButton edge="end" aria-label="edit" onClick={() => handleEditClick(todo)}>
+          <IconButton edge="end" aria-label="edit" onClick={() => {
+            handleEditClick(todo)
+            setUpdateTodo(true)
+          }}>
             <EditIcon />
           </IconButton>
-          <IconButton edge="end" aria-label="delete" onClick={() => handleDelete(todo.id)}>
-            <DeleteIcon />
-          </IconButton>
+
         </>
       ),
     })),
@@ -110,47 +141,61 @@ const TodoApp = () => {
     () => [
       {
         Header: 'Task',
-        accessor: 'col1', 
+        accessor: 'col1',
+      },
+      {
+        Header: 'Number',
+        accessor: 'colNumber',
+      },
+      {
+        Header: 'Check',
+        accessor: 'colCheck',
       },
       {
         Header: 'Status',
-        accessor: 'col2', 
+        accessor: 'col2',
       },
       {
         Header: 'Start date',
-        accessor: 'col3', 
+        accessor: 'col3',
       },
       {
         Header: 'End date',
-        accessor: 'col4', 
+        accessor: 'col4',
       },
       {
         Header: 'Diff time',
-        accessor: 'col5', 
+        accessor: 'col5',
       },
       {
         Header: 'Last change',
-        accessor: 'col6', 
+        accessor: 'col6',
       },
       {
         Header: 'Last change by',
-        accessor: 'col7', 
+        accessor: 'col7',
       },
       {
         Header: 'Created',
-        accessor: 'col8', 
+        accessor: 'col8',
       },
       {
         Header: 'Created by',
-        accessor: 'col9', 
+        accessor: 'col9',
       },
 
       {
         Header: 'Actions',
-        accessor: 'col11', 
+        accessor: 'col11',
+        headerStyle: { backgroundColor: '#fff', color: '#000', textAlign: 'center', fontWeight: 'bold', position: 'sticky', right: 0, zIndex: 10 },
+        cellStyle: { position: 'sticky', right: 0, backgroundColor: '#fff', zIndex: 5 },
       },
     ],
     []
+  );
+  const filteredColumns = React.useMemo(
+    () => columns.filter(column => visibleColumns.includes(column.accessor)),
+    [visibleColumns, columns]
   );
 
   const {
@@ -159,103 +204,144 @@ const TodoApp = () => {
     headerGroups,
     rows,
     prepareRow,
-  } = useTable({ columns, data });
+  } = useTable({ columns: filteredColumns, data });
+
+  const handleCellClick = (todoId) => {
+    if (todoId) {
+      navigate(`/details/${todoId}`);
+
+    } else {
+      console.error("Todo ID is undefined");
+    }
+
+  }
+
+  const handleToggleColumn = (columnId) => {
+    setVisibleColumns((prev) =>
+      prev.includes(columnId)
+        ? prev.filter((col) => col !== columnId)
+        : [...prev, columnId]
+    );
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setVisibleOpen(false); // Закриваємо меню
+        setUpdateTodo(false)
+        setAddVisibleOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [menuRef]);
 
   return (
     <>
-      <Container sx={{ ...conteinerW }}>
-        {editTodo.id && (
-          <Box sx={{ ...updateBox }}>
-            <Typography sx={{ marginBottom: '40px', color: '#ffffff' }} variant="h6" noWrap component="p">
-              Fix case
-              <Button
-                sx={{ color: '#000000' }}
-                onClick={() => setEditTodo({ id: null, task: '' })}
-              >
-                <CloseIcon />
-              </Button>
-            </Typography>
-            <TextField
-              label="Update Todo"
-              variant="outlined"
-              sx={{
-                width: '84%',
-                marginBottom: '20px',
-                marginLeft: '15px',
-                '& .MuiOutlinedInput-root': {
-                  backgroundColor: '#f0f0f0',
-                  borderRadius: '8px',
-                  '&:hover': {
-                    border: '2px solid #fff',
-                  },
-                },
-              }}
-              value={editTodo.task}
-              onChange={(e) => setEditTodo({ ...editTodo, task: e.target.value })}
-            />
-            <Button sx={marginButton} variant="contained" color="primary" onClick={handleUpdate}>
-              Update
+      <ModuleUpdate
+        updateTodo={updateTodo}
+        editTodo={editTodo}
+        setUpdateTodo={setUpdateTodo}
+        setEditTodo={setEditTodo}
+        handleUpdate={handleUpdate}
+      />
+      <Grid container spacing={2}>
+        <Grid item xs={12}>
+          <Box sx={{ ...wBox }}>
+            <Button style={{ float: 'right' }} onClick={() => setVisibleOpen(!visibleOpen)}>
+              <FaRegEye size={30} />
             </Button>
+            <ColumnTooltip visibleOpen={visibleOpen} menuRef={menuRef} columns={columns} visibleColumns={visibleColumns} handleToggleColumn={handleToggleColumn} />
+            <Button style={{ float: 'right', }}
+              onClick={() => setAddVisibleOpen(!visibleOpen)}>
+              <FaPlus size={30} />
+            </Button>
+
+            < ModalAdd
+              visibleAddOpen={visibleAddOpen}
+              setNewTodo={setNewTodo}
+              setAddVisibleOpen={setAddVisibleOpen}
+              menuRef={menuRef}
+              newTodo={newTodo}
+              addTodo={addTodo} />
+
           </Box>
-        )}
-        <h1>Add case</h1>
-        <TextField
-          sx={{ ...wInput }}
-          label="New Todo"
-          variant="outlined"
-          value={newTodo}
-          onChange={(e) => setNewTodo(e.target.value)}
-        />
-        <Button sx={marginButton} variant="contained" color="primary" onClick={addTodo}>
-          Add
-        </Button>
-        <TableContainer component={Paper} sx={{ marginTop: '20px', maxWidth: '100%', overflowX: 'auto',   maxHeight: '500px' }}>
-          <table {...getTableProps()} style={{ marginTop: '20px' }}>
-            <thead>
-              {headerGroups.map(headerGroup => (              
-                <tr {...headerGroup.getHeaderGroupProps()}>
-                  {headerGroup.headers.map(column => (
-                    <th
-                      {...column.getHeaderProps()}
-                      style={{
-                      
-                        background: '#fff',
-                        color: 'black',
-                        fontWeight: 'bold',
-                      }}
-                    >
-                      {column.render('Header')}
-                    </th>
-                  ))}
-                </tr>
-              ))}
-            </thead>
-            <tbody {...getTableBodyProps()} >
-              {rows.map(row => {
-                prepareRow(row);
-                return (
-                  <tr {...row.getRowProps()}>
-                    {row.cells.map(cell => (
-                      <td
-                        {...cell.getCellProps()}
+        </Grid>
+        <Grid item xs={12}>
+          <div style={{ maxHeight: '500px', overflowY: 'auto', overflowX: 'auto', marginTop: '20px', marginLeft: '20%' }}>
+            <table {...getTableProps()} style={{ marginTop: '20px' }}>
+              <thead>
+                {headerGroups.map(headerGroup => (
+                  <tr {...headerGroup.getHeaderGroupProps()}>
+                    {headerGroup.headers.map((column) => (
+                      <th
+                        {...column.getHeaderProps()}
                         style={{
-                          padding: '10px',
-                          
                           background: '#fff',
-                          minWidth: '300px',
-                          
+                          color: 'black',
+                          fontWeight: 'bold',
+                          ...column.headerStyle
                         }}
                       >
-                        {cell.render('Cell')}
-                      </td>
+                        {column.render('Header')}
+                      </th>
                     ))}
                   </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </TableContainer>
-      </Container>
+                ))}
+              </thead>
+              <tbody {...getTableBodyProps()}>
+                {rows.map(row => {
+                   const isSelected = row.original.id === selectedRowId;
+                  prepareRow(row);
+
+                  return (
+                    <tr {...row.getRowProps()}>
+                      {row.cells.map((cell, index) => (
+                        <td
+                          {...cell.getCellProps()}
+                          style={{
+                            padding: '10px',
+                            textAlign: 'center',
+                            background: '#fff',
+                            minWidth: '200px',
+                            cursor: 'pointer',
+                            backgroundColor: isSelected ? '#f0f0f0' : 'inherit',
+                            ...cell.column.cellStyle
+                          }}
+                          onClick={() => {
+                           
+                            const excludedAccessors = ['colCheck', 'col11']; 
+
+                            if (!excludedAccessors.includes(cell.column.id)) {
+                              handleCellClick(row.original.id);
+                              console.log(row.original.id);
+                            }
+                            setSelectedRowId(row.original.id);
+                            console.log(index);
+                            
+
+
+                          }}
+                        >
+                          {cell.render('Cell')}
+                        </td>
+                      ))}
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </Grid>
+
+      </Grid>
+
+
+
+
     </>
   );
 };
