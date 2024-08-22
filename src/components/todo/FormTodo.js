@@ -100,15 +100,21 @@ const TodoApp = () => {
     await deleteToDoList(id);
     setTodos(todos.filter(todo => todo.id !== id));
   };
-  const handleCheckboxChange = (event, id) => {
+  const handleCheckboxChange = async (event, id) => {
     // Логіка для зміни стану вибору чекбокса
     const updatedTodos = todos.map(todo =>
       todo.id === id ? { ...todo, isChecked: event.target.checked } : todo
     );
+    await updateToDoList(id, { end_date: formattedDate});
+
+
     setColor(true)
     setTodos(updatedTodos);
   };
-  const calculateTimeDifference = (startDate, endDate) => {
+
+
+  
+  const calculateTimeDifference =  (startDate, endDate , id) => {
     const start = new Date(startDate);
     const end = new Date(endDate);
     const differenceInMilliseconds = end.getTime() - start.getTime();
@@ -117,9 +123,16 @@ const TodoApp = () => {
     const hours = Math.floor((differenceInSeconds % (24 * 3600)) / 3600);
     const minutes = Math.floor((differenceInSeconds % 3600) / 60);
     const seconds = differenceInSeconds % 60;
-
-    return `${days} days ${hours}:${minutes}:${seconds}`;
+    const allTime = `${days} days ${hours}:${minutes}:${seconds}`
+  
+    const allDiff = async ()=>{
+      await updateToDoList(id, { diff_time: allTime});  
+    }
+    allDiff()
+    return allTime;
   };
+
+ 
 
   const data = React.useMemo(
     () => todos.map(todo => ({
@@ -141,15 +154,16 @@ const TodoApp = () => {
       col3: todo.start_date,
       col4: (
         <>
-          {  todo.isChecked ? formattedDate : ''}
+          {  todo.isChecked ? formattedDate : todo.end_date}
         </>
 
       ),
       col5: (
         <>
           {
-           todo.isChecked ? calculateTimeDifference(todo.start_date, formattedDate) : ''
-          }        </>
+           todo.isChecked ? calculateTimeDifference(todo.start_date, formattedDate, todo.id) : ''
+          }       
+           </>
 
       ),
       col6: todo.lastchange,

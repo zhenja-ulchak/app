@@ -7,7 +7,7 @@ export const GetUsers = async (username, password)=>{
     try {
 
         const response = await axios.get(`${BASE_URL}/user`, {
-            withCredentials: true, // Передає кукі з запитом
+            withCredentials: true,
        
         });
         
@@ -597,10 +597,10 @@ export const GetUsers2 = ()=>{
 //GetLogin("INDYN\\tester","1234")
 export const GetLogin = async (username, password) => {
     try {
-      // Создание строки для базовой аутентификации
+ 
       const authString = `Basic ${btoa(`${username}:${password}`)}`;
       
-      // Отправка запроса с заголовками
+  
       const response = await axios.get(`${BASE_URL}/user/login`, {
         headers: {
           Authorization: authString,
@@ -619,10 +619,10 @@ export const GetLogin = async (username, password) => {
   };
   export const GetLoginRefresh = async (username, password) => {
     try {
-      // Создание строки для базовой аутентификации
+ 
       const authString = `Basic ${btoa(`${username}:${password}`)}`;
       
-      // Отправка запроса с заголовками
+  
       const response = await axios.get(`${BASE_URL}/user/login`, {
         headers: {
           Authorization: authString,
