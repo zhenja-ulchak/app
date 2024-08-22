@@ -1,15 +1,18 @@
 import { mockTodos } from './mockData';
 import axios from 'axios';
-const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
 
 const BASE_URL = `https://api.crosscore.app`;
+
+const client = axios.create({
+  baseURL: BASE_URL,
+  withCredentials: true,
+})
 
 export const fetchTodos = async () => {
  
   try {
-    const response = await axios.get(`${BASE_URL}/user/customer_todo`, {
-      withCredentials: true 
-    });
+    const response = await client.get(`/user/customer_todo`);
 
   
     return response.data;
@@ -25,9 +28,7 @@ export const createToDoList = async (todoList) => {
   console.log(todoList);
   
   try {
-    const response = await axios.post(`${BASE_URL}/user/customer_todo`, todoList , {
-      withCredentials: true
-    });
+    const response = await client.post(`/user/customer_todo`, todoList );
 
  
     const newTodoList = {...todoList, id: mockTodos.length + 1}
@@ -43,7 +44,7 @@ export const createToDoList = async (todoList) => {
 
 export const fetchTodoById = async (id) => {
   try {
-    const response = await axios.get(`${BASE_URL}/user/customer/${id}/contract_status`);
+    const response = await client.get(`/user/customer/${id}/contract_status`);
     return response.data;
   } catch (error) {
     console.error("Error fetching todo by ID:", error);
@@ -55,9 +56,7 @@ export const updateToDoList = async(id, updatedTodo) => {
   console.log(updatedTodo);
   
   try {
-    const response = await axios.put(`${BASE_URL}/user/customer_todo/${id}`,updatedTodo, {
-      withCredentials: true
-    });
+    const response = await client.put(`/user/customer_todo/${id}`,updatedTodo);
 
     return response.data;
   } catch (error) {
@@ -72,9 +71,7 @@ export const deleteToDoList = async(id) => {
 
 
   try {
-    await axios.delete(`${BASE_URL}/user/customer_todo/${id}`, {
-      withCredentials: true
-    });
+    await client.delete(`/user/customer_todo/${id}`);
     return id; // Повертаємо id видаленої задачі або просто підтвердження успіху
   } catch (error) {
     console.error('Error deleting todo:', error);

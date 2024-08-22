@@ -4,11 +4,9 @@ import {
   Grid, Button, Box, IconButton, Checkbox
 
 } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
-import CloseIcon from '@mui/icons-material/Close';
+
 import EditIcon from '@mui/icons-material/Edit';
 import { useTable } from 'react-table';
-import { FaCheck } from "react-icons/fa";
 
 import { useNavigate } from 'react-router-dom';
 import { FaRegEye } from "react-icons/fa";
@@ -27,9 +25,23 @@ const TodoApp = () => {
   const [visibleAddOpen, setAddVisibleOpen] = useState(false);
   const [color, setColor] = useState(false)
   const [selectedRowId, setSelectedRowId] = useState(null);
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const Year = currentDate.getFullYear();
+  const Day = currentDate.getDate();  // День місяця
+  const Month = currentDate.getMonth() + 1;  // Місяць (додаємо 1)
+  const Hours = currentDate.getHours(); // Години
+  const Minutes = currentDate.getMinutes(); // Хвилини
+  const Seconds = currentDate.getSeconds(); // Секунди
+
+  const formattedDate = `${Year}-${Month}-${Day} ${Hours}:${Minutes}:${Seconds}`;
+  console.log(formattedDate);
 
   const navigate = useNavigate();
   const menuRef = useRef(null);
+
+
+
+
 
   const [visibleColumns, setVisibleColumns] = useState([
     'col1', 'colNumber', 'colCheck', 'col2', 'col3', 'col4', 'col11'
@@ -96,6 +108,18 @@ const TodoApp = () => {
     setColor(true)
     setTodos(updatedTodos);
   };
+  const calculateTimeDifference = (startDate, endDate) => {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    const differenceInMilliseconds = end.getTime() - start.getTime();
+    const differenceInSeconds = Math.floor(differenceInMilliseconds / 1000);
+    const days = Math.floor(differenceInSeconds / (24 * 3600));
+    const hours = Math.floor((differenceInSeconds % (24 * 3600)) / 3600);
+    const minutes = Math.floor((differenceInSeconds % 3600) / 60);
+    const seconds = differenceInSeconds % 60;
+
+    return `${days} days ${hours}:${minutes}:${seconds}`;
+  };
 
   const data = React.useMemo(
     () => todos.map(todo => ({
@@ -106,7 +130,7 @@ const TodoApp = () => {
         <>
           <Checkbox
             checked={todo.isChecked}
-            onChange={(e) => handleCheckboxChange(e, todo.id)} 
+            onChange={(e) => handleCheckboxChange(e, todo.id)}
             size="medium"
             color="primary"
           />
@@ -115,8 +139,19 @@ const TodoApp = () => {
       ),
       col2: todo.status,
       col3: todo.start_date,
-      col4: todo.end_date,
-      col5: todo.diff_time,
+      col4: (
+        <>
+          {  todo.isChecked ? formattedDate : ''}
+        </>
+
+      ),
+      col5: (
+        <>
+          {
+           todo.isChecked ? calculateTimeDifference(todo.start_date, formattedDate) : ''
+          }        </>
+
+      ),
       col6: todo.lastchange,
       col7: todo.lastchange_by,
       col8: todo.created,
@@ -136,6 +171,8 @@ const TodoApp = () => {
     })),
     [todos]
   );
+
+
 
   const columns = React.useMemo(
     () => [
@@ -241,6 +278,7 @@ const TodoApp = () => {
 
   return (
     <>
+
       <ModuleUpdate
         updateTodo={updateTodo}
         editTodo={editTodo}
@@ -294,7 +332,7 @@ const TodoApp = () => {
               </thead>
               <tbody {...getTableBodyProps()}>
                 {rows.map(row => {
-                   const isSelected = row.original.id === selectedRowId;
+                  const isSelected = row.original.id === selectedRowId;
                   prepareRow(row);
 
                   return (
@@ -312,18 +350,14 @@ const TodoApp = () => {
                             ...cell.column.cellStyle
                           }}
                           onClick={() => {
-                           
-                            const excludedAccessors = ['colCheck', 'col11']; 
+
+                            const excludedAccessors = ['colCheck', 'col11'];
 
                             if (!excludedAccessors.includes(cell.column.id)) {
                               handleCellClick(row.original.id);
                               console.log(row.original.id);
                             }
                             setSelectedRowId(row.original.id);
-                            console.log(index);
-                            
-
-
                           }}
                         >
                           {cell.render('Cell')}
