@@ -17,11 +17,7 @@ const RotatableArrow = styled(HiArrowDown)(({ theme, rotate }) => ({
 
 const Debug = ({ open }) => {
   const { data } = useLoginStore();
-
-
   const client = data["data"]["user"][0];
-
-
   const [count, setCount] = useState(client.login_timeout || 0);
   const navigate = useNavigate();
 
@@ -72,7 +68,7 @@ const Debug = ({ open }) => {
   }, [client.login_timeout]);
 
   const handleMouseMove = () => {
-    setCount(prevCount => client.login_timeout);
+    setCount(client.login_timeout);
   };
 
   useEffect(() => {
@@ -85,46 +81,39 @@ const Debug = ({ open }) => {
 
   if (count === 1) {
     navigate('/');
-    // Визвати метод логаут, щоб повністю вийти
+    // Викликати метод логауту, щоб повністю вийти
   }
 
-  console.log(
-    Object.entries(client).forEach(([Key, Value]) => {
-      // if (Key === 'gui_config') {
-      //   console.log(`${Key} : `);
-      //   const allValue = JSON.parse(Value);
-    
-      //   Object.entries(allValue).forEach(([SubKey, SubValue]) => {
-      //     console.log(`${SubKey} : `);
-    
-      //     if (typeof SubValue === 'object') {
-      //       console.log(JSON.stringify(SubValue, null, 2)); // Pretty print the object
-      //     } else {
-      //       console.log(`${SubKey} : ${SubValue}`);
-      //     }
-      //   });
-      // }
-    
-      if (Key === 'footer') {
-        console.log(`${Key} : `);
-        const allValue = JSON.parse(Value);
-    
-        Object.entries(allValue).forEach(([SubKey, SubValue]) => {
-          console.log(`${SubKey} : `);
-    
-          if (typeof SubValue === 'object') {
-            console.log(JSON.stringify(SubValue, null, 2)); // Pretty print the object
+  const list = () => {
+    const result = [];
+
+    Object.entries(client).forEach(([key, value]) => {
+      if (key === 'gui_config' || key === 'footer') {
+        const allValue = JSON.parse(value);
+        Object.entries(allValue).forEach(([subKey, subValue]) => {
+          if (typeof subValue === 'object' && subValue !== null) {
+            result.push(
+              <Typography key={subKey}>
+                <strong>{subKey}:</strong> {JSON.stringify(subValue, null, 2)}
+              </Typography>
+            );
           } else {
-            console.log(`${SubKey} : ${SubValue}`);
+            result.push(
+              <Typography key={subKey}>
+                <strong>{subKey}:</strong> {subValue}
+              </Typography>
+            );
           }
         });
+      } else if (key !== 'client_footer') {
+        result.push(
+          <in>{`{Key} : ${value}`}</in>
+        );
       }
+    });
 
-      if (Key !== 'footer' && Key !== 'client_footer' && Key !== 'gui_config') {
-        console.log(`${Key} : ${Value}`);
-      }
-    })
-  );
+    return result;
+  };
 
   return (
     <>
@@ -133,7 +122,7 @@ const Debug = ({ open }) => {
           ? (
             <>
               <Alert severity="warning" sx={{ width: '86%', marginLeft: '256px', position: "fixed", top: '80px' }}>
-                Ваш час сесіїї закінчується !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                Ваш час сесії закінчується!
               </Alert>
               <Box sx={{ ...styleButton }}>
                 <Grid container spacing={2} sx={{ color: '#ffffff', marginLeft: "259px" }}>
@@ -157,7 +146,7 @@ const Debug = ({ open }) => {
                       anchorReference="anchorPosition"
                     >
                       <Box sx={{ p: 2, marginBottom: '50px' }}>
-                        <Typography>timeout : {count} </Typography>
+                        <Typography>timeout : {count}</Typography>
                         <Typography>refresh time: {client["page_refresh_time"]}</Typography>
                         <Typography>display name : {client["display_name"]}</Typography>
                       </Box>
@@ -214,9 +203,8 @@ const Debug = ({ open }) => {
                     anchorReference="anchorPosition"
                   >
                     <Box sx={{ p: 2 }}>
-                      <Typography>timeout : {count} </Typography>
+                      <Typography>timeout : {count}</Typography>
                       <Typography>refresh time: {client["page_refresh_time"]}</Typography>
-
                     </Box>
                   </Popover>
                 </Grid>
@@ -265,7 +253,7 @@ const Debug = ({ open }) => {
                     anchorReference="anchorPosition"
                   >
                     <Box sx={{ p: 2 }}>
-
+                      {list()} {/* Виклик функції list */}
                     </Box>
                   </Popover>
                 </Grid>
