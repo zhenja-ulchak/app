@@ -25,26 +25,24 @@ const TodoApp = () => {
   const [visibleAddOpen, setAddVisibleOpen] = useState(false);
   const [color, setColor] = useState(false)
   const [selectedRowId, setSelectedRowId] = useState(null);
-  const [currentDate, setCurrentDate] = useState(new Date());
-  const Year = currentDate.getFullYear();
-  const Day = currentDate.getDate();  // День місяця
-  const Month = currentDate.getMonth() + 1;  // Місяць (додаємо 1)
-  const Hours = currentDate.getHours(); // Години
-  const Minutes = currentDate.getMinutes(); // Хвилини
-  const Seconds = currentDate.getSeconds(); // Секунди
 
+  const currentDate = new Date();
+
+  const Year = currentDate.getFullYear();
+  const Day = String(currentDate.getDate()).padStart(2, '0');  // День місяця
+  const Month = String(currentDate.getMonth() + 1).padStart(2, '0');  // Місяць (додаємо 1)
+  const Hours = String(currentDate.getHours()).padStart(2, '0'); // Години
+  const Minutes = String(currentDate.getMinutes()).padStart(2, '0'); // Хвилини
+  const Seconds = String(currentDate.getSeconds()).padStart(2, '0'); // Секунди
+  
   const formattedDate = `${Year}-${Month}-${Day} ${Hours}:${Minutes}:${Seconds}`;
   console.log(formattedDate);
 
   const navigate = useNavigate();
   const menuRef = useRef(null);
 
-
-
-
-
   const [visibleColumns, setVisibleColumns] = useState([
-    'col1', 'colNumber', 'colCheck', 'col2', 'col3', 'col4', 'col11'
+    'col1', 'colNumber', 'colCheck', 'col2', 'col3', 'col4', 'col5', 'col11'
   ]);
 
   const wBox = {
@@ -105,7 +103,7 @@ const TodoApp = () => {
     const updatedTodos = todos.map(todo =>
       todo.id === id ? { ...todo, isChecked: event.target.checked } : todo
     );
-    await updateToDoList(id, { end_date: formattedDate});
+    await updateToDoList(id, { end_date: formattedDate });
 
 
     setColor(true)
@@ -113,26 +111,45 @@ const TodoApp = () => {
   };
 
 
-  
-  const calculateTimeDifference =  (startDate, endDate , id) => {
+
+  const calculateTimeDifference = (startDate, endDate, id) => {
     const start = new Date(startDate);
     const end = new Date(endDate);
     const differenceInMilliseconds = end.getTime() - start.getTime();
     const differenceInSeconds = Math.floor(differenceInMilliseconds / 1000);
-    const days = Math.floor(differenceInSeconds / (24 * 3600));
-    const hours = Math.floor((differenceInSeconds % (24 * 3600)) / 3600);
-    const minutes = Math.floor((differenceInSeconds % 3600) / 60);
-    const seconds = differenceInSeconds % 60;
-    const allTime = `${days} days ${hours}:${minutes}:${seconds}`
   
-    const allDiff = async ()=>{
-      await updateToDoList(id, { diff_time: allTime});  
+    const days = Math.floor(differenceInSeconds / (24 * 3600));
+    const hours = String(Math.floor((differenceInSeconds % (24 * 3600)) / 3600)).padStart(2, '0');
+    const minutes = String(Math.floor((differenceInSeconds % 3600) / 60)).padStart(2, '0');
+    const seconds = String(differenceInSeconds % 60).padStart(2, '0');
+
+    console.log(differenceInMilliseconds);
+    const allDiff = async () => {
+      await updateToDoList(id, { diff_time: differenceInMilliseconds });
     }
     allDiff()
-    return allTime;
+    return `${days} day ${hours}:${minutes}:${seconds}`;
   };
 
- 
+  const diffTime = (time) => {
+    const milliseconds = time;
+    // Перетворення мілісекунд у секунди
+    const totalSeconds = Math.floor(milliseconds / 1000);
+    // Визначення кількості днів
+    const days = Math.floor(totalSeconds / 86400); // 86400 секунд в одному дні
+    // Визначення кількості годин
+    const hours = Math.floor((totalSeconds % 86400) / 3600);
+    // Визначення кількості хвилин
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    // Визначення кількості секунд
+    const seconds = totalSeconds % 60;
+    // Форматування часу у вигляді "дні:години:хвилини:секунди"
+    const formattedTime = `${days} day ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    console.log(formattedTime);
+    // Виведе: "2 дні(в) 03:42:05"
+    return formattedTime
+
+  }
 
   const data = React.useMemo(
     () => todos.map(todo => ({
@@ -154,16 +171,16 @@ const TodoApp = () => {
       col3: todo.start_date,
       col4: (
         <>
-          {  todo.isChecked ? formattedDate : todo.end_date}
+          {todo.isChecked ? formattedDate : todo.end_date}
         </>
 
       ),
       col5: (
         <>
           {
-           todo.isChecked ? calculateTimeDifference(todo.start_date, formattedDate, todo.id) : ''
-          }       
-           </>
+            todo.isChecked ? calculateTimeDifference(todo.start_date, formattedDate, todo.id) : diffTime(todo.diff_time)
+          }
+        </>
 
       ),
       col6: todo.lastchange,
