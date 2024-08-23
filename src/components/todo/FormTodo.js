@@ -104,8 +104,6 @@ const TodoApp = () => {
       todo.id === id ? { ...todo, isChecked: event.target.checked } : todo
     );
     await updateToDoList(id, { end_date: formattedDate });
-
-
     setColor(true)
     setTodos(updatedTodos);
   };
@@ -169,20 +167,8 @@ const TodoApp = () => {
       ),
       col2: todo.status,
       col3: todo.start_date,
-      col4: (
-        <>
-          {todo.isChecked ? formattedDate : todo.end_date}
-        </>
-
-      ),
-      col5: (
-        <>
-          {
-            todo.isChecked ? calculateTimeDifference(todo.start_date, formattedDate, todo.id) : diffTime(todo.diff_time)
-          }
-        </>
-
-      ),
+      col4: todo.isChecked ? formattedDate : todo.end_date,
+      col5: todo.isChecked ? calculateTimeDifference(todo.start_date, formattedDate, todo.id) : diffTime(todo.diff_time),
       col6: todo.lastchange,
       col7: todo.lastchange_by,
       col8: todo.created,
