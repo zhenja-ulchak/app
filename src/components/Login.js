@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 
-
+import Auth2FAPage from '../components/2fAuth/FAuth'
 import { useAuth } from '../AuthProvaider';
 import { TextField, Button, Container, Typography, Box } from '@mui/material';
 
 
 const Login = () => {
-
+  const [open, setOpen] = useState(false)
   const { login } = useAuth();
   const [email, setEmail] = useState('INDYN\\tester');
   const [password, setPassword] = useState('1234');
@@ -23,6 +23,9 @@ const Login = () => {
 
   return (
     <Container maxWidth="sm">
+     {  open && 
+      ( <Auth2FAPage />)
+     }
       <Box
         display="flex"
         flexDirection="column"
@@ -63,6 +66,16 @@ const Login = () => {
             style={{ marginTop: '16px' }}
           >
             Login
+          </Button>
+          <Button
+          onClick={()=> setOpen(true)}
+          type="submit"
+          variant="contained"
+          color="primary"
+          fullWidth
+          style={{ marginTop: '16px' }}
+          >
+            2FA
           </Button>
         </form>
       </Box>
