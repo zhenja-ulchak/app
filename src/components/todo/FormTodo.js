@@ -2,12 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import { fetchTodos, createToDoList, updateToDoList, deleteToDoList } from '../../api/ToDoApiProvaider';
 import {
   Grid, Button, Box, IconButton, Checkbox
-
 } from '@mui/material';
-
 import EditIcon from '@mui/icons-material/Edit';
 import { useTable } from 'react-table';
-
 import { useNavigate } from 'react-router-dom';
 import { FaRegEye } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa6";
@@ -23,24 +20,12 @@ const TodoApp = () => {
   const [punch, setPunch] = useState(false);
   const [visibleOpen, setVisibleOpen] = useState(false);
   const [visibleAddOpen, setAddVisibleOpen] = useState(false);
-  const [color, setColor] = useState(false)
+  const [color, setColor] = useState(false);
   const [selectedRowId, setSelectedRowId] = useState(null);
-
-  const currentDate = new Date();
-
-  const Year = currentDate.getFullYear();
-  const Day = String(currentDate.getDate()).padStart(2, '0');  // День місяця
-  const Month = String(currentDate.getMonth() + 1).padStart(2, '0');  // Місяць (додаємо 1)
-  const Hours = String(currentDate.getHours()).padStart(2, '0'); // Години
-  const Minutes = String(currentDate.getMinutes()).padStart(2, '0'); // Хвилини
-  const Seconds = String(currentDate.getSeconds()).padStart(2, '0'); // Секунди
-  
-  const formattedDate = `${Year}-${Month}-${Day} ${Hours}:${Minutes}:${Seconds}`;
-  console.log(formattedDate);
 
   const navigate = useNavigate();
   const menuRef = useRef(null);
-
+  const isProcessingRef = useRef(false);
   const [visibleColumns, setVisibleColumns] = useState([
     'col1', 'colNumber', 'colCheck', 'col2', 'col3', 'col4', 'col5', 'col11'
   ]);
@@ -60,12 +45,20 @@ const TodoApp = () => {
     loadTodos();
   }, [punch, updateTodo]);
 
+  const getFormattedDate = () => {
+    const currentDate = new Date();
+    const Year = currentDate.getFullYear();
+    const Day = String(currentDate.getDate()).padStart(2, '0');
+    const Month = String(currentDate.getMonth() + 1).padStart(2, '0');
+    const Hours = String(currentDate.getHours()).padStart(2, '0');
+    const Minutes = String(currentDate.getMinutes()).padStart(2, '0');
+    const Seconds = String(currentDate.getSeconds()).padStart(2, '0');
+    return `${Year}-${Month}-${Day} ${Hours}:${Minutes}:${Seconds}`;
+  };
 
   const addTodo = async () => {
     const addedTodo = await createToDoList({ task: `${newTodo}` });
     setTodos([...todos, addedTodo]);
-    console.log(addedTodo);
-
     setNewTodo('');
   };
 
@@ -74,7 +67,7 @@ const TodoApp = () => {
       id: todo.id,
       task: todo.text,
     });
-    setUpdateTodo(true)
+    setUpdateTodo(true);
   };
 
   const handleUpdate = async () => {
@@ -85,9 +78,7 @@ const TodoApp = () => {
         todo.id === id ? updatedTodo : todo
       ));
       setEditTodo({ id: null, task: '' });
-      setUpdateTodo(false)
-
-
+      setUpdateTodo(false);
     } catch (error) {
       console.error("Failed to update todo:", error);
     }
@@ -98,56 +89,55 @@ const TodoApp = () => {
     await deleteToDoList(id);
     setTodos(todos.filter(todo => todo.id !== id));
   };
+
   const handleCheckboxChange = async (event, id) => {
-    // Логіка для зміни стану вибору чекбокса
-    const updatedTodos = todos.map(todo =>
-      todo.id === id ? { ...todo, isChecked: event.target.checked } : todo
-    );
-    await updateToDoList(id, { end_date: formattedDate });
-    setColor(true)
-    setTodos(updatedTodos);
+    const isChecked = event.target.checked;
+    const newEndDate = isChecked ? getFormattedDate() : null;
+    
+    // Знайти індекс елемента в масиві за його id
+    const index = todos.findIndex(todo => todo.id === id);
+    
+    if (index !== -1) {
+      // Клонування масиву і оновлення потрібного елемента
+      const updatedTodo = { ...todos[index], isChecked, end_date: newEndDate };
+      
+      // Оновити лише цей елемент на сервері
+      await updateToDoList(id, { end_date: newEndDate });
+      
+      // Створити новий масив з оновленим елементом
+      const updatedTodos = [
+        ...todos.slice(0, index),
+        updatedTodo,
+        ...todos.slice(index + 1)
+      ];
+      
+      setTodos(updatedTodos);
+      console.log(updatedTodos);
+    }
   };
-
-
 
   const calculateTimeDifference = (startDate, endDate, id) => {
     const start = new Date(startDate);
     const end = new Date(endDate);
     const differenceInMilliseconds = end.getTime() - start.getTime();
     const differenceInSeconds = Math.floor(differenceInMilliseconds / 1000);
-  
+
     const days = Math.floor(differenceInSeconds / (24 * 3600));
     const hours = String(Math.floor((differenceInSeconds % (24 * 3600)) / 3600)).padStart(2, '0');
     const minutes = String(Math.floor((differenceInSeconds % 3600) / 60)).padStart(2, '0');
     const seconds = String(differenceInSeconds % 60).padStart(2, '0');
 
-    console.log(differenceInMilliseconds);
-    const allDiff = async () => {
-      await updateToDoList(id, { diff_time: differenceInMilliseconds });
-    }
-    allDiff()
     return `${days} day ${hours}:${minutes}:${seconds}`;
   };
 
   const diffTime = (time) => {
-    const milliseconds = time;
-    // Перетворення мілісекунд у секунди
-    const totalSeconds = Math.floor(milliseconds / 1000);
-    // Визначення кількості днів
-    const days = Math.floor(totalSeconds / 86400); // 86400 секунд в одному дні
-    // Визначення кількості годин
+    const totalSeconds = Math.floor(time / 1000);
+    const days = Math.floor(totalSeconds / 86400);
     const hours = Math.floor((totalSeconds % 86400) / 3600);
-    // Визначення кількості хвилин
     const minutes = Math.floor((totalSeconds % 3600) / 60);
-    // Визначення кількості секунд
     const seconds = totalSeconds % 60;
-    // Форматування часу у вигляді "дні:години:хвилини:секунди"
-    const formattedTime = `${days} day ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-    console.log(formattedTime);
-    // Виведе: "2 дні(в) 03:42:05"
-    return formattedTime
-
-  }
+    return `${days} day ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  };
 
   const data = React.useMemo(
     () => todos.map(todo => ({
@@ -163,33 +153,28 @@ const TodoApp = () => {
             color="primary"
           />
         </>
-
       ),
       col2: todo.status,
       col3: todo.start_date,
-      col4: todo.isChecked ? formattedDate : todo.end_date,
-      col5: todo.isChecked ? calculateTimeDifference(todo.start_date, formattedDate, todo.id) : diffTime(todo.diff_time),
+      col4: todo.isChecked ? getFormattedDate() : todo.end_date,
+      col5: todo.isChecked ? calculateTimeDifference(todo.start_date, getFormattedDate(), todo.id) : diffTime(todo.diff_time),
       col6: todo.lastchange,
       col7: todo.lastchange_by,
       col8: todo.created,
       col9: todo.created_by,
-
       col11: (
         <>
           <IconButton edge="end" aria-label="edit" onClick={() => {
-            handleEditClick(todo)
-            setUpdateTodo(true)
+            handleEditClick(todo);
+            setUpdateTodo(true);
           }}>
             <EditIcon />
           </IconButton>
-
         </>
       ),
     })),
     [todos]
   );
-
-
 
   const columns = React.useMemo(
     () => [
@@ -237,7 +222,6 @@ const TodoApp = () => {
         Header: 'Created by',
         accessor: 'col9',
       },
-
       {
         Header: 'Actions',
         accessor: 'col11',
@@ -247,6 +231,7 @@ const TodoApp = () => {
     ],
     []
   );
+
   const filteredColumns = React.useMemo(
     () => columns.filter(column => visibleColumns.includes(column.accessor)),
     [visibleColumns, columns]
@@ -263,12 +248,10 @@ const TodoApp = () => {
   const handleCellClick = (todoId) => {
     if (todoId) {
       navigate(`/details/${todoId}`);
-
     } else {
       console.error("Todo ID is undefined");
     }
-
-  }
+  };
 
   const handleToggleColumn = (columnId) => {
     setVisibleColumns((prev) =>
@@ -281,8 +264,8 @@ const TodoApp = () => {
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setVisibleOpen(false); // Закриваємо меню
-        setUpdateTodo(false)
+        setVisibleOpen(false);
+        setUpdateTodo(false);
         setAddVisibleOpen(false);
       }
     };
@@ -295,7 +278,6 @@ const TodoApp = () => {
 
   return (
     <>
-
       <ModuleUpdate
         updateTodo={updateTodo}
         editTodo={editTodo}
@@ -314,15 +296,14 @@ const TodoApp = () => {
               onClick={() => setAddVisibleOpen(!visibleOpen)}>
               <FaPlus size={30} />
             </Button>
-
-            < ModalAdd
+            <ModalAdd
               visibleAddOpen={visibleAddOpen}
               setNewTodo={setNewTodo}
               setAddVisibleOpen={setAddVisibleOpen}
               menuRef={menuRef}
               newTodo={newTodo}
-              addTodo={addTodo} />
-
+              addTodo={addTodo}
+            />
           </Box>
         </Grid>
         <Grid item xs={12}>
@@ -354,7 +335,7 @@ const TodoApp = () => {
 
                   return (
                     <tr {...row.getRowProps()}>
-                      {row.cells.map((cell, index) => (
+                      {row.cells.map((cell) => (
                         <td
                           {...cell.getCellProps()}
                           style={{
@@ -367,12 +348,10 @@ const TodoApp = () => {
                             ...cell.column.cellStyle
                           }}
                           onClick={() => {
-
                             const excludedAccessors = ['colCheck', 'col11'];
 
                             if (!excludedAccessors.includes(cell.column.id)) {
                               handleCellClick(row.original.id);
-                              console.log(row.original.id);
                             }
                             setSelectedRowId(row.original.id);
                           }}
@@ -387,12 +366,7 @@ const TodoApp = () => {
             </table>
           </div>
         </Grid>
-
       </Grid>
-
-
-
-
     </>
   );
 };
