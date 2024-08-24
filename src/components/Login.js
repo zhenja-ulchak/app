@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import Auth2FAPage from '../components/2fAuth/FAuth'
+import Auth2FAPage from './2fAuth/TwoFAuth'
 import { useAuth } from '../AuthProvaider';
 import { TextField, Button, Container, Typography, Box } from '@mui/material';
 
@@ -8,7 +8,7 @@ import { TextField, Button, Container, Typography, Box } from '@mui/material';
 const Login = () => {
   const [open, setOpen] = useState(false)
   const { login } = useAuth();
-  const [email, setEmail] = useState('INDYN\\tester');
+  const [email, setEmail] = useState('INDYN\\demo-testa');
   const [password, setPassword] = useState('1234');
   const [error, setError] = useState('');
   const handleLogin = async (e) => {
