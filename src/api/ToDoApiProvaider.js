@@ -42,9 +42,10 @@ export const createToDoList = async (todoList) => {
 
 }
 
+// зєднати 2 метода в один 
 export const fetchTodoById = async (id) => {
   try {
-    const response = await client.get(`/user/customer/${id}/contract_status`);
+    const response = await client.get(`/user/customer_todo/${id}`);
     return response.data;
   } catch (error) {
     console.error("Error fetching todo by ID:", error);
