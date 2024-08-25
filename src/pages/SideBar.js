@@ -14,7 +14,7 @@ import { Link } from 'react-router-dom';
 import SideBarList from '../components/SideBarList'
 import { Button } from '@mui/material';
 
-const SideBar = ({ setActiveTodoDashboard, setActiveTodoApp, setActiveToDoTable, setUsers }) => {
+const SideBar = () => {
   const drawerWidth = 240;
   const { t } = useTranslation();
   return (
@@ -56,9 +56,7 @@ const SideBar = ({ setActiveTodoDashboard, setActiveTodoApp, setActiveToDoTable,
 
         />
         <Divider />
-        <SideBarList
-         
-        />
+        <SideBarList/>
         <Divider />
 
       </Drawer>
