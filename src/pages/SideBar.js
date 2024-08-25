@@ -57,10 +57,7 @@ const SideBar = ({ setActiveTodoDashboard, setActiveTodoApp, setActiveToDoTable,
         />
         <Divider />
         <SideBarList
-          setActiveTodoApp={setActiveTodoApp}
-          setActiveToDoTable={setActiveToDoTable}
-          setActiveTodoDashboard={setActiveTodoDashboard}
-          setUsers={setUsers}
+         
         />
         <Divider />
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import TodoDashboard from './ToDo'
-import Logout from '../components/Logout';
+
 import SideBar from './SideBar'
 import { Users } from './Users'
 import DashApp from './Dashboard'
@@ -15,41 +15,23 @@ const Home = () => {
   const [activeTodoDashboard, setActiveTodoDashboard] = useState(false)
   const [activeTodoApp, setActiveTodoApp] = useState(true)
   const [activeUsers, setUsers] = useState(false)
-  const openDashboard = {
-    display: activeTodoDashboard ? 'display' : 'none',
-  }
-  const openTodoApp = {
-    display: activeTodoApp ? 'display' : 'none',
-  }
-  const openUsers = {
-    display: activeUsers ? 'display' : 'none',
-  }
-  const openToDoTable = {
 
-    display: activeToDoTable ? 'display' : 'none',
-  }
   const isOpen = useDebugStore((state) => state.isOpen); // Отримуємо стан
   return (
     <>
-      <Logout />
-
-      <SideBar
-        setActiveTodoDashboard={setActiveTodoDashboard}
-        setActiveTodoApp={setActiveTodoApp}
-        setActiveToDoTable={setActiveToDoTable}
-        setUsers={setUsers}
-      />
-      <Container sx={{ ...openToDoTable }}>
+     
+   
+      <Container>
         <ToDoTable />
       </Container>
-      <Box sx={{ ...openDashboard }}>
-        <TodoDashboard activeTodoDashboard={activeTodoDashboard} />
+      <Box >
+        <TodoDashboard  />
       </Box>
-      <Container sx={{ ...openTodoApp }}>
-        <DashApp activeTodoApp={activeTodoApp} />
+      <Container >
+        <DashApp  />
       </Container>
-      <Container sx={{ ...openUsers }}>
-        <Users activeUsers={activeUsers} />
+      <Container>
+        <Users  />
       </Container>
 
       <Debug open={isOpen} />
