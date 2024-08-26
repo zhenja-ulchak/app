@@ -307,7 +307,7 @@ const TodoApp = () => {
           </Box>
         </Grid>
         <Grid item xs={12}>
-          <div style={{ maxHeight: '500px', overflowY: 'auto', overflowX: 'auto', marginTop: '20px', marginLeft: '20%' }}>
+          <div style={{ maxHeight: '620px', overflowY: 'auto', overflowX: 'auto', marginTop: '100px' }}>
             <table {...getTableProps()} style={{ marginTop: '20px' }}>
               <thead>
                 {headerGroups.map(headerGroup => (

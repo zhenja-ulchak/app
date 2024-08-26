@@ -26,6 +26,16 @@ const ToDoDetails = () => {
     loadTodoDetails();
   }, [id]);
 
+  const diffTime = () => {
+    const totalSeconds = Math.floor(todo.diff_time / 1000);
+    const days = Math.floor(totalSeconds / 86400);
+    const hours = Math.floor((totalSeconds % 86400) / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+    return `${days} day ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  };
+
+
   if (!todo) {
     return <div>Loading...</div>; // Показуємо "завантаження", поки дані не отримані
   }
@@ -34,47 +44,62 @@ const ToDoDetails = () => {
     <>
 
 
-      <Container component="main" sx={{ marginTop: '100px' }}>
-        <Button
-          component={Link}
-          to="/todo"
-          sx={{ color: '#000000' }}
-        >
-          <FaArrowLeft size={30} />
-        </Button>
-        <Paper elevation={3} sx={{ padding: 5 }}>
-          <Typography variant="h4" gutterBottom>
-            Todo Details
-          </Typography>
-          <Box sx={{ marginBottom: 2, }}>
+
+      <Button
+        component={Link}
+        to="/todo"
+        sx={{ color: '#000000' }}
+      >
+        <FaArrowLeft size={30} />
+      </Button>
+      <Paper elevation={3} sx={{ padding: 5, width: '100%', height: '80vh' }}>
+        <Typography variant="h4" gutterBottom>
+          Todo Details
+          <Typography sx={{ float: 'right' }} variant="h4" gutterBottom>
+          {diffTime()}
+        </Typography>
+        </Typography>
+
+       
+        <Box sx={{marginBottom:'10px' }}>
+          <Paper elevation={2} sx={{ padding: 2, marginBottom:'10px'  }}>
             <Typography variant="h6" component="div">
               <strong>ID:</strong> {todo.id}
             </Typography>
+          </Paper>
+          <Paper elevation={2} sx={{ padding: 2 , marginBottom:'10px'}}>
             <Typography variant="h6" component="div">
               <strong>Task:</strong> {todo.task}
             </Typography>
+          </Paper>
+          <Paper elevation={2} sx={{ padding: 2 , marginBottom:'10px'}}>
             <Typography variant="h6" component="div">
               <strong>Status:</strong> {todo.status}
             </Typography>
+          </Paper>
+          <Paper elevation={2} sx={{ padding: 2 , marginBottom:'10px'}}>
             <Typography variant="h6" component="div">
               <strong>Start Date:</strong> {todo.start_date}
             </Typography>
+          </Paper>
+          <Paper elevation={2} sx={{ padding: 2 , marginBottom:'10px'}}>
             <Typography variant="h6" component="div">
               <strong>End Date:</strong> {todo.end_date}
             </Typography>
+          </Paper>
+        </Box>
 
-          </Box>
-          <Box sx={{ float: 'right' }}>
-            <Button variant="contained" color="primary">
-              start
-            </Button>
+        <Box sx={{ float: 'right' }}>
+          <Button sx={{ margin: '10px' }} variant="contained" color="primary">
+            start
+          </Button>
 
-            <Button variant="contained" color="primary">
-              end
-            </Button>
-          </Box>
-        </Paper>
-      </Container></>
+          <Button sx={{ margin: '10px' }} variant="contained" color="primary">
+            end
+          </Button>
+        </Box>
+      </Paper>
+    </>
   );
 };
 

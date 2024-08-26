@@ -13,37 +13,53 @@ import SettingPage from './pages/Settings';
 import ToDoDetails from './components/todo/Details';
 import SideBar from './pages/SideBar';
 import FormTodo from './components/todo/FormTodo'
-import { Grid, Container } from '@mui/material';
+import { Grid, Container, Box } from '@mui/material';
 
 const AppContent = () => {
   const location = useLocation();
-  
+
   // Перелік маршрутів, на яких не потрібно відображати SideBar
   const hideSideBarRoutes = ['/register', '/login'];
 
   return (
-    <Container maxWidth="lg">
-      <Grid container>
-        {!hideSideBarRoutes.includes(location.pathname) && (
-          <Grid item xs={12} sm={3}>
-            <SideBar />
-          </Grid>
-        )}
-        <Grid item xs={12} sm={hideSideBarRoutes.includes(location.pathname) ? 12 : 9}>
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/todo" element={<FormTodo />} />
-            <Route path="/" element={<Login />} />
-            <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
-            <Route path="/setting" element={<SettingPage />} />
-            <Route path="/details/:id" element={<ToDoDetails />} />
-            <Route path="/dashboard" element={<DashApp />} />
-            <Route path="/tools" element={<Tools />} />
-            <Route path="/users" element={<Users />} />
-          </Routes>
-        </Grid>
-      </Grid>
+    <Container
+      sx={{
+        maxWidth: '100%',
+        '@media (min-width: 1200px)': {
+          maxWidth: '1670px',
+          marginLeft:'13%'
+        },
+      }}>
+
+      {!hideSideBarRoutes.includes(location.pathname) && (
+
+        <SideBar />
+
+      )}
+
+      <Box 
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        minHeight: '100vh',
+      }}
+      >
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/todo" element={<FormTodo />} />
+          <Route path="/" element={<Login />} />
+          <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+          <Route path="/setting" element={<SettingPage />} />
+          <Route path="/details/:id" element={<ToDoDetails />} />
+          <Route path="/dashboard" element={<DashApp />} />
+          <Route path="/tools" element={<Tools />} />
+          <Route path="/users" element={<Users />} />
+        </Routes>
+      </Box>
+
+
     </Container>
   );
 };
