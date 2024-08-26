@@ -4,33 +4,36 @@ import { fetchTodoById } from '../../api/ToDoApiProvaider'; // Імпортуй�
 import { Container, Paper, Typography, Box, Button } from '@mui/material';
 import { FaArrowLeft } from "react-icons/fa";
 import { Link } from 'react-router-dom';
-import DiffTimeTask from './components/DiffTime'
+
+import { updateToDoList } from '../../api/ToDoApiProvaider';
+import useVisibleStore from '../../store/TaskStore'
+
 import GetFormattedDate from './components/GetFormattedDate'
 
+
 const ToDoDetails = () => {
+  const {setVisible} = useVisibleStore()
+  const {setId} = useVisibleStore()
   const { id } = useParams(); // Отримуємо параметр `id` з URL
   const [todo, setTodo] = useState(null); // Створюємо стан для зберігання завдання
-  
-  
-  
-  
-  
-  
-
-
-
-
-  const handleCheckboxChasnge = async (event, id) => {
-    const isChecked = event.target.checked;
-    const newEndDate = isChecked ? GetFormattedDate() : null;
+  const handleClickStart = async() => {
+    setVisible(true)
+    setId(todo.id)
+    console.log(GetFormattedDate());
+    const endTime = GetFormattedDate()
     
-    // Знайти індекс елемента в масиві за його id
-    
-    
+    await updateToDoList(id, { end_date: `${endTime}` });
+  }
+
+  const handleClick = async () => {
+    const start = new Date(todo.start_date);
+    const end = new Date(GetFormattedDate());
+    const differenceInMilliseconds = end.getTime() - start.getTime();
+
+    console.log(differenceInMilliseconds);
+    await updateToDoList(id, { diff_time: differenceInMilliseconds });
+
   };
-
-
-
 
 
   useEffect(() => {
@@ -72,49 +75,52 @@ const ToDoDetails = () => {
       <Paper elevation={3} sx={{ padding: 5, width: '100%', height: '80vh' }}>
         <Typography variant="h4" gutterBottom>
           Todo Details
-          <Typography sx={{ float: 'right' }} variant="h4" gutterBottom>
-          {DiffTimeTask()}
-        </Typography>
+
         </Typography>
 
-       
-        <Box sx={{marginBottom:'10px' }}>
-          <Paper elevation={2} sx={{ padding: 2, marginBottom:'10px'  }}>
+
+        <Box sx={{ marginBottom: '10px' }}>
+          <Paper elevation={2} sx={{ padding: 2, marginBottom: '10px' }}>
             <Typography variant="h6" component="div">
               <strong>ID:</strong> {todo.id}
             </Typography>
           </Paper>
-          <Paper elevation={2} sx={{ padding: 2 , marginBottom:'10px'}}>
+          <Paper elevation={2} sx={{ padding: 2, marginBottom: '10px' }}>
             <Typography variant="h6" component="div">
               <strong>Task:</strong> {todo.task}
             </Typography>
           </Paper>
-          <Paper elevation={2} sx={{ padding: 2 , marginBottom:'10px'}}>
+          <Paper elevation={2} sx={{ padding: 2, marginBottom: '10px' }}>
             <Typography variant="h6" component="div">
               <strong>Status:</strong> {todo.status}
             </Typography>
           </Paper>
-          <Paper elevation={2} sx={{ padding: 2 , marginBottom:'10px'}}>
+          <Paper elevation={2} sx={{ padding: 2, marginBottom: '10px' }}>
             <Typography variant="h6" component="div">
               <strong>Start Date:</strong> {todo.start_date}
             </Typography>
           </Paper>
-          <Paper elevation={2} sx={{ padding: 2 , marginBottom:'10px'}}>
+          <Paper elevation={2} sx={{ padding: 2, marginBottom: '10px' }}>
             <Typography variant="h6" component="div">
               <strong>End Date:</strong> {todo.end_date}
             </Typography>
           </Paper>
         </Box>
-      
+
         <Box sx={{ float: 'right' }}>
           <Button
-           sx={{ margin: '10px' }}
-            variant="contained" 
+            onClick={() => handleClickStart()}
+            sx={{ margin: '10px' }}
+            variant="contained"
             color="primary">
             start
           </Button>
 
-          <Button sx={{ margin: '10px' }} variant="contained" color="primary">
+          <Button
+            onClick={() => handleClick()}
+            sx={{ margin: '10px' }}
+            variant="contained"
+            color="primary">
             end
           </Button>
         </Box>
