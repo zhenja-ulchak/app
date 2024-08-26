@@ -11,6 +11,9 @@ import { FaPlus } from "react-icons/fa6";
 import ModalAdd from './components/ModalAddToDo'
 import ModuleUpdate from './components/ModalUpdateToDo'
 import ColumnTooltip from './components/AddColumnTooltip'
+import DiffTimeTask from './components/DiffTime'
+import CalculateTimeDifference from './components/CalculateDateTime'
+import GetFormattedDate from './components/GetFormattedDate'
 
 const TodoApp = () => {
   const [todos, setTodos] = useState([]);
@@ -45,16 +48,7 @@ const TodoApp = () => {
     loadTodos();
   }, [punch, updateTodo]);
 
-  const getFormattedDate = () => {
-    const currentDate = new Date();
-    const Year = currentDate.getFullYear();
-    const Day = String(currentDate.getDate()).padStart(2, '0');
-    const Month = String(currentDate.getMonth() + 1).padStart(2, '0');
-    const Hours = String(currentDate.getHours()).padStart(2, '0');
-    const Minutes = String(currentDate.getMinutes()).padStart(2, '0');
-    const Seconds = String(currentDate.getSeconds()).padStart(2, '0');
-    return `${Year}-${Month}-${Day} ${Hours}:${Minutes}:${Seconds}`;
-  };
+
 
   const addTodo = async () => {
     const addedTodo = await createToDoList({ task: `${newTodo}` });
@@ -90,33 +84,7 @@ const TodoApp = () => {
     setTodos(todos.filter(todo => todo.id !== id));
   };
 
-  const handleCheckboxChange = async (event, id) => {
-    const isChecked = event.target.checked;
-    const newEndDate = isChecked ? getFormattedDate() : null;
-    
-    // Знайти індекс елемента в масиві за його id
-    const index = todos.findIndex(todo => todo.id === id);
-    
-    if (index !== -1) {
-      // Клонування масиву і оновлення потрібного елемента
-      const updatedTodo = { ...todos[index], isChecked, end_date: newEndDate };
-      
-      // Оновити лише цей елемент на сервері
-      await updateToDoList(id, { end_date: newEndDate });
-      
-      // Створити новий масив з оновленим елементом
-      const updatedTodos = [
-        ...todos.slice(0, index),
-        updatedTodo,
-        ...todos.slice(index + 1)
-      ];
-      
-      setTodos(updatedTodos);
-      console.log(updatedTodos);
-    }
-  };
-
-  const calculateTimeDifference = (startDate, endDate, id) => {
+  const CalculateTimeDifference = (startDate, endDate, id) => {
     const start = new Date(startDate);
     const end = new Date(endDate);
     const differenceInMilliseconds = end.getTime() - start.getTime();
@@ -129,16 +97,6 @@ const TodoApp = () => {
 
     return `${days} day ${hours}:${minutes}:${seconds}`;
   };
-
-  const diffTime = (time) => {
-    const totalSeconds = Math.floor(time / 1000);
-    const days = Math.floor(totalSeconds / 86400);
-    const hours = Math.floor((totalSeconds % 86400) / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-    const seconds = totalSeconds % 60;
-    return `${days} day ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-  };
-
   const data = React.useMemo(
     () => todos.map(todo => ({
       id: todo.id,
@@ -146,18 +104,18 @@ const TodoApp = () => {
       colNumber: todo.number,
       colCheck: (
         <>
-          <Checkbox
+          {/* <Checkbox
             checked={todo.isChecked}
             onChange={(e) => handleCheckboxChange(e, todo.id)}
             size="medium"
             color="primary"
-          />
+          /> */}
         </>
       ),
       col2: todo.status,
       col3: todo.start_date,
-      col4: todo.isChecked ? getFormattedDate() : todo.end_date,
-      col5: todo.isChecked ? calculateTimeDifference(todo.start_date, getFormattedDate(), todo.id) : diffTime(todo.diff_time),
+      col4:true ? GetFormattedDate() : todo.end_date,
+      col5: true ? CalculateTimeDifference(todo.start_date, GetFormattedDate(), todo.id) : DiffTimeTask(todo.diff_time),
       col6: todo.lastchange,
       col7: todo.lastchange_by,
       col8: todo.created,

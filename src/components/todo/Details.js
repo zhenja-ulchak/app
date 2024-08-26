@@ -4,10 +4,34 @@ import { fetchTodoById } from '../../api/ToDoApiProvaider'; // Імпортуй�
 import { Container, Paper, Typography, Box, Button } from '@mui/material';
 import { FaArrowLeft } from "react-icons/fa";
 import { Link } from 'react-router-dom';
+import DiffTimeTask from './components/DiffTime'
+import GetFormattedDate from './components/GetFormattedDate'
 
 const ToDoDetails = () => {
   const { id } = useParams(); // Отримуємо параметр `id` з URL
   const [todo, setTodo] = useState(null); // Створюємо стан для зберігання завдання
+  
+  
+  
+  
+  
+  
+
+
+
+
+  const handleCheckboxChasnge = async (event, id) => {
+    const isChecked = event.target.checked;
+    const newEndDate = isChecked ? GetFormattedDate() : null;
+    
+    // Знайти індекс елемента в масиві за його id
+    
+    
+  };
+
+
+
+
 
   useEffect(() => {
     const loadTodoDetails = async () => {
@@ -26,14 +50,7 @@ const ToDoDetails = () => {
     loadTodoDetails();
   }, [id]);
 
-  const diffTime = () => {
-    const totalSeconds = Math.floor(todo.diff_time / 1000);
-    const days = Math.floor(totalSeconds / 86400);
-    const hours = Math.floor((totalSeconds % 86400) / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-    const seconds = totalSeconds % 60;
-    return `${days} day ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-  };
+
 
 
   if (!todo) {
@@ -56,7 +73,7 @@ const ToDoDetails = () => {
         <Typography variant="h4" gutterBottom>
           Todo Details
           <Typography sx={{ float: 'right' }} variant="h4" gutterBottom>
-          {diffTime()}
+          {DiffTimeTask()}
         </Typography>
         </Typography>
 
@@ -88,9 +105,12 @@ const ToDoDetails = () => {
             </Typography>
           </Paper>
         </Box>
-
+      
         <Box sx={{ float: 'right' }}>
-          <Button sx={{ margin: '10px' }} variant="contained" color="primary">
+          <Button
+           sx={{ margin: '10px' }}
+            variant="contained" 
+            color="primary">
             start
           </Button>
 
