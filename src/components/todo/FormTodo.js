@@ -247,7 +247,7 @@ const TodoApp = () => {
         setEditTodo={setEditTodo}
         handleUpdate={handleUpdate}
       />
-      <Grid container spacing={2}>
+      <Grid container spacing={2} sx={{marginTop :'40px'}}>
         <Grid item xs={12}>
           <Box sx={{ ...wBox }}>
             <Button style={{ float: 'right' }} onClick={() => setVisibleOpen(!visibleOpen)}>
