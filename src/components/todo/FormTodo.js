@@ -1,16 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { fetchTodos, createToDoList, updateToDoList, deleteToDoList } from '../../api/ToDoApiProvaider';
 import {
-  Grid, Button, Box, IconButton, Checkbox
+  Grid, Button, Box, IconButton, Select, MenuItem, Typography
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
-import { useTable } from 'react-table';
+import { useTable, usePagination } from 'react-table';
 import { useNavigate } from 'react-router-dom';
 import { FaRegEye } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa6";
 import { GiCheckMark } from "react-icons/gi";
 import { GrDocumentTime } from "react-icons/gr";
-import { TiDocument } from "react-icons/ti";
+import { styled } from '@mui/material/styles';
 import ModalAdd from './components/ModalAddToDo'
 import ModuleUpdate from './components/ModalUpdateToDo'
 import ColumnTooltip from './components/AddColumnTooltip'
@@ -26,13 +26,20 @@ const TodoApp = () => {
   const [visibleAddOpen, setAddVisibleOpen] = useState(false);
   const [color, setColor] = useState(false);
   const [selectedRowId, setSelectedRowId] = useState(null);
-  const {isVisible, idTask} = useVisibleStore()
+  const { isVisible, idTask } = useVisibleStore()
   const navigate = useNavigate();
   const menuRef = useRef(null);
   const isProcessingRef = useRef(false);
   const [visibleColumns, setVisibleColumns] = useState([
     'col1', 'colNumber', 'colCheck', 'col2', 'col3', 'col4', 'col5', 'col11'
   ]);
+
+  const StyledTableRow = styled('tr')({
+    transition: 'background-color 0.3s ease',
+    '&:hover': {
+      backgroundColor: '#f0f0f0', // Зміна фону при наведенні
+    },
+  });
 
   const wBox = {
     width: '87%',
@@ -86,7 +93,7 @@ const TodoApp = () => {
     const seconds = totalSeconds % 60;
     return `${days} day ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
   };
-    console.log(idTask);
+  console.log(idTask);
 
   const data = React.useMemo(
     () => todos.map(todo => ({
@@ -96,8 +103,8 @@ const TodoApp = () => {
       colCheck: (
         <>
 
-        { todo.diff_time  ?  <GiCheckMark /> :  <GrDocumentTime /> }
-        
+          {todo.diff_time ? <GiCheckMark /> : <GrDocumentTime />}
+
         </>
       ),
       col2: todo.status,
@@ -187,9 +194,18 @@ const TodoApp = () => {
     getTableProps,
     getTableBodyProps,
     headerGroups,
-    rows,
+    page, // Використовуйте замість rows для рендерингу поточної сторінки
     prepareRow,
-  } = useTable({ columns: filteredColumns, data });
+    canPreviousPage,
+    canNextPage,
+    pageOptions,
+    pageCount,
+    gotoPage,
+    nextPage,
+    previousPage,
+    setPageSize,
+    state: { pageIndex, pageSize },
+  } = useTable({ columns: filteredColumns, data, initialState: { pageSize: 5 } }, usePagination);
 
   const handleCellClick = (todoId) => {
     if (todoId) {
@@ -253,7 +269,7 @@ const TodoApp = () => {
           </Box>
         </Grid>
         <Grid item xs={12}>
-          <div style={{ maxHeight: '620px', overflowY: 'auto', overflowX: 'auto', marginTop: '100px' }}>
+          <div style={{ maxHeight: '620px', overflowY: 'auto', overflowX: 'auto' }}>
             <table {...getTableProps()} style={{ marginTop: '20px' }}>
               <thead>
                 {headerGroups.map(headerGroup => (
@@ -275,12 +291,12 @@ const TodoApp = () => {
                 ))}
               </thead>
               <tbody {...getTableBodyProps()}>
-                {rows.map(row => {
+                {page.map(row => {
                   const isSelected = row.original.id === selectedRowId;
                   prepareRow(row);
 
                   return (
-                    <tr {...row.getRowProps()}>
+                    <StyledTableRow {...row.getRowProps()}>
                       {row.cells.map((cell) => (
                         <td
                           {...cell.getCellProps()}
@@ -305,12 +321,67 @@ const TodoApp = () => {
                           {cell.render('Cell')}
                         </td>
                       ))}
-                    </tr>
+                    </StyledTableRow>
                   );
                 })}
               </tbody>
             </table>
+
           </div>
+          <Box display="flex" alignItems="center" sx={{ float: "right" }} mt={2}>
+            <Button
+              onClick={() => gotoPage(0)}
+              disabled={!canPreviousPage}
+              variant="contained"
+              size="small"
+            >
+              {'<<'}
+            </Button>
+            <Button
+              onClick={previousPage}
+              disabled={!canPreviousPage}
+              variant="contained"
+              size="small"
+              sx={{ mx: 1 }}
+            >
+              {'<'}
+            </Button>
+            <Button
+              onClick={nextPage}
+              disabled={!canNextPage}
+              variant="contained"
+              size="small"
+            >
+              {'>'}
+            </Button>
+            <Button
+              onClick={() => gotoPage(pageCount - 1)}
+              disabled={!canNextPage}
+              variant="contained"
+              size="small"
+              sx={{ mx: 1 }}
+            >
+              {'>>'}
+            </Button>
+            <Typography variant="body1" sx={{ mx: 2 }}>
+              Сторінка{' '}
+              <strong>
+                {pageIndex + 1} з {pageOptions.length}
+              </strong>
+            </Typography>
+            <Select
+              value={pageSize}
+              onChange={(e) => setPageSize(Number(e.target.value))}
+              size="small"
+              variant="outlined"
+            >
+              {[5, 10, 20, 50, 100].map((size) => (
+                <MenuItem key={size} value={size}>
+                  Показувати {size}
+                </MenuItem>
+              ))}
+            </Select>
+          </Box>
         </Grid>
       </Grid>
     </>

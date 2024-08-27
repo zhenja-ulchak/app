@@ -54,11 +54,11 @@ const SideBar = () => {
 
 
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              News
+              TASK
             </Typography>
 
             <Button
-              // sx={{ marginLeft: '15%', padding: '5px 40px', background: '#ffffff', color: '#000000' }}
+              sx={{  padding: '5px 40px', background: '#ffffff', color: '#000000' }}
               component={Link}
               to="/setting"
               variant="contained"
