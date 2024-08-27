@@ -22,14 +22,8 @@ const AppContent = () => {
   const hideSideBarRoutes = ['/register', '/login'];
 
   return (
-    <Container
-      sx={{
-        maxWidth: '100%',
-        '@media (min-width: 1200px)': {
-          maxWidth: '1670px',
-          marginLeft:'13%'
-        },
-      }}>
+
+    <>
 
       {!hideSideBarRoutes.includes(location.pathname) && (
 
@@ -37,13 +31,13 @@ const AppContent = () => {
 
       )}
 
-      <Box 
-      sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        minHeight: '100vh',
-      }}
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          minHeight: '100vh',
+        }}
       >
         <Routes>
           <Route path="/login" element={<Login />} />
@@ -58,9 +52,10 @@ const AppContent = () => {
           <Route path="/users" element={<Users />} />
         </Routes>
       </Box>
+    </>
 
 
-    </Container>
+
   );
 };
 

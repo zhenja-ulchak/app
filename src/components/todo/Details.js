@@ -43,7 +43,6 @@ const ToDoDetails = () => {
 
         const task = data.data["customer_todo"];
         console.log(task[0])
-
         setTodo(task[0]);
       } catch (error) {
         console.error("Error fetching todo details:", error);
