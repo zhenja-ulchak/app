@@ -24,7 +24,7 @@ const TodoApp = () => {
   const [punch, setPunch] = useState(false);
   const [visibleOpen, setVisibleOpen] = useState(false);
   const [visibleAddOpen, setAddVisibleOpen] = useState(false);
-  const [color, setColor] = useState(false);
+  const [colorId, setColorId] = useState(null);
   const [selectedRowId, setSelectedRowId] = useState(null);
   const { isVisible, idTask } = useVisibleStore()
   const navigate = useNavigate();
@@ -237,6 +237,14 @@ const TodoApp = () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [menuRef]);
+  useEffect(() => {
+    const storedId = localStorage.getItem('idColor');
+    setColorId(storedId);
+  }, []);
+
+
+
+
 
   return (
     <>
@@ -247,7 +255,7 @@ const TodoApp = () => {
         setEditTodo={setEditTodo}
         handleUpdate={handleUpdate}
       />
-      <Grid container spacing={2} sx={{marginTop :'40px'}}>
+      <Grid container spacing={2} sx={{ marginTop: '40px' }}>
         <Grid item xs={12}>
           <Box sx={{ ...wBox }}>
             <Button style={{ float: 'right' }} onClick={() => setVisibleOpen(!visibleOpen)}>
@@ -292,8 +300,11 @@ const TodoApp = () => {
               </thead>
               <tbody {...getTableBodyProps()}>
                 {page.map(row => {
-                  const isSelected = row.original.id === selectedRowId;
+                  const colorIdArray = JSON.parse(colorId);
+                  const isSelected = colorIdArray.some(id => row.original.id === id);
                   prepareRow(row);
+
+
 
                   return (
                     <StyledTableRow {...row.getRowProps()}>
@@ -310,7 +321,10 @@ const TodoApp = () => {
                             ...cell.column.cellStyle
                           }}
                           onClick={() => {
-                            const excludedAccessors = ['colCheck', 'col11'];
+
+
+
+                            const excludedAccessors = ['col11'];
 
                             if (!excludedAccessors.includes(cell.column.id)) {
                               handleCellClick(row.original.id);

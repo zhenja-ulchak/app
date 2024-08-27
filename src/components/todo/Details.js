@@ -13,13 +13,27 @@ import GetFormattedDate from './components/GetFormattedDate'
 
 const ToDoDetails = () => {
   const {setVisible} = useVisibleStore()
+  const [myArray, setMyArray] = useState([]);
   const {setId} = useVisibleStore()
   const { id } = useParams(); // Отримуємо параметр `id` з URL
   const [todo, setTodo] = useState(null); // Створюємо стан для зберігання завдання
   const handleClickStart = async() => {
     setVisible(true)
     setId(todo.id)
-    console.log(GetFormattedDate());
+
+    const storedArray = localStorage.getItem('idColor');
+    const myArray = storedArray ? JSON.parse(storedArray) : [];
+    
+    // Додаємо новий ID в масив
+    const updatedArray = [...myArray, todo.id];
+    setMyArray(updatedArray);
+  
+    // Оновлюємо localStorage
+    localStorage.setItem('idColor', JSON.stringify(updatedArray));
+
+
+
+
     const endTime = GetFormattedDate()
     
     await updateToDoList(id, { end_date: `${endTime}` });
@@ -71,7 +85,7 @@ const ToDoDetails = () => {
       >
         <FaArrowLeft size={30} />
       </Button>
-      <Paper elevation={3} sx={{ padding: 5, width: '100%', height: '80vh' }}>
+      <Paper elevation={3} sx={{ padding: 5, width: '100%', marginTop:'40px' }}>
         <Typography variant="h4" gutterBottom>
           Todo Details
 

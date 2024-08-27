@@ -19,7 +19,7 @@ const AppContent = () => {
   const location = useLocation();
 
   // Перелік маршрутів, на яких не потрібно відображати SideBar
-  const hideSideBarRoutes = ['/register', '/login'];
+  const hideSideBarRoutes = ['/register', '/login', '/'];
 
   return (
 
