@@ -5,81 +5,53 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
+import { Link } from 'react-router-dom';
+import Logout from '../components/Logout';
 
-
-const SideBarList = ({ setActiveTodoDashboard, setActiveTodoApp, setUsers, setActiveToDoTable}) => {
-  const clickTodoDashboard = () => {
-    setActiveTodoDashboard(true)
-    setActiveToDoTable(false)
-    setUsers(false)
-    setActiveTodoApp(false)
-
-
-  }
-  const clickActiveTodoApp = () => {
-    setActiveTodoApp(true)
-    setActiveTodoDashboard(false)
-    setUsers(false)
-    setActiveToDoTable(false)
-    
-
-  }
-  const clickUsers = () => {
-    setUsers(true)
-    setActiveTodoApp(false)
-    setActiveTodoDashboard(false)
-    setActiveToDoTable(false)
-
+const SideBarList = () => {
  
-  }
-  const clickToDoTable = ()=>{
-    setActiveToDoTable(true)
-    setActiveTodoDashboard(false)
-    setUsers(false)
-    setActiveTodoApp(false)
-  }
 
   return (
-
     <List>
-
-      <ListItem sx={{ display: 'block' }} >
-        <ListItemButton
-          onClick={clickTodoDashboard}
-        >
+            <ListItem disablePadding>
+        <ListItemButton >
+        <Logout />
+          <ListItemText  />
+        </ListItemButton>
+      </ListItem> 
+      <ListItem disablePadding>
+        <ListItemButton component={Link} to="/dashboard">
           <ListItemIcon>
             <InboxIcon />
           </ListItemIcon>
           <ListItemText primary="TodoDashboard" />
         </ListItemButton>
-        <ListItemButton
-          onClick={clickActiveTodoApp}
-        >
+      </ListItem>
+      <ListItem disablePadding>
+        <ListItemButton component={Link} to="/todo">
           <ListItemIcon>
             <InboxIcon />
           </ListItemIcon>
           <ListItemText primary="TodoApp" />
         </ListItemButton>
-        <ListItemButton
-          onClick={clickUsers}
-        >
+      </ListItem>
+      <ListItem disablePadding>
+        <ListItemButton component={Link} to="/users">
           <ListItemIcon>
             <InboxIcon />
           </ListItemIcon>
           <ListItemText primary="Users" />
         </ListItemButton>
-
-        <ListItemButton
-          onClick={clickToDoTable}
-        >
+      </ListItem>
+      <ListItem disablePadding>
+        <ListItemButton component={Link} to="/todos">
           <ListItemIcon>
             <InboxIcon />
           </ListItemIcon>
           <ListItemText primary="ToDoTable" />
         </ListItemButton>
       </ListItem>
-   
     </List>
-  )
+  );
 }
 export default SideBarList

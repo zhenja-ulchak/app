@@ -1,21 +1,20 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { fetchTodos, createToDoList, updateToDoList, deleteToDoList } from '../../api/ToDoApiProvaider';
 import {
-  Grid, Button, Box, IconButton, Checkbox
-
+  Grid, Button, Box, IconButton, Select, MenuItem, Typography
 } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
-import CloseIcon from '@mui/icons-material/Close';
 import EditIcon from '@mui/icons-material/Edit';
-import { useTable } from 'react-table';
-import { FaCheck } from "react-icons/fa";
-
+import { useTable, usePagination } from 'react-table';
 import { useNavigate } from 'react-router-dom';
 import { FaRegEye } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa6";
+import { GiCheckMark } from "react-icons/gi";
+import { GrDocumentTime } from "react-icons/gr";
+import { styled } from '@mui/material/styles';
 import ModalAdd from './components/ModalAddToDo'
 import ModuleUpdate from './components/ModalUpdateToDo'
 import ColumnTooltip from './components/AddColumnTooltip'
+import useVisibleStore from '../../store/TaskStore'
 
 const TodoApp = () => {
   const [todos, setTodos] = useState([]);
@@ -25,15 +24,22 @@ const TodoApp = () => {
   const [punch, setPunch] = useState(false);
   const [visibleOpen, setVisibleOpen] = useState(false);
   const [visibleAddOpen, setAddVisibleOpen] = useState(false);
-  const [color, setColor] = useState(false)
+  const [colorId, setColorId] = useState(null);
   const [selectedRowId, setSelectedRowId] = useState(null);
-
+  const { isVisible, idTask } = useVisibleStore()
   const navigate = useNavigate();
   const menuRef = useRef(null);
-
+  const isProcessingRef = useRef(false);
   const [visibleColumns, setVisibleColumns] = useState([
-    'col1', 'colNumber', 'colCheck', 'col2', 'col3', 'col4', 'col11'
+    'col1', 'colNumber', 'colCheck', 'col2', 'col3', 'col4', 'col5', 'col11'
   ]);
+
+  const StyledTableRow = styled('tr')({
+    transition: 'background-color 0.3s ease',
+    '&:hover': {
+      backgroundColor: '#f0f0f0', // Зміна фону при наведенні
+    },
+  });
 
   const wBox = {
     width: '87%',
@@ -50,12 +56,9 @@ const TodoApp = () => {
     loadTodos();
   }, [punch, updateTodo]);
 
-
   const addTodo = async () => {
     const addedTodo = await createToDoList({ task: `${newTodo}` });
     setTodos([...todos, addedTodo]);
-    console.log(addedTodo);
-
     setNewTodo('');
   };
 
@@ -64,7 +67,7 @@ const TodoApp = () => {
       id: todo.id,
       task: todo.text,
     });
-    setUpdateTodo(true)
+    setUpdateTodo(true);
   };
 
   const handleUpdate = async () => {
@@ -75,27 +78,22 @@ const TodoApp = () => {
         todo.id === id ? updatedTodo : todo
       ));
       setEditTodo({ id: null, task: '' });
-      setUpdateTodo(false)
-
-
+      setUpdateTodo(false);
     } catch (error) {
       console.error("Failed to update todo:", error);
     }
     setPunch(true);
   };
 
-  const handleDelete = async (id) => {
-    await deleteToDoList(id);
-    setTodos(todos.filter(todo => todo.id !== id));
+  const DiffTimeTask = (time) => {
+    const totalSeconds = Math.floor(time / 1000);
+    const days = Math.floor(totalSeconds / 86400);
+    const hours = Math.floor((totalSeconds % 86400) / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+    return `${days} day ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
   };
-  const handleCheckboxChange = (event, id) => {
-    // Логіка для зміни стану вибору чекбокса
-    const updatedTodos = todos.map(todo =>
-      todo.id === id ? { ...todo, isChecked: event.target.checked } : todo
-    );
-    setColor(true)
-    setTodos(updatedTodos);
-  };
+  console.log(idTask);
 
   const data = React.useMemo(
     () => todos.map(todo => ({
@@ -104,33 +102,27 @@ const TodoApp = () => {
       colNumber: todo.number,
       colCheck: (
         <>
-          <Checkbox
-            checked={todo.isChecked}
-            onChange={(e) => handleCheckboxChange(e, todo.id)} 
-            size="medium"
-            color="primary"
-          />
-        </>
 
+          {todo.diff_time ? <GiCheckMark /> : <GrDocumentTime />}
+
+        </>
       ),
       col2: todo.status,
       col3: todo.start_date,
       col4: todo.end_date,
-      col5: todo.diff_time,
+      col5: DiffTimeTask(todo.diff_time),
       col6: todo.lastchange,
       col7: todo.lastchange_by,
       col8: todo.created,
       col9: todo.created_by,
-
       col11: (
         <>
           <IconButton edge="end" aria-label="edit" onClick={() => {
-            handleEditClick(todo)
-            setUpdateTodo(true)
+            handleEditClick(todo);
+            setUpdateTodo(true);
           }}>
             <EditIcon />
           </IconButton>
-
         </>
       ),
     })),
@@ -183,7 +175,6 @@ const TodoApp = () => {
         Header: 'Created by',
         accessor: 'col9',
       },
-
       {
         Header: 'Actions',
         accessor: 'col11',
@@ -193,6 +184,7 @@ const TodoApp = () => {
     ],
     []
   );
+
   const filteredColumns = React.useMemo(
     () => columns.filter(column => visibleColumns.includes(column.accessor)),
     [visibleColumns, columns]
@@ -202,19 +194,26 @@ const TodoApp = () => {
     getTableProps,
     getTableBodyProps,
     headerGroups,
-    rows,
+    page, // Використовуйте замість rows для рендерингу поточної сторінки
     prepareRow,
-  } = useTable({ columns: filteredColumns, data });
+    canPreviousPage,
+    canNextPage,
+    pageOptions,
+    pageCount,
+    gotoPage,
+    nextPage,
+    previousPage,
+    setPageSize,
+    state: { pageIndex, pageSize },
+  } = useTable({ columns: filteredColumns, data, initialState: { pageSize: 5 } }, usePagination);
 
   const handleCellClick = (todoId) => {
     if (todoId) {
       navigate(`/details/${todoId}`);
-
     } else {
       console.error("Todo ID is undefined");
     }
-
-  }
+  };
 
   const handleToggleColumn = (columnId) => {
     setVisibleColumns((prev) =>
@@ -227,8 +226,8 @@ const TodoApp = () => {
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setVisibleOpen(false); // Закриваємо меню
-        setUpdateTodo(false)
+        setVisibleOpen(false);
+        setUpdateTodo(false);
         setAddVisibleOpen(false);
       }
     };
@@ -238,6 +237,14 @@ const TodoApp = () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [menuRef]);
+  useEffect(() => {
+    const storedId = localStorage.getItem('idColor');
+    setColorId(storedId);
+  }, []);
+
+
+
+
 
   return (
     <>
@@ -248,7 +255,7 @@ const TodoApp = () => {
         setEditTodo={setEditTodo}
         handleUpdate={handleUpdate}
       />
-      <Grid container spacing={2}>
+      <Grid container spacing={2} sx={{ marginTop: '40px' }}>
         <Grid item xs={12}>
           <Box sx={{ ...wBox }}>
             <Button style={{ float: 'right' }} onClick={() => setVisibleOpen(!visibleOpen)}>
@@ -259,19 +266,18 @@ const TodoApp = () => {
               onClick={() => setAddVisibleOpen(!visibleOpen)}>
               <FaPlus size={30} />
             </Button>
-
-            < ModalAdd
+            <ModalAdd
               visibleAddOpen={visibleAddOpen}
               setNewTodo={setNewTodo}
               setAddVisibleOpen={setAddVisibleOpen}
               menuRef={menuRef}
               newTodo={newTodo}
-              addTodo={addTodo} />
-
+              addTodo={addTodo}
+            />
           </Box>
         </Grid>
         <Grid item xs={12}>
-          <div style={{ maxHeight: '500px', overflowY: 'auto', overflowX: 'auto', marginTop: '20px', marginLeft: '20%' }}>
+          <div style={{ maxHeight: '620px', overflowY: 'auto', overflowX: 'auto' }}>
             <table {...getTableProps()} style={{ marginTop: '20px' }}>
               <thead>
                 {headerGroups.map(headerGroup => (
@@ -293,13 +299,16 @@ const TodoApp = () => {
                 ))}
               </thead>
               <tbody {...getTableBodyProps()}>
-                {rows.map(row => {
-                   const isSelected = row.original.id === selectedRowId;
+                {page.map(row => {
+                  const colorIdArray = JSON.parse(colorId);
+                  const isSelected = colorIdArray.some(id => row.original.id === id);
                   prepareRow(row);
 
+
+
                   return (
-                    <tr {...row.getRowProps()}>
-                      {row.cells.map((cell, index) => (
+                    <StyledTableRow {...row.getRowProps()}>
+                      {row.cells.map((cell) => (
                         <td
                           {...cell.getCellProps()}
                           style={{
@@ -312,36 +321,83 @@ const TodoApp = () => {
                             ...cell.column.cellStyle
                           }}
                           onClick={() => {
-                           
-                            const excludedAccessors = ['colCheck', 'col11']; 
+
+
+
+                            const excludedAccessors = ['col11'];
 
                             if (!excludedAccessors.includes(cell.column.id)) {
                               handleCellClick(row.original.id);
-                              console.log(row.original.id);
                             }
                             setSelectedRowId(row.original.id);
-                            console.log(index);
-                            
-
-
                           }}
                         >
                           {cell.render('Cell')}
                         </td>
                       ))}
-                    </tr>
+                    </StyledTableRow>
                   );
                 })}
               </tbody>
             </table>
+
           </div>
+          <Box display="flex" alignItems="center" sx={{ float: "right" }} mt={2}>
+            <Button
+              onClick={() => gotoPage(0)}
+              disabled={!canPreviousPage}
+              variant="contained"
+              size="small"
+            >
+              {'<<'}
+            </Button>
+            <Button
+              onClick={previousPage}
+              disabled={!canPreviousPage}
+              variant="contained"
+              size="small"
+              sx={{ mx: 1 }}
+            >
+              {'<'}
+            </Button>
+            <Button
+              onClick={nextPage}
+              disabled={!canNextPage}
+              variant="contained"
+              size="small"
+            >
+              {'>'}
+            </Button>
+            <Button
+              onClick={() => gotoPage(pageCount - 1)}
+              disabled={!canNextPage}
+              variant="contained"
+              size="small"
+              sx={{ mx: 1 }}
+            >
+              {'>>'}
+            </Button>
+            <Typography variant="body1" sx={{ mx: 2 }}>
+              Сторінка{' '}
+              <strong>
+                {pageIndex + 1} з {pageOptions.length}
+              </strong>
+            </Typography>
+            <Select
+              value={pageSize}
+              onChange={(e) => setPageSize(Number(e.target.value))}
+              size="small"
+              variant="outlined"
+            >
+              {[5, 10, 20, 50, 100].map((size) => (
+                <MenuItem key={size} value={size}>
+                  Показувати {size}
+                </MenuItem>
+              ))}
+            </Select>
+          </Box>
         </Grid>
-
       </Grid>
-
-
-
-
     </>
   );
 };

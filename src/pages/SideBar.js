@@ -1,46 +1,78 @@
 import * as React from 'react';
-
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
+import Button from '@mui/material/Button';
+import List from '@mui/material/List';
+import Divider from '@mui/material/Divider';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import InboxIcon from '@mui/icons-material/MoveToInbox';
+import MailIcon from '@mui/icons-material/Mail';
+
+import MenuIcon from '@mui/icons-material/Menu';
+
 import CssBaseline from '@mui/material/CssBaseline';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 
 import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
+
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
 import SideBarList from '../components/SideBarList'
-import { Button } from '@mui/material';
 
-const SideBar = ({ setActiveTodoDashboard, setActiveTodoApp, setActiveToDoTable, setUsers }) => {
+
+const SideBar = () => {
   const drawerWidth = 240;
   const { t } = useTranslation();
+
+  const [open, setOpen] = React.useState(false);
+
+  const toggleDrawer = (newOpen) => () => {
+    setOpen(newOpen);
+  };
+
+
+  const DrawerList = (
+    <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
+  <SideBarList/>
+    </Box>
+  );
+
+
+
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      <AppBar
-        position="fixed"
-        sx={{ width: `calc(100% - ${drawerWidth}px)`, ml: `${drawerWidth}px` }}
-      >
-        <Toolbar>
+      <Box sx={{ flexGrow: 1 , width:'100%'}}>
+        <AppBar position="static">
+          <Toolbar>
+            <Button onClick={toggleDrawer(true)}>  <MenuIcon sx={{color: '#fff'}}/></Button>
 
-          <Typography sx={{ float: 'right' , width:'120px'}} variant="h6" noWrap component="div">
-            {t('Permanent')}
 
-          </Typography>
-          <Button
-          sx={{marginLeft: '95%', padding: '5px 40px', background:'#ffffff', color: '#000000'}}
-            component={Link}
-            to="/setting"
-            variant="contained"
+            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+              TASK
+            </Typography>
+
+            <Button
+              sx={{  padding: '5px 40px', background: '#ffffff', color: '#000000' }}
+              component={Link}
+              to="/setting"
+              variant="contained"
             >
               SETTING
-          </Button>
-        </Toolbar>
-      </AppBar>
-      <Drawer
+            </Button>
+          </Toolbar>
+        </AppBar>
+      </Box>
+
+
+
+
+      {/* <Drawer
         sx={{
           width: drawerWidth,
           flexShrink: 0,
@@ -56,14 +88,13 @@ const SideBar = ({ setActiveTodoDashboard, setActiveTodoApp, setActiveToDoTable,
 
         />
         <Divider />
-        <SideBarList
-          setActiveTodoApp={setActiveTodoApp}
-          setActiveToDoTable={setActiveToDoTable}
-          setActiveTodoDashboard={setActiveTodoDashboard}
-          setUsers={setUsers}
-        />
+        <SideBarList/>
         <Divider />
 
+      </Drawer> */}
+
+      <Drawer open={open} onClose={toggleDrawer(false)}>
+        {DrawerList}
       </Drawer>
 
     </Box>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography } from '@mui/material';
+import { Container, Typography } from '@mui/material';
 import LanguageSwitcher from '../translate/ButtonChengeLang';
 import Debug from '../components/DebugPanel';
 import Switch from '@mui/material/Switch';
@@ -31,72 +31,70 @@ const SettingPage = () => {
             <Button
                 component={Link}
                 to="/home"
-                sx={{color:'#000000'}}
+                sx={{ color: '#000000' }}
             >
                 <FaArrowLeft size={30} />
             </Button>
-            <Typography variant="h2" noWrap component="p" sx={{ marginTop: '100px', marginLeft: '30%' }}>
-                Налаштування
-            </Typography>
-            <Grid container spacing={3}>
-                <Grid item xs>
-
-                </Grid>
-                <Grid item xs={6}>
-
-                    <Accordion defaultExpanded sx={{ ...AccordionStyle }}>
-                        <AccordionSummary
-                            expandIcon={<ExpandMoreIcon />}
-                            aria-controls="panel1-content"
-                            id="panel1-header"
-                        >
-                            change langich
-                        </AccordionSummary>
-                        <AccordionDetails>
-                            <LanguageSwitcher sx={{ float: 'right' }} />
-                        </AccordionDetails>
-                    </Accordion>
-                    <Accordion sx={{ ...AccordionStyle }}>
-                        <AccordionSummary
-                            expandIcon={<ExpandMoreIcon />}
-                            aria-controls="panel2-content"
-                            id="panel2-header"
-                        >
-                            Debug Panel
-                        </AccordionSummary>
-                        <AccordionDetails>
-
-                            <Switch
-                                checked={isOpen}
-                                onChange={toggleOpen}
-                                inputProps={{ 'aria-label': 'controlled' }}
-                            />
-                        </AccordionDetails>
-                    </Accordion>
-                    <Accordion sx={{ ...AccordionStyle }}>
-                        <AccordionSummary
-                            expandIcon={<ExpandMoreIcon />}
-                            aria-controls="panel3-content"
-                            id="panel3-header"
-                        >
-                            Accordion Actions
-                        </AccordionSummary>
-                        <AccordionDetails>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-                            malesuada lacus ex, sit amet blandit leo lobortis eget.
-                        </AccordionDetails>
-                        <AccordionActions>
-                            <Button>Cancel</Button>
-                            <Button>Agree</Button>
-                        </AccordionActions>
-                    </Accordion>
 
 
-                </Grid>
-                <Grid item xs>
+            <Container>
 
-                </Grid>
-            </Grid>
+
+                <Typography variant="h2" noWrap component="p" sx={{ marginTop: '100px', marginLeft: '30%' }}>
+                    Налаштування
+                </Typography>
+                <Accordion defaultExpanded sx={{ ...AccordionStyle }}>
+                    <AccordionSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        aria-controls="panel1-content"
+                        id="panel1-header"
+                    >
+                        change langich
+                    </AccordionSummary>
+                    <AccordionDetails>
+                        <LanguageSwitcher sx={{ float: 'right' }} />
+                    </AccordionDetails>
+                </Accordion>
+                <Accordion sx={{ ...AccordionStyle }}>
+                    <AccordionSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        aria-controls="panel2-content"
+                        id="panel2-header"
+                    >
+                        Debug Panel
+                    </AccordionSummary>
+                    <AccordionDetails>
+
+                        <Switch
+                            checked={isOpen}
+                            onChange={toggleOpen}
+                            inputProps={{ 'aria-label': 'controlled' }}
+                        />
+                    </AccordionDetails>
+                </Accordion>
+                <Accordion sx={{ ...AccordionStyle }}>
+                    <AccordionSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        aria-controls="panel3-content"
+                        id="panel3-header"
+                    >
+                        Accordion Actions
+                    </AccordionSummary>
+                    <AccordionDetails>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
+                        malesuada lacus ex, sit amet blandit leo lobortis eget.
+                    </AccordionDetails>
+                    <AccordionActions>
+                        <Button>Cancel</Button>
+                        <Button>Agree</Button>
+                    </AccordionActions>
+                </Accordion>
+            </Container>
+
+
+
+
+
 
 
 
