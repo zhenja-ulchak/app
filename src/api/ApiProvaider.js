@@ -623,14 +623,15 @@ export const GetLogin = async (username, password) => {
       const authString = `Basic ${btoa(`${username}:${password}`)}`;
       
   
-      const response = await axios.get(`${BASE_URL}/user/login`, {
+      const response = await axios.get(`${BASE_URL}/user/login-refresh`, {
         headers: {
           Authorization: authString,
         },
         withCredentials: true 
       });
   
-   
+      console.log(response);
+      
       return response;
     } catch (error) {
       console.error('Error fetching data:', error);
