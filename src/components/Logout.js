@@ -4,8 +4,8 @@ import React from 'react';
 // import { auth } from '../firebaseConfig';
 import { useNavigate } from 'react-router-dom';
 import {Logout as apiLogout} from '../api/ApiProvaider'
-import { Container, TextField, Button, List, ListItem, ListItemText, IconButton, Alert } from '@mui/material';
-
+import {  Button,  } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 const Logout = () => {
   const navigate = useNavigate();
@@ -21,10 +21,10 @@ const Logout = () => {
       console.error('Logout Error:', error.message);
     }
   };
-
+  const { t } = useTranslation();
   return (
-    <Button onClick={handleLogout}>
-      Logout
+    <Button variant="outlined" onClick={handleLogout}>
+      {t('logout.Logout')}
       </Button>
   );
 };

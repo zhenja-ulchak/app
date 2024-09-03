@@ -15,6 +15,7 @@ import ModalAdd from './components/ModalAddToDo'
 import ModuleUpdate from './components/ModalUpdateToDo'
 import ColumnTooltip from './components/AddColumnTooltip'
 import useVisibleStore from '../../store/TaskStore'
+import { useTranslation } from 'react-i18next';
 
 const TodoApp = () => {
   const [todos, setTodos] = useState([]);
@@ -28,6 +29,7 @@ const TodoApp = () => {
   const [selectedRowId, setSelectedRowId] = useState(null);
   const { isVisible, idTask } = useVisibleStore()
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const menuRef = useRef(null);
   const isProcessingRef = useRef(false);
   const [visibleColumns, setVisibleColumns] = useState([
@@ -132,51 +134,52 @@ const TodoApp = () => {
   const columns = React.useMemo(
     () => [
       {
-        Header: 'Task',
+        Header: t('todo.task'),
         accessor: 'col1',
+        Cell: ({ value }) => t(value)
       },
       {
-        Header: 'Number',
+        Header: t('todo.number'),
         accessor: 'colNumber',
       },
       {
-        Header: 'Check',
+        Header: t('todo.check'),
         accessor: 'colCheck',
       },
       {
-        Header: 'Status',
+        Header: t('todo.status'),
         accessor: 'col2',
       },
       {
-        Header: 'Start date',
+        Header: t('todo.start_date'),
         accessor: 'col3',
       },
       {
-        Header: 'End date',
+        Header: t('todo.end_date'),
         accessor: 'col4',
       },
       {
-        Header: 'Diff time',
+        Header: t('todo.diff_time'),
         accessor: 'col5',
       },
       {
-        Header: 'Last change',
+        Header: t('todo.last_change'),
         accessor: 'col6',
       },
       {
-        Header: 'Last change by',
+        Header: t('todo.las_change_by'),
         accessor: 'col7',
       },
       {
-        Header: 'Created',
+        Header: t('todo.created'),
         accessor: 'col8',
       },
       {
-        Header: 'Created by',
+        Header: t('todo.created_by'),
         accessor: 'col9',
       },
       {
-        Header: 'Actions',
+        Header: t('todo.actions'),
         accessor: 'col11',
         headerStyle: { backgroundColor: '#fff', color: '#000', textAlign: 'center', fontWeight: 'bold', position: 'sticky', right: 0, zIndex: 10 },
         cellStyle: { position: 'sticky', right: 0, backgroundColor: '#fff', zIndex: 5 },

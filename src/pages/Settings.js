@@ -10,7 +10,7 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Button from '@mui/material/Button';
-import Grid from '@mui/material/Grid';
+import { useTranslation } from 'react-i18next';
 import { FaArrowLeft } from "react-icons/fa";
 import useLoginStore from '../store/UserStor'
 import { Link } from 'react-router-dom';
@@ -21,6 +21,7 @@ const AccordionStyle = {
 }
 
 const SettingPage = () => {
+    const { t } = useTranslation();
     const isOpen = useDebugStore((state) => state.isOpen); // Отримуємо стан
     const toggleOpen = useDebugStore((state) => state.toggleOpen); // Отримуємо функцію для зміни стану
     const data = useLoginStore((state) => state.data);
@@ -35,13 +36,9 @@ const SettingPage = () => {
             >
                 <FaArrowLeft size={30} />
             </Button>
-
-
             <Container>
-
-
                 <Typography variant="h2" noWrap component="p" sx={{ marginTop: '100px', marginLeft: '30%' }}>
-                    Налаштування
+                {t('setting.Settings')}
                 </Typography>
                 <Accordion defaultExpanded sx={{ ...AccordionStyle }}>
                     <AccordionSummary
@@ -49,7 +46,7 @@ const SettingPage = () => {
                         aria-controls="panel1-content"
                         id="panel1-header"
                     >
-                        change langich
+                         {t('setting.changeL')}
                     </AccordionSummary>
                     <AccordionDetails>
                         <LanguageSwitcher sx={{ float: 'right' }} />
@@ -61,7 +58,7 @@ const SettingPage = () => {
                         aria-controls="panel2-content"
                         id="panel2-header"
                     >
-                        Debug Panel
+                             {t('setting.DebugP')}
                     </AccordionSummary>
                     <AccordionDetails>
 
@@ -72,33 +69,8 @@ const SettingPage = () => {
                         />
                     </AccordionDetails>
                 </Accordion>
-                <Accordion sx={{ ...AccordionStyle }}>
-                    <AccordionSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls="panel3-content"
-                        id="panel3-header"
-                    >
-                        Accordion Actions
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-                        malesuada lacus ex, sit amet blandit leo lobortis eget.
-                    </AccordionDetails>
-                    <AccordionActions>
-                        <Button>Cancel</Button>
-                        <Button>Agree</Button>
-                    </AccordionActions>
-                </Accordion>
+              
             </Container>
-
-
-
-
-
-
-
-
-
             <Debug open={isOpen} />
         </>
     );
