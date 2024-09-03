@@ -2,26 +2,13 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import Button from '@mui/material/Button';
-import List from '@mui/material/List';
-import Divider from '@mui/material/Divider';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
-
 import MenuIcon from '@mui/icons-material/Menu';
-
 import CssBaseline from '@mui/material/CssBaseline';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
-
-import Typography from '@mui/material/Typography';
-
 import { useTranslation } from 'react-i18next';
+import Typography from '@mui/material/Typography';
 import { Link } from 'react-router-dom';
-
 import SideBarList from '../components/SideBarList'
 
 
@@ -54,7 +41,7 @@ const SideBar = () => {
 
 
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              TASK
+                       {t('sideBar.TASK')} 
             </Typography>
 
             <Button
@@ -63,7 +50,7 @@ const SideBar = () => {
               to="/setting"
               variant="contained"
             >
-              SETTING
+              {t('sideBar.SETTING')} 
             </Button>
           </Toolbar>
         </AppBar>

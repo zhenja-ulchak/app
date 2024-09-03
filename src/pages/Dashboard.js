@@ -18,7 +18,7 @@ const DashApp = () => {
       >
 
         <Typography variant="h2" noWrap component="p" sx={{ marginTop: '200px', marginLeft: '30%' }}>
-          {t('welcome')}
+          {t('welcome.welcome')}
 
         </Typography>
 

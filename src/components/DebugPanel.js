@@ -5,8 +5,9 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Alert from '@mui/material/Alert';
 import { useNavigate } from 'react-router-dom';
-
+import { useTranslation } from 'react-i18next';
 const Debug = ({ open }) => {
+  const { t } = useTranslation();
   const { data } = useLoginStore()
   const client = data["data"]["client"]
   const [count, setCount] = useState(client.fa2_key_timeout || 0);
@@ -63,19 +64,19 @@ const Debug = ({ open }) => {
           (
             <>
               <Alert severity="warning" sx={{ width: '86%', marginLeft: '256px', position: "fixed", top: '80px' }}>
-                Ваш час сесіїї закінчується !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+              {t('debug.titleAlert')} !!!!!!!!!!!!!!!!!!!!!!!!!!!!
               </Alert>
               <Box sx={{ ...styleButton }}>
                 <Grid container spacing={2} sx={{ color: '#ffffff', marginLeft: "259px" }}>
                   <Grid item xs={2} sx={{ margin: '20px 20px' }}>
-                    <Typography>timeout : {client["login_timeout"]}</Typography>
+                    <Typography>{t('debug.time')} : {client["login_timeout"]}</Typography>
 
                   </Grid>
                   <Grid item xs={2} sx={{ margin: '20px 20px' }}>
-                    <Typography>refresh time: {count}</Typography>
+                    <Typography>{t('debug.refresh')}: {count}</Typography>
                   </Grid>
                   <Grid item xs={2} sx={{ margin: '20px 20px' }}>
-                    <Typography>display name : {client["display_name"]}</Typography>
+                    <Typography>{t('debug.display')} : {client["display_name"]}</Typography>
                   </Grid>
                 </Grid>
               </Box>
@@ -84,18 +85,18 @@ const Debug = ({ open }) => {
           )
           :
           (<Box sx={{ ...styleButton }}>
-            <Grid container spacing={2} sx={{ color: '#ffffff', marginLeft: "259px" }}>
-              <Grid item xs={2} sx={{ margin: '20px 20px' }}>
-                <Typography>timeout : {client["login_timeout"]}</Typography>
+             <Grid container spacing={2} sx={{ color: '#ffffff', marginLeft: "259px" }}>
+                  <Grid item xs={2} sx={{ margin: '20px 20px' }}>
+                    <Typography>{t('debug.time')} : {client["login_timeout"]}</Typography>
 
-              </Grid>
-              <Grid item xs={2} sx={{ margin: '20px 20px' }}>
-                <Typography>refresh time: {count}</Typography>
-              </Grid>
-              <Grid item xs={2} sx={{ margin: '20px 20px' }}>
-                <Typography>display name : {client["display_name"]}</Typography>
-              </Grid>
-            </Grid>
+                  </Grid>
+                  <Grid item xs={2} sx={{ margin: '20px 20px' }}>
+                    <Typography>{t('debug.refresh')}: {count}</Typography>
+                  </Grid>
+                  <Grid item xs={2} sx={{ margin: '20px 20px' }}>
+                    <Typography>{t('debug.display')} : {client["display_name"]}</Typography>
+                  </Grid>
+                </Grid>
           </Box>)
       }
 

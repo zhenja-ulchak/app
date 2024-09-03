@@ -1,5 +1,44 @@
 {
-    "welcome": "Welcome to APP",
-    "Permanent":" app"
-
+    "welcome" :{
+        "welcome": "Welcome to APP",
+        "Permanent":" app"
+    
+    },
+    "debug":{
+     "titleAlert" : "Your session time is running out",
+     "time" : "timeout",
+     "refresh" : "refresh time",
+     "display" : "display name"
+    },
+    "setting": {
+        "Settings": "Setting",
+        "changeL": "change langvich",
+        "DebugP": "Debug Panel"
+    },
+    "todo": {
+        "task": "Task",
+        "number": "Number",
+        "check": "Check",
+        "status": "Status",
+        "start_date": "Start date",
+        "end_date": "End date",
+        "diff_time": "Diff time",
+        "last_change": "Last change",
+        "last_change_by": "Last change by",
+        "created": "Created",
+        "created_by": "Created by",
+        "actions": "Actions"
+      },
+      "sideBar": {
+         "TASK": "TASK" ,
+         "SETTING": "SETTING",
+         "dashboard": "Dashboard",
+         "todo": "Todo",
+         "users": "Users",
+         "todos": "Todos"
+      },
+      "logout" : {
+          "Logout" : "logout"
+      }
+  
 }
