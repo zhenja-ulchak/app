@@ -5,7 +5,7 @@ import Login from './components/Login';
 import ProtectedRoute from './route/ProtectedRoute';
 import Home from './pages/Home';
 import { AuthProvider } from './AuthProvaider';
-import UsersList from './components/UsersList';
+import Debug from './components/DebugPanel'
 import DashApp from './pages/Dashboard';
 import Tools from './pages/Tools';
 import { Users } from './pages/Users';
@@ -14,21 +14,24 @@ import ToDoDetails from './components/todo/Details';
 import SideBar from './pages/SideBar';
 import FormTodo from './components/todo/FormTodo'
 import { Grid, Container, Box } from '@mui/material';
-
+import useDebugStore from './store/DebugStore'; 
 const AppContent = () => {
   const location = useLocation();
 
   // Перелік маршрутів, на яких не потрібно відображати SideBar
   const hideSideBarRoutes = ['/register', '/login', '/'];
 
+  const isOpen = useDebugStore((state) => state.isOpen); // Отримуємо стан
   return (
 
     <>
 
       {!hideSideBarRoutes.includes(location.pathname) && (
 
+     <>
         <SideBar />
-
+        <Debug open={isOpen} />
+     </>
       )}
 
       <Box
@@ -52,6 +55,8 @@ const AppContent = () => {
           <Route path="/users" element={<Users />} />
         </Routes>
       </Box>
+
+     
     </>
 
 
