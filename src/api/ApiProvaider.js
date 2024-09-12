@@ -618,6 +618,8 @@ export const GetLogin = async (username, password) => {
     
   };
   export const GetLoginRefresh = async (username, password) => {
+      console.log(username);
+      
     try {
  
       const authString = `Basic ${btoa(`${username}:${password}`)}`;

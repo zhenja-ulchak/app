@@ -76,9 +76,14 @@ const Debug = ({ open }) => {
     }
   }, [refresh]);
 
+
   useEffect(() => {
-    if (refresh ===  (refresh*90)/100) {
-      GetLoginRefresh('INDYN\\demo-testa', '1234');
+    if(count != 0){
+      if (refresh ===  (refresh*90)/100) {
+        GetLoginRefresh('INDYN\\demo-testa', '1234');
+  
+        setRefresh(client.page_refresh_time || 0)
+      }
     }
   }, [refresh]);
   const handleMouseMove = () => {
