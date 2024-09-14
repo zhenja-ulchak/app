@@ -1,8 +1,37 @@
 import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { api_v1, api_mrr } from './api'; // Імпортуємо API
+
 
 const external_provider_id = '15'
 const BASE_URL = `https://api.crosscore.app`;
-export const GetaAccountProfile = async ()=>{
+
+export const MyComponent = () => {
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    // Виклик api_v1
+    api_v1.get('/some-endpoint')
+      .then((response) => {
+        setData(response.data);
+      })
+      .catch((error) => {
+        console.error('Error fetching data:', error);
+      });
+  }, []);
+
+  return (
+    <div>
+      <h1>Data from API</h1>
+      {data ? <pre>{JSON.stringify(data, null, 2)}</pre> : <p>Loading...</p>}
+    </div>
+  );
+};
+
+
+
+
+export const GetAccountProfile = async ()=>{
     let retVal = null;
     try {
 
@@ -12,6 +41,7 @@ export const GetaAccountProfile = async ()=>{
             withCredentials: true,
             data: {},
         });
+        console.log(response);
         
         retVal = response
       } catch (error) {
