@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { api_v1, api_mrr } from './api'; // Імпортуємо API
+import { api_v1, api_mrr } from './keyApi'; // Імпортуємо API
 
 
 const external_provider_id = '15'

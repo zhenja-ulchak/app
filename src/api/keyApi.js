@@ -1,12 +1,12 @@
 import crypto from 'crypto-js';
 import axios from 'axios';
 
-// Функція для отримання кукісів на сервері
+// Функція для отримання кукісів на клієнті
 let cookies = () => undefined;
 
-if (typeof window === 'undefined') {
-  const { cookies: c } = require('next/headers');
-  cookies = c;
+if (typeof window !== 'undefined') {
+  // Якщо це клієнтська частина
+  cookies = () => document.cookie;
 }
 
 // Створення екземпляра api_v1
@@ -26,8 +26,9 @@ api_v1.interceptors.response.use(
 
 // Перехоплювач запитів для api_v1
 api_v1.interceptors.request.use((request) => {
-  if (cookies()) {
-    request.headers['Cookie'] = String(cookies());
+  const cookieData = cookies();
+  if (cookieData) {
+    request.headers['Cookie'] = cookieData;
   }
   return request;
 });
@@ -39,7 +40,7 @@ const api_mrr = axios.create({
 
 // Перехоплювач запитів для api_mrr
 api_mrr.interceptors.request.use((request) => {
-  if (window.location.pathname.includes('mining')) {
+  if (typeof window !== 'undefined' && window.location.pathname.includes('mining')) {
     const api_key = '47e5606e1009cf6ae8947807df11615777bccfbdb4e6b9651538e588aadf70bf';
     const api_secret = '3bca54570a8e2d1ed764d1bbae4c2f516381d681c15fcb84e887e0205b496f5f';
 
