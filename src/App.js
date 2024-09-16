@@ -13,8 +13,11 @@ import SettingPage from './pages/Settings';
 import ToDoDetails from './components/todo/Details';
 import SideBar from './pages/SideBar';
 import FormTodo from './components/todo/FormTodo'
-import { Grid, Container, Box } from '@mui/material';
+import {  Box } from '@mui/material';
 import useDebugStore from './store/DebugStore'; 
+import {AccountPage} from './pages/miningView/Account'
+import {Footer} from './pages/Footer'
+
 const AppContent = () => {
   const location = useLocation();
 
@@ -31,6 +34,7 @@ const AppContent = () => {
      <>
         <SideBar />
         <Debug open={isOpen} />
+        <Footer />
      </>
       )}
 
@@ -46,6 +50,7 @@ const AppContent = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/todo" element={<FormTodo />} />
+          <Route path="/account" element={<AccountPage />} />
           <Route path="/" element={<Login />} />
           <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
           <Route path="/setting" element={<SettingPage />} />

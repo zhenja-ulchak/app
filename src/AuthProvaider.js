@@ -17,6 +17,8 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
   try {
       const res = await GetLogin(email, password);
+      console.log(res);
+      
       setData(res.data)
     
       

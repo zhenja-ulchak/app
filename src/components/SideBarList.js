@@ -51,6 +51,14 @@ const SideBarList = () => {
         </ListItemIcon>
         <ListItemText primary={t('sideBar.todos')} />
       </ListItemButton>
+      </ListItem>
+      <ListItem disablePadding>
+      <ListItemButton component={Link} to="/account">
+        <ListItemIcon>
+          <InboxIcon />
+        </ListItemIcon>
+        <ListItemText primary={'Account'} />
+      </ListItemButton>
     </ListItem>
   </List>
   );
