@@ -35,7 +35,7 @@ api_v1.interceptors.request.use((request) => {
 
 // Створення екземпляра api_mrr
 const api_mrr = axios.create({
-  baseURL: process.env.API_AXIOS_MRR_URL || process.env.NEXT_PUBLIC_API_AXIOS_MRR_URL,
+  baseURL: process.env.API_AXIOS_MRR_URL ,
 });
 
 // Перехоплювач запитів для api_mrr
