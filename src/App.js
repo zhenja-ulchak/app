@@ -16,7 +16,7 @@ import FormTodo from './components/todo/FormTodo'
 import {  Box } from '@mui/material';
 import useDebugStore from './store/DebugStore'; 
 import {AccountPage} from './pages/miningView/Account'
-
+import {Footer} from './pages/Footer'
 
 const AppContent = () => {
   const location = useLocation();
@@ -34,6 +34,7 @@ const AppContent = () => {
      <>
         <SideBar />
         <Debug open={isOpen} />
+        <Footer />
      </>
       )}
 

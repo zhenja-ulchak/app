@@ -17,9 +17,42 @@ const RotatableArrow = styled(HiArrowDown)(({ theme, rotate }) => ({
 
 const Debug = ({ open }) => {
   const { data } = useLoginStore();
-  const client = data["data"]["user"][0];
+
+
+
+  const dataOne =    {
+    "id": "103",
+    "bsl_type": "core",
+    "display_name": "INDYN",
+    "active": false,
+    "lic_key": "NWE1ODZjNGI0ZDZjNzA1ODRlNTc3NDY5NGQzMDZjNzA1NDMyNmM0YjUzNmM1MjczNTQ2YjcwNTM1MjU2NWE0NjU2MzE1NTMxNTE2YzUyNTY2MjQ1NTI0YTYxNTg2NDcwNTc1NDRhMzQ2MzQ2NzA1ODRlNTQ0MjRhNjE2ZDM5NzA1NTU0NGEzNDYzNDY3MDU4NGU1NDQyNGE2MTU4NjQ3MDU5NmI2MzM1NjE2YzZjNTk1NTZlNDI2OTRkNmE1MjcwNTQzMjZjNGI1MzZjNTI3MjU1NmM3MDU1NjE1NTZjN2E1MzU3MzE1NzRlNDc0ZTQ4NjI0ODZjNjE1NjZhNmM3MjU3NTY2ODcyNjE1NTM5NzA1MzU4NmM0ZTUyNDU2YjdhNTQ0NjU2NjE2MjQ2NmM3MDRkNDg2YzUwNTEzMDZmMzU=",
+    "name": "indyn",
+    "asset_version": "5eb21e29e6b911ee8c8cb62304048e10",
+    "country_iso": "en",
+    "logo": "https://insidedynamic.de/assets/images/Logo/logo-inside-dynamic.svg",
+    "page_refresh_time": "301",
+    "login_timeout": "200",
+    "fa2_key_timeout": "600",
+    "languages": "ru, de, en",
+    "time_format": "YYYY-MMM-DD",
+    "header": "<img src=\"https://www.freewebheaders.com/wp-content/gallery/holidays-size-1280x375/thumbs/thumbs_colorful-holiday-christmas-gifts-and-decorations-with-lights-tinsel-header-background-1280x375.jpg\" width=\"100%\" style=\"height:100px\"/>",
+    "banner": "{\"title\": \"title\", \"active\": true, \"content\": {\"root\": {\"type\": \"root\", \"format\": \"\", \"indent\": 0, \"version\": 1, \"children\": [{\"type\": \"paragraph\", \"format\": \"right\", \"indent\": 0, \"version\": 1, \"children\": [{\"mode\": \"normal\", \"text\": \"asdd\", \"type\": \"text\", \"style\": \"\", \"detail\": 0, \"format\": 0, \"version\": 1}], \"direction\": \"ltr\"}, {\"type\": \"paragraph\", \"format\": \"\", \"indent\": 0, \"version\": 1, \"children\": [], \"direction\": null}, {\"type\": \"paragraph\", \"format\": \"right\", \"indent\": 0, \"version\": 1, \"children\": [{\"mode\": \"normal\", \"text\": \"asdddasdaasdasd111aaasdasdasd1123123\", \"type\": \"text\", \"style\": \"\", \"detail\": 0, \"format\": 0, \"version\": 1}], \"direction\": \"ltr\"}, {\"type\": \"paragraph\", \"format\": \"right\", \"indent\": 0, \"version\": 1, \"children\": [{\"mode\": \"normal\", \"text\": \"adddd\", \"type\": \"text\", \"style\": \"\", \"detail\": 0, \"format\": 0, \"version\": 1}], \"direction\": \"ltr\"}], \"direction\": \"ltr\"}}, \"end_time\": \"2025-Jan-31\", \"start_time\": \"2024-Feb-22\"}",
+    "footer": "{\"root\":{\"children\":[{\"children\":[{\"detail\":0,\"format\":0,\"mode\":\"normal\",\"style\":\"\",\"text\":\"footeraasdasdasd1\",\"type\":\"text\",\"version\":1}],\"direction\":\"ltr\",\"format\":\"center\",\"indent\":0,\"type\":\"paragraph\",\"version\":1}],\"direction\":\"ltr\",\"format\":\"\",\"indent\":0,\"type\":\"root\",\"version\":1}}",
+    "checksum": "3584b4d06e8b021f314b4a3b52c27b87",
+    "file_provider_id": null,
+    "config_change": "2024-02-15 19:34:24",
+    "lastchange": "2024-03-20 13:57:04",
+    "lastchange_by": "tester",
+    "created_by": "System",
+    "created": "2024-04-24 21:53:42",
+    "api_expires_in_hours": "24",
+    "is_debug_on": true
+  };
+
+  const client = !data ? dataOne : data["data"]["user"][0]
+  
   const [count, setCount] = useState(client.login_timeout || 0);
-  const [refresh, setRefresh] = useState(client.page_refresh_time || 0);
+  const [refresh, setRefresh] = useState(client.page_refresh_time / 10 || 0);
   const navigate = useNavigate();
 
   // State for Popover
@@ -79,7 +112,7 @@ const Debug = ({ open }) => {
 
   useEffect(() => {
     if(count != 0){
-      if (refresh ===  (refresh*90)/100) {
+      if (refresh  <= (refresh*90)/100) {
         GetLoginRefresh('INDYN\\demo-testa', '1234');
   
         setRefresh(client.page_refresh_time || 0)
@@ -128,6 +161,10 @@ const Debug = ({ open }) => {
     });
     return result;
   };
+
+  if (!client) {
+    return <div>Loading...</div>; // Показуємо повідомлення, поки дані не будуть доступні
+  }
   return (
     <>
       {

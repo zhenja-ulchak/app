@@ -11,19 +11,35 @@ export const  GetAccountProfile = () => {
 
   useEffect(() => {
     // Виклик api_v1
-  
-    const response =  api_v1.post(`${BASE_URL}/user/external_provider_proxy/${external_provider_id}`, {
+    // {url: "/rig/mine", method: "GET", data: {}}
+    // data
+    // : 
+    // {}
+    // method
+    // : 
+    // "GET"
+    // url
+    // : 
+    // "/rig/mine"
+    const response =  api_v1.post(`${BASE_URL}/user/external_provider_proxy/16`, {data: {
       url: `/whoami`,
       method: "GET",
       data: {},
-  }).then((response) => {
-        setData(response.data);
-      })
-      .catch((error) => {
-        console.error('Error fetching data:', error);
-      });
-
-      console.log(response);
+  }}, { withCredentials: true }) .then(({ data }) => {
+    const processedData = {
+      ...data,
+      data: {
+        ...data.data,
+        external_data: data?.data?.external_data ,
+      },
+    };
+    console.log('Processed Data:', processedData);
+    return processedData;
+  })
+  .catch((error) => {
+    console.error('Error fetching data:', error);
+  });
+ 
   }, []);
 
   return data

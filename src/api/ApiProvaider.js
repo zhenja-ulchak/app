@@ -597,19 +597,13 @@ export const GetUsers2 = ()=>{
 //GetLogin("INDYN\\tester","1234")
 export const GetLogin = async (username, password) => {
     try {
- 
       const authString = `Basic ${btoa(`${username}:${password}`)}`;
-      
-  
       const response = await axios.get(`${BASE_URL}/user/login`, {
         headers: {
           Authorization: authString,
         },
         withCredentials: true 
       });
-  
-  
-   
       return response;
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -643,10 +637,10 @@ export const GetLogin = async (username, password) => {
   };
 
 
-export const Logout = ()=>{
-    console.log("Logout out");
-    
-}
+  export const Logout = ()=>{
+      console.log("Logout out");
+      
+  }
 
 
 export const GetTarif = async (username, password) => {
