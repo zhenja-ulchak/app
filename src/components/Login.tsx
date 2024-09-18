@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 
-
+import { useNavigate } from "react-router-dom";
 import { useAuth } from '../AuthProvaider';
 import { TextField, Button, Container, Typography, Box } from '@mui/material';
+import { Navigate } from 'react-router-dom';
 
 
 const Login = () => {
-
+  const navigate = useNavigate()
   const { login}: any = useAuth();
   const [email, setEmail] = useState('INDYN\\demo-testa');
   const [password, setPassword] = useState('1234');
@@ -16,7 +17,7 @@ const Login = () => {
 
 
     await login(email, password);
-
+    navigate("/home");
 
   };
 

@@ -13,7 +13,7 @@ const Register = () => {
       const respons = 'lsw'
       if(respons){
      
-          navigate("/");
+          navigate("/home");
 
       }
       alert('Registration successful!');
