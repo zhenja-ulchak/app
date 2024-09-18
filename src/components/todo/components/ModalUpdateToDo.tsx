@@ -15,7 +15,7 @@ const updateBox = {
   };
 
   
-const ModalUpdate = ({ updateTodo, editTodo, setUpdateTodo, setEditTodo, handleUpdate, }) => {
+const ModalUpdate = ({ updateTodo, editTodo, setUpdateTodo, setEditTodo, handleUpdate } : any) => {
 
 
     return (

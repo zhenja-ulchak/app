@@ -2,9 +2,10 @@ import {
     FormControlLabel, Checkbox, Typography, Box,
 
 } from '@mui/material';
+import { Key, ReactElement, JSXElementConstructor, ReactNode, ReactPortal } from 'react';
 
 
-const ColumnTooltip = ({ visibleOpen, menuRef, columns, visibleColumns, handleToggleColumn }) => {
+const ColumnTooltip = ({ visibleOpen, menuRef, columns, visibleColumns, handleToggleColumn }: any) => {
 
 
     return (
@@ -13,7 +14,7 @@ const ColumnTooltip = ({ visibleOpen, menuRef, columns, visibleColumns, handleTo
             {visibleOpen
                 ?
                 (<Box ref={menuRef} style={{ float: 'right', position: 'absolute', zIndex: '99999', right: '60px', top: '229px', background: '#fff', border: '1px solid rgb(177 177 177)', padding: '22px' }}>
-                    {columns.map((column) => (
+                    {columns.map((column: { accessor: Key | null | undefined; Header: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | null | undefined; }) => (
                          <FormControlLabel
                          key={column.accessor}
                          control={

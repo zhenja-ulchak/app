@@ -14,9 +14,10 @@ import ToDoDetails from './components/todo/Details';
 import SideBar from './pages/SideBar';
 import FormTodo from './components/todo/FormTodo'
 import {  Box } from '@mui/material';
+import {Footer} from './pages/Footer'
 import useDebugStore from './store/DebugStore'; 
 import {AccountPage} from './pages/miningView/Account'
-import {Footer} from './pages/Footer'
+
 
 const AppContent = () => {
   const location = useLocation();
@@ -49,15 +50,15 @@ const AppContent = () => {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/todo" element={<FormTodo />} />
-          <Route path="/account" element={<AccountPage />} />
+          <Route path="/todo" element={<ProtectedRoute><FormTodo /></ProtectedRoute>} />
+          <Route path="/account" element={ <ProtectedRoute>< AccountPage /></ProtectedRoute>} />
           <Route path="/" element={<Login />} />
           <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
-          <Route path="/setting" element={<SettingPage />} />
-          <Route path="/details/:id" element={<ToDoDetails />} />
-          <Route path="/dashboard" element={<DashApp />} />
-          <Route path="/tools" element={<Tools />} />
-          <Route path="/users" element={<Users />} />
+          <Route path="/setting" element={ <ProtectedRoute><SettingPage /></ProtectedRoute>} />
+          <Route path="/details/:id" element={ <ProtectedRoute><ToDoDetails /></ProtectedRoute>} />
+          <Route path="/dashboard" element={ <ProtectedRoute><DashApp /></ProtectedRoute>} />
+          <Route path="/tools" element={ <ProtectedRoute><Tools /></ProtectedRoute>} />
+          <Route path="/users" element={ <ProtectedRoute><Users /></ProtectedRoute>} />
         </Routes>
       </Box>
 

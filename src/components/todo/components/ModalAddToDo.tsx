@@ -4,7 +4,7 @@ import {
   } from '@mui/material';
 
 
-const ModalAdd = ({visibleAddOpen, setNewTodo, setAddVisibleOpen, menuRef, newTodo, addTodo}) => {
+const ModalAdd = ({visibleAddOpen, setNewTodo, setAddVisibleOpen, menuRef, newTodo, addTodo}: any) => {
 
 
     return (

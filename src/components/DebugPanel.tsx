@@ -9,14 +9,16 @@ import IconButton from '@mui/material/IconButton';
 import { HiArrowDown } from "react-icons/hi";
 import { useNavigate } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
+// @ts-ignore
 import {GetLoginRefresh} from '../api/ApiProvaider'
+import { JSX } from 'react/jsx-runtime';
 const RotatableArrow = styled(HiArrowDown)(({ theme, rotate }) => ({
   transition: 'transform 0.3s ease',
   transform: rotate ? 'rotate(180deg)' : 'rotate(0deg)',
 }));
 
-const Debug = ({ open }) => {
-  const { data } = useLoginStore();
+const Debug = ({ open }: any) => {
+  const { data }: any = useLoginStore();
 
 
 
@@ -62,11 +64,11 @@ const Debug = ({ open }) => {
   const openPopover = Boolean(anchorEl);
   const openPopover2 = Boolean(anchorEl2);
 
-  const handleClick = (event) => {
+  const handleClick = (event: { currentTarget: React.SetStateAction<null>; }) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClick2 = (event) => {
+  const handleClick2 = (event: { currentTarget: React.SetStateAction<null>; }) => {
     setAnchorEl2(event.currentTarget);
   };
 
@@ -89,7 +91,7 @@ const Debug = ({ open }) => {
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setCount(prevCount => {
+      setCount((prevCount: number) => {
         if (prevCount <= 1) {
           clearInterval(timer);
           return 0;
@@ -134,10 +136,10 @@ const Debug = ({ open }) => {
     navigate('/');
   }
   const list = () => {
-    const result = [];
+    const result: JSX.Element[] = [];
     Object.entries(client).forEach(([key, value]) => {
       if (key === 'gui_config' || key === 'footer') {
-        const allValue = JSON.parse(value);
+        const allValue : any = JSON.parse(value);
         Object.entries(allValue).forEach(([subKey, subValue]) => {
           if (typeof subValue === 'object' && subValue !== null) {
             result.push(

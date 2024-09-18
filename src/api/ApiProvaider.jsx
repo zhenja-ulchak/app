@@ -19,6 +19,7 @@ export const GetUsers = async (username, password)=>{
     
     return retVal;
 }
+
 export const GetUsers2 = ()=>{
     let retVal = null;
     const userRespons = {
@@ -594,6 +595,7 @@ export const GetUsers2 = ()=>{
     retVal = userRespons;
     return retVal;
 }
+
 //GetLogin("INDYN\\tester","1234")
 export const GetLogin = async (username, password) => {
     try {
@@ -611,6 +613,7 @@ export const GetLogin = async (username, password) => {
     }
     
   };
+  
   export const GetLoginRefresh = async (username, password) => {
       console.log(username);
       
