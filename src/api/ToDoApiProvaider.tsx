@@ -1,90 +1,59 @@
-import { mockTodos } from './mockData';
 import axios from 'axios';
-
 
 const BASE_URL = `https://api.crosscore.app`;
 
 const client = axios.create({
   baseURL: BASE_URL,
   withCredentials: true,
-})
+});
 
-export const fetchTodos = async () => {
- 
-  try {
-    const response = await client.get(`/user/customer_todo`);
-
-  
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching data:', error);
-    throw error;
-  }
-    
-  };
-
-
-export const createToDoList = async (todoList) => {
-  console.log(todoList);
-  
-  try {
-    const response = await client.post(`/user/customer_todo`, todoList );
-
- 
-    const newTodoList = {...todoList, id: mockTodos.length + 1}
- 
-    return newTodoList
-    
-  } catch (error) {
-    console.error('Error creating todo:', error);
-    throw error;
-  }
-
+// Тип для завдань
+interface Todo {
+  id: number;
+  task: string;
+  [key: string]: any;
 }
 
-// зєднати 2 метода в один 
-export const fetchTodoById = async (id) => {
+// Об'єднана функція для отримання всіх завдань або завдання за ID
+export const fetchTodos = async (id?: number): Promise<Todo | Todo[]> => {
   try {
-    const response = await client.get(`/user/customer_todo/${id}`);
+    const endpoint = id ? `/user/customer_todo/${id}` : `/user/customer_todo`;
+    const response = await client.get(endpoint);
     return response.data;
   } catch (error) {
-    console.error("Error fetching todo by ID:", error);
+    console.error('Error fetching todo data:', error);
     throw error;
   }
 };
 
-export const updateToDoList = async(id, updatedTodo) => {
-  console.log(updatedTodo);
-  
+export const createToDoList = async (todoList: Todo): Promise<Todo> => {
   try {
-    const response = await client.put(`/user/customer_todo/${id}`,updatedTodo);
+    const response = await client.post(`/user/customer_todo`, todoList);
+    // Можливо, потрібен цей код для створення нового завдання локально:
+    const newTodoList = { ...todoList, id: response.data.id };
+    return newTodoList;
+  } catch (error) {
+    console.error('Error creating todo:', error);
+    throw error;
+  }
+};
 
+export const updateToDoList = async (id: number, updatedTodo: Partial<Todo>): Promise<Todo> => {
+  try {
+    const response = await client.put(`/user/customer_todo/${id}`, updatedTodo);
     return response.data;
   } catch (error) {
     console.error('Error updating todo:', error);
     throw error;
   }
+};
 
-}
-
-export const deleteToDoList = async(id) => {
-
-
-
+export const deleteToDoList = async (id: number): Promise<number> => {
   try {
     await client.delete(`/user/customer_todo/${id}`);
-    return id; // Повертаємо id видаленої задачі або просто підтвердження успіху
+    return id; // Повертаємо ID видаленого завдання
   } catch (error) {
     console.error('Error deleting todo:', error);
     throw error;
   }
-  //   await delay(500); // Імітуємо затримку запиту
-  // const index = mockTodos.findIndex(todo => todo.id === id);
-  // if (index !== -1) {
-  //   const [deletedTodo] = mockTodos.splice(index, 1);
-  //   return deletedTodo;
-  // } else {
-  //   throw new Error('Todo not found');
-  // }
-}
-
+};

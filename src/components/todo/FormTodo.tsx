@@ -5,8 +5,7 @@ import {
   createToDoList,
   updateToDoList,
   deleteToDoList,
-  // @ts-ignore
-} from '../../api/ToDoApiProvider';
+} from '../../api/ToDoApiProvaider';
 import {
   Grid,
   Button,
@@ -84,14 +83,28 @@ const TodoApp: React.FC = () => {
   useEffect(() => {
     const loadTodos = async () => {
       const data = await fetchTodos();
-      const tasks = data.data['customer_todo'];
+      // @ts-ignore
+      const tasks: Todo[] = data.data['customer_todo']; // Переконайтесь, що тут правильний тип
       setTodos(tasks);
     };
     loadTodos();
   }, [updateTodo]);
 
   const addTodo = async () => {
-    const addedTodo = await createToDoList({ task: newTodo });
+    // @ts-ignore
+    const addedTodo: Todo = await createToDoList({
+      task: newTodo,
+      id: 0,
+      number: 0,
+      diff_time: null,
+      status: '',
+      start_date: '',
+      end_date: '',
+      lastchange: '',
+      lastchange_by: '',
+      created: '',
+      created_by: '',
+    });
     setTodos([...todos, addedTodo]);
     setNewTodo('');
   };
@@ -105,9 +118,10 @@ const TodoApp: React.FC = () => {
   };
 
   const handleUpdate = async () => {
-    if (!editTodo.id) return;
+    if (editTodo.id === null) return;
     try {
-      const updatedTodo = await updateToDoList(editTodo.id, { task: editTodo.task });
+      // @ts-ignore
+      const updatedTodo: Todo = await updateToDoList(editTodo.id, { task: editTodo.task });
       setTodos(
         todos.map((todo) =>
           todo.id === editTodo.id ? updatedTodo : todo
@@ -119,7 +133,6 @@ const TodoApp: React.FC = () => {
       console.error('Failed to update todo:', error);
     }
   };
-
   const DiffTimeTask = (time: number | null): string => {
     if (!time) return 'N/A';
     const totalSeconds = Math.floor(time / 1000);

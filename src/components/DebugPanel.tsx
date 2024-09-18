@@ -143,43 +143,43 @@ const Debug = ({ open }: any) => {
   if (count === 1) {
     navigate('/');
   }
-  const List: React.FC<Props> = ({ client }) => {
-    const result: JSX.Element[] = [];
+  // const List: React.FC<Props> = ({ client }) => {
+  //   const result: JSX.Element[] = [];
   
-    Object.entries(client).forEach(([key, value]) => {
-      if (key === 'gui_config' || key === 'footer') {
-        try {
-          const allValue: Record<string, any> = JSON.parse(value);
+  //   Object.entries(client).forEach(([key, value]) => {
+  //     if (key === 'gui_config' || key === 'footer') {
+  //       try {
+  //         const allValue: Record<string, any> = JSON.parse(value);
           
-          Object.entries(allValue).forEach(([subKey, subValue]) => {
-            if (typeof subValue === 'object' && subValue !== null) {
-              result.push(
-                <Typography key={subKey}>
-                  <strong>{subKey}:</strong> {JSON.stringify(subValue, null, 2)}
-                </Typography>
-              );
-            } else {
-              result.push(
-                <Typography key={subKey}>
-                  <strong>{subKey}:</strong> {subValue}
-                </Typography>
-              );
-            }
-          });
-        } catch (error) {
-          console.error(`Failed to parse JSON for key ${key}`, error);
-        }
-      } else if (key !== 'client_footer') {
-        result.push(
-          <Typography key={key}>
-            <i>{`${key}: ${value}`}</i>
-          </Typography>
-        );
-      }
-    });
+  //         Object.entries(allValue).forEach(([subKey, subValue]) => {
+  //           if (typeof subValue === 'object' && subValue !== null) {
+  //             result.push(
+  //               <Typography key={subKey}>
+  //                 <strong>{subKey}:</strong> {JSON.stringify(subValue, null, 2)}
+  //               </Typography>
+  //             );
+  //           } else {
+  //             result.push(
+  //               <Typography key={subKey}>
+  //                 <strong>{subKey}:</strong> {subValue}
+  //               </Typography>
+  //             );
+  //           }
+  //         });
+  //       } catch (error) {
+  //         console.error(`Failed to parse JSON for key ${key}`, error);
+  //       }
+  //     } else if (key !== 'client_footer') {
+  //       result.push(
+  //         <Typography key={key}>
+  //           <i>{`${key}: ${value}`}</i>
+  //         </Typography>
+  //       );
+  //     }
+  //   });
   
-    return result;
-  };
+  //   return result;
+  // };
   if (!client) {
     return <div>Loading...</div>; // Показуємо повідомлення, поки дані не будуть доступні
   }

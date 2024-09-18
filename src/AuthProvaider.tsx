@@ -1,10 +1,10 @@
 // src/context/AuthContext.tsx
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
-// @ts-ignore
-import { GetLogin } from '../api/ApiProvaider'; // виправив шлях
-// @ts-ignore
-import useLoginStore from '../store/UserStore'; // виправив шлях
+
+import { GetLogin } from './api/ApiProvaider'; // виправив шлях
+
+import useLoginStore from './store/UserStor'; // виправив шлях
 
 interface AuthContextType {
   user: string | null;
@@ -21,7 +21,7 @@ interface AuthProviderProps {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<string | null>(null);
   const navigate = useNavigate();
-  const { setData } = useLoginStore();
+  const { setData }:any = useLoginStore();
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
