@@ -17,6 +17,14 @@ const RotatableArrow = styled(HiArrowDown)(({ theme, rotate }) => ({
   transform: rotate ? 'rotate(180deg)' : 'rotate(0deg)',
 }));
 
+interface ClientObject {
+  [key: string]: string; // Adjust this type based on actual structure of `client`
+}
+
+interface Props {
+  client: ClientObject;
+}
+
 const Debug = ({ open }: any) => {
   const { data }: any = useLoginStore();
 
@@ -135,35 +143,43 @@ const Debug = ({ open }: any) => {
   if (count === 1) {
     navigate('/');
   }
-  const list = () => {
+  const List: React.FC<Props> = ({ client }) => {
     const result: JSX.Element[] = [];
+  
     Object.entries(client).forEach(([key, value]) => {
       if (key === 'gui_config' || key === 'footer') {
-        const allValue : any = JSON.parse(value);
-        Object.entries(allValue).forEach(([subKey, subValue]) => {
-          if (typeof subValue === 'object' && subValue !== null) {
-            result.push(
-              <Typography key={subKey}>
-                <strong>{subKey}:</strong> {JSON.stringify(subValue, null, 2)}
-              </Typography>
-            );
-          } else {
-            result.push(
-              <Typography key={subKey}>
-                <strong>{subKey}:</strong> {subValue}
-              </Typography>
-            );
-          }
-        });
+        try {
+          const allValue: Record<string, any> = JSON.parse(value);
+          
+          Object.entries(allValue).forEach(([subKey, subValue]) => {
+            if (typeof subValue === 'object' && subValue !== null) {
+              result.push(
+                <Typography key={subKey}>
+                  <strong>{subKey}:</strong> {JSON.stringify(subValue, null, 2)}
+                </Typography>
+              );
+            } else {
+              result.push(
+                <Typography key={subKey}>
+                  <strong>{subKey}:</strong> {subValue}
+                </Typography>
+              );
+            }
+          });
+        } catch (error) {
+          console.error(`Failed to parse JSON for key ${key}`, error);
+        }
       } else if (key !== 'client_footer') {
         result.push(
-          <in>{`{Key} : ${value}`}</in>
+          <Typography key={key}>
+            <i>{`${key}: ${value}`}</i>
+          </Typography>
         );
       }
     });
+  
     return result;
   };
-
   if (!client) {
     return <div>Loading...</div>; // Показуємо повідомлення, поки дані не будуть доступні
   }
@@ -180,8 +196,8 @@ const Debug = ({ open }: any) => {
                 <Grid container spacing={2} sx={{ color: '#ffffff', marginLeft: "259px" }}>
                   <Grid item xs={2} sx={{ margin: '20px 20px',  color: '#fff'  }}>
                   time
-                    <IconButton onClick={handleClick}>
-                    TIME <RotatableArrow rotate={openPopover} style={{ color: '#fff' }} />
+                    <IconButton onClick={()=> handleClick}>
+                    TIME <RotatableArrow rotate={String(anchorEl)} style={{ color: '#fff' }} />
                     </IconButton>
                     <Popover
                       open={openPopover}
