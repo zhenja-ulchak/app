@@ -223,8 +223,8 @@ const Debug = ({ open }: any) => {
                   </Grid>
                   <Grid item xs={2} sx={{ margin: '20px 20px',  color: '#fff' }}>
                   user
-                    <IconButton onClick={handleClick2}>
-                      <RotatableArrow rotate={openPopover2} style={{ color: '#fff' }} />
+                    <IconButton onClick={()=> handleClick2}>
+                      <RotatableArrow rotate={String(anchorEl2)} style={{ color: '#fff' }} />
                     </IconButton>
                     <Popover
                       open={openPopover2}
@@ -255,8 +255,8 @@ const Debug = ({ open }: any) => {
               <Grid container spacing={2} sx={{ color: '#ffffff', marginLeft: "259px" }}>
                 <Grid item xs={2} sx={{ margin: '20px 20px', color: '#fff' }}>
                 time
-                  <IconButton onClick={handleClick}>
-                   <RotatableArrow rotate={openPopover} style={{ color: '#fff' }} />
+                  <IconButton onClick={()=> handleClick}>
+                   <RotatableArrow rotate={String(anchorEl)} style={{ color: '#fff' }} />
                   </IconButton>
                   <Popover
                     open={openPopover}
@@ -282,8 +282,8 @@ const Debug = ({ open }: any) => {
                 </Grid>
                 <Grid item xs={2} sx={{ margin: '20px 20px', color: '#fff' }}>
                 user
-                  <IconButton onClick={handleClick2}>
-                    <RotatableArrow rotate={openPopover2} style={{ color: '#fff' }} />
+                  <IconButton onClick={()=> handleClick2}>
+                    <RotatableArrow rotate={String(setAnchorEl2)} style={{ color: '#fff' }} />
                   </IconButton>
                   <Popover
                     open={openPopover2}
@@ -308,9 +308,9 @@ const Debug = ({ open }: any) => {
                 </Grid>
                 <Grid item xs={2} sx={{ margin: '20px 20px', color: '#fff' }}>
                 list
-                  <IconButton onClick={handleClick2}>
+                  <IconButton onClick={()=> handleClick2}>
             
-                   <RotatableArrow rotate={openPopover2} style={{ color: '#fff' }} />
+                   <RotatableArrow rotate={String(setAnchorEl2)} style={{ color: '#fff' }} />
                   </IconButton>
                   <Popover
                     open={openPopover2}
@@ -328,7 +328,7 @@ const Debug = ({ open }: any) => {
                     anchorReference="anchorPosition"
                   >
                     <Box sx={{ p: 2 }}>
-                      {list()} {/* Виклик функції list */}
+                      {List()} {/* Виклик функції list */}
                     </Box>
                   </Popover>
                 </Grid>
