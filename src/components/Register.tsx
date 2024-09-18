@@ -7,7 +7,7 @@ const Register = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate()
-  const handleRegister = async (e) => {
+  const handleRegister = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
     try {
       const respons = 'lsw'
@@ -18,7 +18,7 @@ const Register = () => {
       }
       alert('Registration successful!');
     } catch (error) {
-      alert(error.message);
+      alert('Register problem');
     }
   };
 

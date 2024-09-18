@@ -328,7 +328,7 @@ const Debug = ({ open }: any) => {
                     anchorReference="anchorPosition"
                   >
                     <Box sx={{ p: 2 }}>
-                      {List()} {/* Виклик функції list */}
+                    {/*   {List()} */ }
                     </Box>
                   </Popover>
                 </Grid>

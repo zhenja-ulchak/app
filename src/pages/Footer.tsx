@@ -12,7 +12,7 @@ export const Footer = () => {
                 position: 'absolute',
                 bottom: '0',
                 width: '100%',
-                position: 'fixed',
+         
                 height: '80px'
             }}
         >

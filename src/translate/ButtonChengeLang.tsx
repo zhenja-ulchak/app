@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 const LanguageSwitcher = () => {
   const { i18n } = useTranslation();
 
-  const handleLanguageChange = (lng) => {
+  const handleLanguageChange = (lng: string | undefined) => {
     i18n.changeLanguage(lng);
   };
   const styleButton = {

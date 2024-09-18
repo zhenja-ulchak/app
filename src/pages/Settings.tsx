@@ -22,8 +22,11 @@ const AccordionStyle = {
 
 const SettingPage = () => {
     const { t } = useTranslation();
+    // @ts-ignore
     const isOpen = useDebugStore((state) => state.isOpen); // Отримуємо стан
+    // @ts-ignore
     const toggleOpen = useDebugStore((state) => state.toggleOpen); // Отримуємо функцію для зміни стану
+    // @ts-ignore
     const data = useLoginStore((state) => state.data);
 
 
@@ -49,7 +52,11 @@ const SettingPage = () => {
                          {t('setting.changeL')}
                     </AccordionSummary>
                     <AccordionDetails>
-                        <LanguageSwitcher sx={{ float: 'right' }} />
+                        <div style={{ float: 'right' }}>
+                        <LanguageSwitcher  />
+
+                        </div>
+                        
                     </AccordionDetails>
                 </Accordion>
                 <Accordion sx={{ ...AccordionStyle }}>
