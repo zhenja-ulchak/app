@@ -18,7 +18,7 @@ const SideBar = () => {
 
   const [open, setOpen] = React.useState(false);
 
-  const toggleDrawer = (newOpen) => () => {
+  const toggleDrawer = (newOpen: boolean | ((prevState: boolean) => boolean)) => () => {
     setOpen(newOpen);
   };
 

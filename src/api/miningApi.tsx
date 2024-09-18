@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+// @ts-ignore
 import { api_v1, api_mrr } from './keyApi'; // Імпортуємо API
 
 
@@ -25,7 +26,7 @@ export const  GetAccountProfile = () => {
       url: `/whoami`,
       method: "GET",
       data: {},
-  }}, { withCredentials: true }) .then(({ data }) => {
+  }}, { withCredentials: true }) .then(({ data }: any) => {
     const processedData = {
       ...data,
       data: {
@@ -36,7 +37,7 @@ export const  GetAccountProfile = () => {
     console.log('Processed Data:', processedData);
     return processedData;
   })
-  .catch((error) => {
+  .catch((error: any) => {
     console.error('Error fetching data:', error);
   });
  

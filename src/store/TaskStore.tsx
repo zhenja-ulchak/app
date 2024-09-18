@@ -2,9 +2,9 @@ import {create} from 'zustand';
 
 const useVisibleStore = create((set) => ({
     isVisible: false,
-    setVisible: (value) => set({ isVisible: value }),
+    setVisible: (value: any) => set({ isVisible: value }),
     idTask: 1,
-    setId: (myId) => set({ idTask: myId }),
+    setId: (myId: any) => set({ idTask: myId }),
 }));
 
 export default useVisibleStore;

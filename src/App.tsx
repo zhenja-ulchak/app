@@ -24,7 +24,7 @@ const AppContent = () => {
 
   // Перелік маршрутів, на яких не потрібно відображати SideBar
   const hideSideBarRoutes = ['/register', '/login', '/'];
-
+// @ts-ignore
   const isOpen = useDebugStore((state) => state.isOpen); // Отримуємо стан
   return (
 

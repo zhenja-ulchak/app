@@ -1,6 +1,8 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
+// @ts-ignore
 import en from './locales/en/translation.json';
+// @ts-ignore
 import ua from './locales/ua/translation.json';
 
 i18n
