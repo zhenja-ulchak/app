@@ -17,7 +17,7 @@ const UsersList = () => {
   useEffect(() => {
     const getUsers = async () => {
       try {
-        const usersData = await GetUsers("INDYN\\tester", "1234");
+        const usersData = await GetUsers();
         const user = usersData.data['data']['user'];
         
         setUsers(user); // Assuming user is an array of objects

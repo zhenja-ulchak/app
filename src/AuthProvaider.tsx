@@ -2,9 +2,9 @@
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { GetLogin } from './api/ApiProvaider'; // виправив шлях
+import { GetLogin } from './api/ApiProvaider'; 
 
-import useLoginStore from './store/UserStor'; // виправив шлях
+import useLoginStore from './store/UserStor'; 
 
 interface AuthContextType {
   user: string | null;
@@ -20,8 +20,8 @@ interface AuthProviderProps {
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<string | null>(null);
-  const navigate = useNavigate();
   const { setData }:any = useLoginStore();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
@@ -30,15 +30,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   }, []);
 
-  const login = async (email: string, password: string) => {
+  const login = async (username: string, password: string) => {
     try {
-      const res = await GetLogin(email, password);
+      const res = await GetLogin(username, password);
       console.log(res);
 
       setData(res.data); // зберігаємо дані користувача в стан
       if (res.data?.token) { // якщо є токен в даних
-        setUser(email); // можна зберігати дані користувача, наприклад, email
-        localStorage.setItem('user', email); // зберігаємо в localStorage (тут можна зберігати токен)
+        setUser(username); // можна зберігати дані користувача, наприклад, email
+        localStorage.setItem('user', username); // зберігаємо в localStorage (тут можна зберігати токен)
         localStorage.setItem('token', res.data.token); // зберігаємо токен
         navigate('/home');
       } 

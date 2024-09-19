@@ -1,8 +1,13 @@
-import create from 'zustand';
+import {create} from 'zustand';
 
-const useLoginStore = create((set) => ({
+type LoginStore = {
+    data: string | null
+    setData: ( newData: null | string )=> void
+}
+
+const useLoginStore = create<LoginStore>((set) => ({
     data: null,  // Початковий стан для даних
-    setData: (newData: any) => set({ data: newData }), // Функція для встановлення даних
+    setData: (newData: null | string) => set({ data: newData }), // Функція для встановлення даних
 }));
 
 export default useLoginStore;

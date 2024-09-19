@@ -1,10 +1,17 @@
-import {create} from 'zustand';
+import { create } from 'zustand';
 
-const useVisibleStore = create((set) => ({
-    isVisible: false,
-    setVisible: (value: any) => set({ isVisible: value }),
-    idTask: 1,
-    setId: (myId: any) => set({ idTask: myId }),
+type VisibleStore = {
+  isVisible: boolean;
+  setVisible: (value: boolean) => void; 
+  idTask: number;
+  setId: (myId: number) => void; 
+}
+
+const useVisibleStore = create<VisibleStore>((set) => ({
+  isVisible: false,
+  setVisible: (value: boolean) => set({ isVisible: value }),
+  idTask: 1, 
+  setId: (myId: number) => set({ idTask: myId }), 
 }));
 
 export default useVisibleStore;
