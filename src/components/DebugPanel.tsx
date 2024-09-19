@@ -28,6 +28,7 @@ interface Props {
 const Debug = ({ open }: any) => {
   const { data }: any = useLoginStore();
 
+console.log(data);
 
 
   const dataOne =    {
@@ -40,9 +41,9 @@ const Debug = ({ open }: any) => {
     "asset_version": "5eb21e29e6b911ee8c8cb62304048e10",
     "country_iso": "en",
     "logo": "https://insidedynamic.de/assets/images/Logo/logo-inside-dynamic.svg",
-    "page_refresh_time": "301",
-    "login_timeout": "200",
-    "fa2_key_timeout": "600",
+    "page_refresh_time": 301,
+    "login_timeout":200,
+    "fa2_key_timeout": 600,
     "languages": "ru, de, en",
     "time_format": "YYYY-MMM-DD",
     "header": "<img src=\"https://www.freewebheaders.com/wp-content/gallery/holidays-size-1280x375/thumbs/thumbs_colorful-holiday-christmas-gifts-and-decorations-with-lights-tinsel-header-background-1280x375.jpg\" width=\"100%\" style=\"height:100px\"/>",
@@ -59,7 +60,7 @@ const Debug = ({ open }: any) => {
     "is_debug_on": true
   };
 
-  const client = !data ? dataOne : data["data"]["user"][0]
+  const client = !data ? dataOne : dataOne
   
   const [count, setCount] = useState(client.login_timeout || 0);
   const [refresh, setRefresh] = useState(client.page_refresh_time / 10 || 0);
