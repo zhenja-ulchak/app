@@ -1,4 +1,7 @@
 import axios from 'axios';
+import { z } from 'zod';
+import{ CustomerTodoType } from '../types/ToDoCustomerType'
+
 
 const BASE_URL = `https://api.crosscore.app`;
 
@@ -8,14 +11,10 @@ const client = axios.create({
 });
 
 // Тип для завдань
-interface Todo {
-  id: number;
-  task: string;
-  [key: string]: any;
-}
+
 
 // Об'єднана функція для отримання всіх завдань або завдання за ID
-export const fetchTodos = async (id?: number): Promise<Todo | Todo[]> => {
+export const fetchTodos = async (id?: number): Promise<CustomerTodoType | CustomerTodoType[]> => {
   try {
     const endpoint = id ? `/user/customer_todo/${id}` : `/user/customer_todo`;
     const response = await client.get(endpoint);
@@ -26,7 +25,7 @@ export const fetchTodos = async (id?: number): Promise<Todo | Todo[]> => {
   }
 };
 
-export const createToDoList = async (todoList: Todo): Promise<Todo> => {
+export const createToDoList = async (todoList: CustomerTodoType): Promise<CustomerTodoType> => {
   try {
     const response = await client.post(`/user/customer_todo`, todoList);
     // Можливо, потрібен цей код для створення нового завдання локально:
@@ -38,7 +37,7 @@ export const createToDoList = async (todoList: Todo): Promise<Todo> => {
   }
 };
 
-export const updateToDoList = async (id: number, updatedTodo: Partial<Todo>): Promise<Todo> => {
+export const updateToDoList = async (id: number, updatedTodo: Partial<CustomerTodoType>): Promise<CustomerTodoType> => {
   try {
     const response = await client.put(`/user/customer_todo/${id}`, updatedTodo);
     return response.data;

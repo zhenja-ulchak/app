@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-
+import { z } from 'zod';
+import{ CreateCustomerTodoType, CustomersTodoStatusTypeEnum, CustomerTodoType } from '../../types/ToDoCustomerType'
 import {
   fetchTodos,
   createToDoList,
@@ -32,22 +33,10 @@ import { useTranslation } from 'react-i18next';
 import { JSX } from 'react/jsx-runtime';
 import { MUIStyledCommonProps } from '@mui/system';
 
-interface Todo {
-  id: number;
-  task: string;
-  number: number;
-  diff_time: number | null;
-  status: string;
-  start_date: string;
-  end_date: string;
-  lastchange: string;
-  lastchange_by: string;
-  created: string;
-  created_by: string;
-}
+
 
 const TodoApp: React.FC = () => {
-  const [todos, setTodos] = useState<Todo[]>([]);
+  const [todos, setTodos] = useState<CustomerTodoType[]>([]);
   const [newTodo, setNewTodo] = useState<string>('');
   const [editTodo, setEditTodo] = useState<{ id: number | null; task: string }>({
     id: null,
@@ -91,27 +80,30 @@ const TodoApp: React.FC = () => {
   }, [updateTodo]);
 
   const addTodo = async () => {
-    // @ts-ignore
-    const addedTodo: Todo = await createToDoList({
-      task: newTodo,
-      id: 0,
-      number: 0,
+
+    const addedTodo:  CustomerTodoType = await createToDoList({
+      task: newTodo, // Assuming newTodo is a string
+      id: '0', // Use a string here
+      number: '0', // Use a string here
       diff_time: null,
-      status: '',
-      start_date: '',
-      end_date: '',
-      lastchange: '',
-      lastchange_by: '',
-      created: '',
-      created_by: '',
+      status: CustomersTodoStatusTypeEnum.Pending,
+      start_date: Number(''), // Ensure this is a string or null
+      end_date: '', // Ensure this is a string or null
+      lastchange: null, // Ensure this is a string or null
+      lastchange_by: null, // Ensure this is a string or null
+      created: null, // Ensure this is a string or null
+      created_by: null, // Ensure this is a string or null
+      customer_id: '0', // Use a string here
+      solution: '',
+      message_history: null // Ensure this is a string or null
     });
     setTodos([...todos, addedTodo]);
     setNewTodo('');
   };
 
-  const handleEditClick = (todo: Todo) => {
+  const handleEditClick = (todo: CustomerTodoType) => {
     setEditTodo({
-      id: todo.id,
+      id: Number(todo.id),
       task: todo.task,
     });
     setUpdateTodo(true);
@@ -121,10 +113,10 @@ const TodoApp: React.FC = () => {
     if (editTodo.id === null) return;
     try {
       // @ts-ignore
-      const updatedTodo: Todo = await updateToDoList(editTodo.id, { task: editTodo.task });
+      const updatedTodo: CustomerTodoType = await updateToDoList(editTodo.id, { task: editTodo.task });
       setTodos(
         todos.map((todo) =>
-          todo.id === editTodo.id ? updatedTodo : todo
+          todo.id === String(editTodo.id) ? updatedTodo : todo
         )
       );
       setEditTodo({ id: null, task: '' });
@@ -155,7 +147,7 @@ const TodoApp: React.FC = () => {
         col2: todo.status,
         col3: todo.start_date,
         col4: todo.end_date,
-        col5: DiffTimeTask(todo.diff_time),
+        col5: DiffTimeTask(Number(todo.diff_time)),
         col6: todo.lastchange,
         col7: todo.lastchange_by,
         col8: todo.created,

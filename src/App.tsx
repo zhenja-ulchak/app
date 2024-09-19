@@ -53,7 +53,7 @@ const AppContent = () => {
           <Route path="/todo" element={<ProtectedRoute><FormTodo /></ProtectedRoute>} />
           <Route path="/account" element={ <ProtectedRoute>< AccountPage /></ProtectedRoute>} />
           <Route path="/" element={<Login />} />
-          <Route path="/home" element={<Home />} />
+          <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
           <Route path="/setting" element={ <ProtectedRoute><SettingPage /></ProtectedRoute>} />
           <Route path="/details/:id" element={ <ProtectedRoute><ToDoDetails /></ProtectedRoute>} />
           <Route path="/dashboard" element={ <ProtectedRoute><DashApp /></ProtectedRoute>} />

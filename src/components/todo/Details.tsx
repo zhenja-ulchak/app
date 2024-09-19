@@ -41,7 +41,7 @@ const ToDoDetails: React.FC = () => {
   const handleClickEnd = async () => {
     const start = new Date(todo!.start_date);
     const end = new Date(GetFormattedDate());
-    const differenceInMilliseconds = end.getTime() - start.getTime();
+    const differenceInMilliseconds = String(end.getTime() - start.getTime());
     await updateToDoList(todo!.id, { diff_time: differenceInMilliseconds });
   };
 
