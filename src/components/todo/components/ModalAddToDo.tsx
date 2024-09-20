@@ -1,22 +1,15 @@
 import {
     Grid, TextField, Button, Box, InputLabel, Modal
-  
   } from '@mui/material';
 
 
 const ModalAdd = ({visibleAddOpen, setNewTodo, setAddVisibleOpen, menuRef, newTodo, addTodo}: any) => {
-
-
     return (
-
         <>
             {visibleAddOpen ?
-
                 (
-
                     <Modal
                         open={visibleAddOpen}
-
                         aria-labelledby="modal-modal-title"
                         aria-describedby="modal-modal-description"
                     >

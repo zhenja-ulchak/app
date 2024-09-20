@@ -27,12 +27,10 @@ import { styled, Theme } from '@mui/material/styles';
 import ModalAdd from './components/ModalAddToDo';
 import ModuleUpdate from './components/ModalUpdateToDo';
 import ColumnTooltip from './components/AddColumnTooltip';
-import useVisibleStore from '../../store/TaskStore';
+// import useVisibleStore from '../../store/TaskStore';
 import { useTranslation } from 'react-i18next';
 import { JSX } from 'react/jsx-runtime';
 import { MUIStyledCommonProps } from '@mui/system';
-
-
 
 const TodoApp: React.FC = () => {
   const [todos, setTodos] = useState<CustomerTodoType[]>([]);
@@ -61,6 +59,22 @@ const TodoApp: React.FC = () => {
   const menuRef = useRef<HTMLDivElement | null>(null);
   const colorId = useRef<string | null>(null);
 
+  const handleClickOutside = (event: MouseEvent) => {
+    if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setVisibleOpen(false); // Закриваємо блок при кліку поза ним
+    }
+};
+
+useEffect(() => {
+    // Додаємо обробник події при монтуванні компонента
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+        // Вилучаємо обробник події при демонтажі компонента
+        document.removeEventListener('mousedown', handleClickOutside);
+    };
+}, []);
+
+
   const StyledTableRow = styled('tr')({
     transition: 'background-color 0.3s ease',
     '&:hover': {
@@ -86,20 +100,20 @@ const TodoApp: React.FC = () => {
   const addTodo = async () => {
 
     const addedTodo:  CustomerTodoType = await createToDoList({
-      task: newTodo, // Assuming newTodo is a string
-      id: '0', // Use a string here
-      number: '0', // Use a string here
+      task: newTodo, 
+      id: '0', 
+      number: '0', 
       diff_time: null,
       status: CustomersTodoStatusTypeEnum.Pending,
-      start_date: Number(''), // Ensure this is a string or null
-      end_date: '', // Ensure this is a string or null
-      lastchange: null, // Ensure this is a string or null
-      lastchange_by: null, // Ensure this is a string or null
-      created: null, // Ensure this is a string or null
-      created_by: null, // Ensure this is a string or null
-      customer_id: '0', // Use a string here
+      start_date: Number(''), 
+      end_date: '', 
+      lastchange: null, 
+      lastchange_by: null, 
+      created: null, 
+      created_by: null,
+      customer_id: '0', 
       solution: '',
-      message_history: null // Ensure this is a string or null
+      message_history: null 
     });
     setTodos([...todos, addedTodo]);
     setNewTodo('');
@@ -285,11 +299,6 @@ const TodoApp: React.FC = () => {
                   const colorIdArray = colorId.current ? JSON.parse(colorId.current) : [];
                   const isSelected = colorIdArray.some((id: number) => row.original.id === id);
                   prepareRow(row);
-
-
-
-              
-
                   return (
                     <StyledTableRow {...row.getRowProps()}>
                       {row.cells.map((cell) => (
@@ -305,11 +314,7 @@ const TodoApp: React.FC = () => {
                             ...cell.column.cellStyle
                           }}
                           onClick={() => {
-
-
-
                             const excludedAccessors = ['col11'];
-
                             if (!excludedAccessors.includes(cell.column.id)) {
                               handleCellClick(row.original.id);
                             }
