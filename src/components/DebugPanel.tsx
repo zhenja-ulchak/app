@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import useLoginStore from '../store/UserStor';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
@@ -16,11 +16,6 @@ const RotatableArrow = styled(HiArrowDown)(({ theme, rotate }) => ({
   transition: 'transform 0.3s ease',
   transform: rotate ? 'rotate(180deg)' : 'rotate(0deg)',
 }));
-
-interface ClientObject {
-  [key: string]: string; // Adjust this type based on actual structure of `client`
-}
-
 
 
 const Debug = ({ open }: any) => {
@@ -54,7 +49,7 @@ console.log(data);
     "is_debug_on": true
   };
 
-  const client = !data ? dataOne : dataOne
+  const client = data || dataOne;
   
   const [count, setCount] = useState(client.login_timeout || 0);
   const [refresh, setRefresh] = useState(client.page_refresh_time / 10 || 0);
@@ -123,17 +118,19 @@ console.log(data);
         setRefresh(client.page_refresh_time || 0)
       }
     }
-  }, [refresh]);
-  const handleMouseMove = () => {
-    setCount(client.login_timeout);
-  };
+  }, [refresh, client.page_refresh_time,count ]);
 
+
+  const handleMouseMove = useCallback(() => {
+    setCount(client.login_timeout);
+  }, [client.login_timeout]);
+  
   useEffect(() => {
     window.addEventListener('mousemove', handleMouseMove);
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
     };
-  }, []);
+  }, [handleMouseMove]);
 
   if (count === 1) {
     navigate('/');
