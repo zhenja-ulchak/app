@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-import{ CustomersTodoStatusTypeEnum, CustomerTodoType } from '../../types/ToDoCustomerType'
+import { CustomersTodoStatusTypeEnum, CustomerTodoType } from '../../types/ToDoCustomerType'
 import {
   fetchTodos,
   createToDoList,
@@ -14,6 +14,7 @@ import {
   Select,
   MenuItem,
   Typography,
+  
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 // @ts-ignore
@@ -52,7 +53,7 @@ const TodoApp: React.FC = () => {
     'col5',
     'col11',
   ]);
-// @ts-ignore
+  // @ts-ignore
   // const { idTask }: { idTask: number } = useVisibleStore();
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -61,18 +62,18 @@ const TodoApp: React.FC = () => {
 
   const handleClickOutside = (event: MouseEvent) => {
     if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setVisibleOpen(false); // Закриваємо блок при кліку поза ним
+      setVisibleOpen(false); // Закриваємо блок при кліку поза ним
     }
-};
+  };
 
-useEffect(() => {
+  useEffect(() => {
     // Додаємо обробник події при монтуванні компонента
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
-        // Вилучаємо обробник події при демонтажі компонента
-        document.removeEventListener('mousedown', handleClickOutside);
+      // Вилучаємо обробник події при демонтажі компонента
+      document.removeEventListener('mousedown', handleClickOutside);
     };
-}, []);
+  }, []);
 
 
   const StyledTableRow = styled('tr')({
@@ -99,21 +100,21 @@ useEffect(() => {
 
   const addTodo = async () => {
 
-    const addedTodo:  CustomerTodoType = await createToDoList({
-      task: newTodo, 
-      id: '0', 
-      number: '0', 
+    const addedTodo: CustomerTodoType = await createToDoList({
+      task: newTodo,
+      id: '0',
+      number: '0',
       diff_time: null,
       status: CustomersTodoStatusTypeEnum.Pending,
-      start_date: Number(''), 
-      end_date: '', 
-      lastchange: null, 
-      lastchange_by: null, 
-      created: null, 
+      start_date: Number(''),
+      end_date: '',
+      lastchange: null,
+      lastchange_by: null,
+      created: null,
       created_by: null,
-      customer_id: '0', 
+      customer_id: '0',
       solution: '',
-      message_history: null 
+      message_history: null
     });
     setTodos([...todos, addedTodo]);
     setNewTodo('');
@@ -188,7 +189,11 @@ useEffect(() => {
 
   const columns = React.useMemo<Column<any>[]>(
     () => [
-      { Header: t('todo.task'), accessor: 'col1' },
+      {
+        Header: t('todo.task'),
+        accessor: 'col1',
+        Cell: ({ value }: any) => t(value)
+      },
       { Header: t('todo.number'), accessor: 'colNumber' },
       { Header: t('todo.check'), accessor: 'colCheck' },
       { Header: t('todo.status'), accessor: 'col2' },
@@ -199,7 +204,26 @@ useEffect(() => {
       { Header: t('todo.last_change_by'), accessor: 'col7' },
       { Header: t('todo.created'), accessor: 'col8' },
       { Header: t('todo.created_by'), accessor: 'col9' },
-      { Header: t('todo.actions'), accessor: 'col11' },
+      {
+        Header: t('todo.actions'),
+        accessor: 'col11',
+        headerStyle:
+        {
+          backgroundColor: '#fff',
+          color: '#000',
+          textAlign: 'center',
+          fontWeight: 'bold',
+          position: 'sticky',
+          right: 0, zIndex: 10
+        },
+        cellStyle:
+        {
+          position: 'sticky',
+          right: 0,
+          backgroundColor: '#fff',
+          zIndex: 5
+        },
+      },
     ],
     [t]
   );
@@ -244,7 +268,7 @@ useEffect(() => {
 
   return (
     <>
-        <ModuleUpdate
+      <ModuleUpdate
         updateTodo={updateTodo}
         editTodo={editTodo}
         setUpdateTodo={setUpdateTodo}
@@ -257,7 +281,13 @@ useEffect(() => {
             <Button style={{ float: 'right' }} onClick={() => setVisibleOpen(!visibleOpen)}>
               <FaRegEye size={30} />
             </Button>
-            <ColumnTooltip visibleOpen={visibleOpen} menuRef={menuRef} columns={columns} visibleColumns={visibleColumns} handleToggleColumn={handleToggleColumn} />
+            <ColumnTooltip
+              visibleOpen={visibleOpen}
+              menuRef={menuRef}
+              columns={columns}
+              visibleColumns={visibleColumns}
+              handleToggleColumn={handleToggleColumn}
+            />
             <Button style={{ float: 'right', }}
               onClick={() => setAddVisibleOpen(!visibleOpen)}>
               <FaPlus size={30} />
@@ -273,7 +303,7 @@ useEffect(() => {
           </Box>
         </Grid>
         <Grid item xs={12}>
-          <div style={{ maxHeight: '620px', overflowY: 'auto', overflowX: 'auto' }}>
+          <div style={{ maxHeight: '378px', overflowY: 'auto', overflowX: 'auto' }}>
             <table {...getTableProps()} style={{ marginTop: '20px' }}>
               <thead>
                 {headerGroups.map((headerGroup: { getHeaderGroupProps: () => JSX.IntrinsicAttributes & React.ClassAttributes<HTMLTableRowElement> & React.HTMLAttributes<HTMLTableRowElement>; headers: any[]; }) => (
@@ -331,7 +361,7 @@ useEffect(() => {
             </table>
 
           </div>
-          <Box display="flex" alignItems="center" sx={{ float: "right" }} mt={2}>
+          <Box display="flex" alignItems="center" sx={{ float: "right", marginRight: '20px' }} mt={2}>
             <Button
               onClick={() => gotoPage(0)}
               disabled={!canPreviousPage}
