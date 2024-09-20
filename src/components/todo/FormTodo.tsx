@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { z } from 'zod';
-import{ CreateCustomerTodoType, CustomersTodoStatusTypeEnum, CustomerTodoType } from '../../types/ToDoCustomerType'
+
+import{ CustomersTodoStatusTypeEnum, CustomerTodoType } from '../../types/ToDoCustomerType'
 import {
   fetchTodos,
   createToDoList,
-  updateToDoList,
-  deleteToDoList,
+  updateToDoList
 } from '../../api/ToDoApiProvaider';
 import {
   Grid,
@@ -60,7 +59,7 @@ const TodoApp: React.FC = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const menuRef = useRef<HTMLDivElement | null>(null);
-  const colorId = useRef<string | null>(null);
+  // const colorId = useRef<string | null>(null);
 
   const StyledTableRow = styled('tr')({
     transition: 'background-color 0.3s ease',
@@ -201,8 +200,8 @@ const TodoApp: React.FC = () => {
     canPreviousPage,
     canNextPage,
     pageOptions,
-    pageCount,
-    gotoPage,
+    // pageCount,
+    // gotoPage,
     nextPage,
     previousPage,
     setPageSize,

@@ -13,7 +13,7 @@ import SideBarList from '../components/SideBarList'
 
 
 const SideBar = () => {
-  const drawerWidth = 240;
+ 
   const { t } = useTranslation();
 
   const [open, setOpen] = React.useState(false);

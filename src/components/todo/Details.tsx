@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { fetchTodos, updateToDoList } from '../../api/ToDoApiProvaider'; // Імпортуйте ваші функції для отримання та оновлення даних
-import { Container, Paper, Typography, Box, Button } from '@mui/material';
+import {  Paper, Typography, Box, Button } from '@mui/material';
 import { FaArrowLeft } from 'react-icons/fa';
 import useVisibleStore from '../../store/TaskStore';
 import GetFormattedDate from './components/GetFormattedDate';
+
 
 // Типи даних
 interface Todo {
@@ -20,7 +21,8 @@ const ToDoDetails: React.FC = () => {
   const { setVisible, setId }: any = useVisibleStore();
   const [todo, setTodo] = useState<Todo | null>(null); // Створюємо стан для зберігання завдання
   const [myArray, setMyArray] = useState<number[]>([]); // Стан для масиву ID
-
+  console.log(myArray);
+  
   // Обробник для початку завдання
   const handleClickStart = async () => {
     setVisible(true);

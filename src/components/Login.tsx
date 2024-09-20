@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { AuthForm } from '../types/LoginResponseType'
+// import { AuthForm } from '../types/LoginResponseType'
 import { useNavigate } from "react-router-dom";
 import { useAuth } from '../AuthProvaider';
 import { TextField, Button, Container, Typography, Box } from '@mui/material';
@@ -11,7 +11,7 @@ const Login = () => {
   const { login}: any = useAuth();
   const [email, setEmail] = useState('INDYN\\demo-testa');
   const [password, setPassword] = useState('1234');
-  const [error, setError] = useState('');
+
   const handleLogin = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
 
@@ -34,7 +34,7 @@ const Login = () => {
         <Typography variant="h2" component="h2" gutterBottom>
           Login
         </Typography>
-        {error && <Typography color="error">{error}</Typography>}
+
         <form onSubmit={handleLogin}>
           <TextField
             label="Username"

@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 // @ts-ignore
 import {GetLoginRefresh} from '../api/ApiProvaider'
-import { JSX } from 'react/jsx-runtime';
+
 const RotatableArrow = styled(HiArrowDown)(({ theme, rotate }) => ({
   transition: 'transform 0.3s ease',
   transform: rotate ? 'rotate(180deg)' : 'rotate(0deg)',
@@ -21,9 +21,7 @@ interface ClientObject {
   [key: string]: string; // Adjust this type based on actual structure of `client`
 }
 
-interface Props {
-  client: ClientObject;
-}
+
 
 const Debug = ({ open }: any) => {
   const { data }: any = useLoginStore();
@@ -46,10 +44,6 @@ console.log(data);
     "fa2_key_timeout": 600,
     "languages": "ru, de, en",
     "time_format": "YYYY-MMM-DD",
-    "header": "<img src=\"https://www.freewebheaders.com/wp-content/gallery/holidays-size-1280x375/thumbs/thumbs_colorful-holiday-christmas-gifts-and-decorations-with-lights-tinsel-header-background-1280x375.jpg\" width=\"100%\" style=\"height:100px\"/>",
-    "banner": "{\"title\": \"title\", \"active\": true, \"content\": {\"root\": {\"type\": \"root\", \"format\": \"\", \"indent\": 0, \"version\": 1, \"children\": [{\"type\": \"paragraph\", \"format\": \"right\", \"indent\": 0, \"version\": 1, \"children\": [{\"mode\": \"normal\", \"text\": \"asdd\", \"type\": \"text\", \"style\": \"\", \"detail\": 0, \"format\": 0, \"version\": 1}], \"direction\": \"ltr\"}, {\"type\": \"paragraph\", \"format\": \"\", \"indent\": 0, \"version\": 1, \"children\": [], \"direction\": null}, {\"type\": \"paragraph\", \"format\": \"right\", \"indent\": 0, \"version\": 1, \"children\": [{\"mode\": \"normal\", \"text\": \"asdddasdaasdasd111aaasdasdasd1123123\", \"type\": \"text\", \"style\": \"\", \"detail\": 0, \"format\": 0, \"version\": 1}], \"direction\": \"ltr\"}, {\"type\": \"paragraph\", \"format\": \"right\", \"indent\": 0, \"version\": 1, \"children\": [{\"mode\": \"normal\", \"text\": \"adddd\", \"type\": \"text\", \"style\": \"\", \"detail\": 0, \"format\": 0, \"version\": 1}], \"direction\": \"ltr\"}], \"direction\": \"ltr\"}}, \"end_time\": \"2025-Jan-31\", \"start_time\": \"2024-Feb-22\"}",
-    "footer": "{\"root\":{\"children\":[{\"children\":[{\"detail\":0,\"format\":0,\"mode\":\"normal\",\"style\":\"\",\"text\":\"footeraasdasdasd1\",\"type\":\"text\",\"version\":1}],\"direction\":\"ltr\",\"format\":\"center\",\"indent\":0,\"type\":\"paragraph\",\"version\":1}],\"direction\":\"ltr\",\"format\":\"\",\"indent\":0,\"type\":\"root\",\"version\":1}}",
-    "checksum": "3584b4d06e8b021f314b4a3b52c27b87",
     "file_provider_id": null,
     "config_change": "2024-02-15 19:34:24",
     "lastchange": "2024-03-20 13:57:04",
@@ -122,7 +116,7 @@ console.log(data);
 
 
   useEffect(() => {
-    if(count != 0){
+    if(count !== 0){
       if (refresh  <= (refresh*90)/100) {
         GetLoginRefresh('INDYN\\demo-testa', '1234');
   
