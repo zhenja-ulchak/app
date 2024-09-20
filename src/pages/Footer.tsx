@@ -9,7 +9,7 @@ export const Footer = () => {
                 backgroundColor: '#1976d2',
                 color: '#fff',
                 paddingTop: '20px' ,
-                position: 'absolute',
+                position: 'fixed',
                 bottom: '0',
                 width: '100%',
          

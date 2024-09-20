@@ -1,32 +1,21 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+
+import { useEffect, useState } from 'react';
 // @ts-ignore
-import { api_v1, api_mrr } from './keyApi'; // Імпортуємо API
+import { api_v1 } from './keyApi'; // Імпортуємо API
 
 
-const external_provider_id = '15'
+
 const BASE_URL = `https://api.crosscore.app`;
 
 export const  GetAccountProfile = () => {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    // Виклик api_v1
-    // {url: "/rig/mine", method: "GET", data: {}}
-    // data
-    // : 
-    // {}
-    // method
-    // : 
-    // "GET"
-    // url
-    // : 
-    // "/rig/mine"
     const response =  api_v1.post(`${BASE_URL}/user/external_provider_proxy/16`, {data: {
       url: `/whoami`,
       method: "GET",
       data: {},
-  }}, { withCredentials: true }) .then(({ data }: any) => {
+  }}, { withCredentials: true }).then(({ data }: any) => {
     const processedData = {
       ...data,
       data: {
@@ -35,7 +24,9 @@ export const  GetAccountProfile = () => {
       },
     };
     console.log('Processed Data:', processedData);
-    return processedData;
+    setData(processedData);
+    console.log(response);
+    
   })
   .catch((error: any) => {
     console.error('Error fetching data:', error);

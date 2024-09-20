@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 // Функція для отримання кукісів на клієнті
-let cookies = () => undefined;
+
 
 const getCookies = (): string | undefined => {
   if (typeof window !== 'undefined') {

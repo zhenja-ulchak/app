@@ -55,11 +55,11 @@ const TodoApp: React.FC = () => {
     'col11',
   ]);
 // @ts-ignore
-  const { idTask }: { idTask: number } = useVisibleStore();
+  // const { idTask }: { idTask: number } = useVisibleStore();
   const navigate = useNavigate();
   const { t } = useTranslation();
   const menuRef = useRef<HTMLDivElement | null>(null);
-  // const colorId = useRef<string | null>(null);
+  const colorId = useRef<string | null>(null);
 
   const StyledTableRow = styled('tr')({
     transition: 'background-color 0.3s ease',
@@ -68,6 +68,11 @@ const TodoApp: React.FC = () => {
     },
   });
 
+  const wBox = {
+    width: '87%',
+    marginRight: '20px',
+    marginLeft: '13%'
+  };
   useEffect(() => {
     const loadTodos = async () => {
       const data = await fetchTodos();
@@ -200,8 +205,8 @@ const TodoApp: React.FC = () => {
     canPreviousPage,
     canNextPage,
     pageOptions,
-    // pageCount,
-    // gotoPage,
+    pageCount,
+    gotoPage,
     nextPage,
     previousPage,
     setPageSize,
@@ -225,7 +230,7 @@ const TodoApp: React.FC = () => {
 
   return (
     <>
-      <ModuleUpdate
+        <ModuleUpdate
         updateTodo={updateTodo}
         editTodo={editTodo}
         setUpdateTodo={setUpdateTodo}
@@ -234,24 +239,13 @@ const TodoApp: React.FC = () => {
       />
       <Grid container spacing={2} sx={{ marginTop: '40px' }}>
         <Grid item xs={12}>
-          <Box sx={{ width: '87%', marginRight: '20px', marginLeft: '13%' }}>
-            <Button
-              style={{ float: 'right' }}
-              onClick={() => setVisibleOpen(!visibleOpen)}
-            >
+          <Box sx={{ ...wBox }}>
+            <Button style={{ float: 'right' }} onClick={() => setVisibleOpen(!visibleOpen)}>
               <FaRegEye size={30} />
             </Button>
-            <ColumnTooltip
-              visibleOpen={visibleOpen}
-              menuRef={menuRef}
-              columns={columns}
-              visibleColumns={visibleColumns}
-              handleToggleColumn={handleToggleColumn}
-            />
-            <Button
-              style={{ float: 'right' }}
-              onClick={() => setAddVisibleOpen(!visibleAddOpen)}
-            >
+            <ColumnTooltip visibleOpen={visibleOpen} menuRef={menuRef} columns={columns} visibleColumns={visibleColumns} handleToggleColumn={handleToggleColumn} />
+            <Button style={{ float: 'right', }}
+              onClick={() => setAddVisibleOpen(!visibleOpen)}>
               <FaPlus size={30} />
             </Button>
             <ModalAdd
@@ -277,9 +271,7 @@ const TodoApp: React.FC = () => {
                           background: '#fff',
                           color: 'black',
                           fontWeight: 'bold',
-                          borderBottom: '2px solid #d4d2d0',
-                          textAlign: 'left',
-                          paddingLeft: '10px',
+                          ...column.headerStyle
                         }}
                       >
                         {column.render('Header')}
@@ -289,23 +281,39 @@ const TodoApp: React.FC = () => {
                 ))}
               </thead>
               <tbody {...getTableBodyProps()}>
-                {page.map((row: { getRowProps: () => JSX.IntrinsicAttributes & MUIStyledCommonProps<Theme> & React.ClassAttributes<HTMLTableRowElement> & React.HTMLAttributes<HTMLTableRowElement>; original: { id: number; }; cells: { getCellProps: () => JSX.IntrinsicAttributes & React.ClassAttributes<HTMLTableDataCellElement> & React.TdHTMLAttributes<HTMLTableDataCellElement>; render: (arg0: string) => string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Iterable<React.ReactNode> | null | undefined; }[]; }) => {
+                {page.map((row: { original: { id: number; }; getRowProps: () => JSX.IntrinsicAttributes & MUIStyledCommonProps<Theme> & React.ClassAttributes<HTMLTableRowElement> & React.HTMLAttributes<HTMLTableRowElement>; cells: any[]; }) => {
+                  const colorIdArray = colorId.current ? JSON.parse(colorId.current) : [];
+                  const isSelected = colorIdArray.some((id: number) => row.original.id === id);
                   prepareRow(row);
+
+
+
+              
+
                   return (
-                    <StyledTableRow
-                      {...row.getRowProps()}
-                      style={{
-                        cursor: 'pointer',
-                        backgroundColor: row.original.id === idTask ? '#f3f4f5' : '',
-                      }}
-                      onClick={() => handleCellClick(row.original.id)}
-                    >
-                      {row.cells.map((cell: { getCellProps: () => JSX.IntrinsicAttributes & React.ClassAttributes<HTMLTableDataCellElement> & React.TdHTMLAttributes<HTMLTableDataCellElement>; render: (arg0: string) => string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Iterable<React.ReactNode> | null | undefined; }) => (
+                    <StyledTableRow {...row.getRowProps()}>
+                      {row.cells.map((cell) => (
                         <td
                           {...cell.getCellProps()}
                           style={{
-                            borderBottom: '1px solid #ddd',
-                            paddingLeft: '10px',
+                            padding: '10px',
+                            textAlign: 'center',
+                            background: '#fff',
+                            minWidth: '200px',
+                            cursor: 'pointer',
+                            backgroundColor: isSelected ? '#f0f0f0' : 'inherit',
+                            ...cell.column.cellStyle
+                          }}
+                          onClick={() => {
+
+
+
+                            const excludedAccessors = ['col11'];
+
+                            if (!excludedAccessors.includes(cell.column.id)) {
+                              handleCellClick(row.original.id);
+                            }
+                            // setSelectedRowId(row.original.id);
                           }}
                         >
                           {cell.render('Cell')}
@@ -316,32 +324,61 @@ const TodoApp: React.FC = () => {
                 })}
               </tbody>
             </table>
+
           </div>
-        </Grid>
-        <Grid item xs={12}>
-          <Box>
-            <IconButton
-              onClick={() => previousPage()}
+          <Box display="flex" alignItems="center" sx={{ float: "right" }} mt={2}>
+            <Button
+              onClick={() => gotoPage(0)}
               disabled={!canPreviousPage}
+              variant="contained"
+              size="small"
             >
-              {t('todo.previous')}
-            </IconButton>
+              {'<<'}
+            </Button>
+            <Button
+              onClick={previousPage}
+              disabled={!canPreviousPage}
+              variant="contained"
+              size="small"
+              sx={{ mx: 1 }}
+            >
+              {'<'}
+            </Button>
+            <Button
+              onClick={nextPage}
+              disabled={!canNextPage}
+              variant="contained"
+              size="small"
+            >
+              {'>'}
+            </Button>
+            <Button
+              onClick={() => gotoPage(pageCount - 1)}
+              disabled={!canNextPage}
+              variant="contained"
+              size="small"
+              sx={{ mx: 1 }}
+            >
+              {'>>'}
+            </Button>
+            <Typography variant="body1" sx={{ mx: 2 }}>
+              Сторінка{' '}
+              <strong>
+                {pageIndex + 1} з {pageOptions.length}
+              </strong>
+            </Typography>
             <Select
               value={pageSize}
               onChange={(e) => setPageSize(Number(e.target.value))}
+              size="small"
+              variant="outlined"
             >
-              {[5, 10, 20, 30].map((size) => (
+              {[5, 10, 20, 50, 100].map((size) => (
                 <MenuItem key={size} value={size}>
-                  {t('todo.show')} {size}
+                  Показувати {size}
                 </MenuItem>
               ))}
             </Select>
-            <Typography>
-              {t('todo.page')} {pageIndex + 1} {t('todo.of')} {pageOptions.length}
-            </Typography>
-            <IconButton onClick={() => nextPage()} disabled={!canNextPage}>
-              {t('todo.next')}
-            </IconButton>
           </Box>
         </Grid>
       </Grid>

@@ -1,46 +1,56 @@
 import React, { useState } from 'react';
-// import { GetLogin } from '../api/ApiProvaider';
-import { useNavigate } from "react-router-dom";
+import {Container, TextField, Button, Box, Typography } from '@mui/material';
 
+import { useNavigate } from 'react-router-dom';
 
-const Register = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const navigate = useNavigate()
-  const handleRegister = async (e: { preventDefault: () => void; }) => {
+const Register: React.FC = () => {
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const navigate = useNavigate();
+
+  const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const respons = 'lsw'
-      if(respons){
-     
-          navigate("/home");
-
+      // Імітація відповіді, замість реального API запиту
+      const response = 'success'; // Тестова відповідь
+      if (response) {
+        navigate('/home');
+        alert('Registration successful!');
       }
-      alert('Registration successful!');
     } catch (error) {
-      alert('Register problem');
+      alert('Registration problem');
     }
   };
 
   return (
-    <div>
-      <h2>Register</h2>
-      <form onSubmit={handleRegister}>
-        <input
+    <Container maxWidth="sm">
+    <Box display="flex" flexDirection="column" alignItems="center"    minHeight="100vh" mt={5}>
+      <Typography variant="h4" component="h2" gutterBottom>
+        Register
+      </Typography>
+      <Box component="form" onSubmit={handleRegister} display="flex" flexDirection="column" gap={2} width="600px">
+        <TextField
+          label="Email"
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="Email"
+          required
+          fullWidth
         />
-        <input
+        <TextField
+          label="Password"
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password"
+          required
+          fullWidth
         />
-        <button type="submit">Register</button>
-      </form>
-    </div>
+        <Button variant="contained" type="submit" fullWidth>
+          Register
+        </Button>
+      </Box>
+    </Box>
+    </Container>
   );
 };
 

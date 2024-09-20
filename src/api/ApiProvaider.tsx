@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { AuthForm } from '../types/LoginResponseType';
+
 
 const BASE_URL = `https://api.crosscore.app`;
 
