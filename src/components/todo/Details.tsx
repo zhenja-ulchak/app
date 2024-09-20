@@ -8,7 +8,7 @@ import GetFormattedDate from './components/GetFormattedDate';
 
 
 // Типи даних
-interface Todo {
+type Todo = {
   id: number;
   task: string;
   status: string;

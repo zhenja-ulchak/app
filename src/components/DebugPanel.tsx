@@ -17,11 +17,15 @@ const RotatableArrow = styled(HiArrowDown)(({ theme, rotate }) => ({
   transform: rotate ? 'rotate(180deg)' : 'rotate(0deg)',
 }));
 
+type Client =  {
+  [key: string]: any;
+}
+
 
 const Debug = ({ open }: any) => {
   const { data }: any = useLoginStore();
 
-console.log(data);
+
 
 
   const dataOne =    {
@@ -49,24 +53,29 @@ console.log(data);
     "is_debug_on": true
   };
 
-  const client = data || dataOne;
-  
-  const [count, setCount] = useState(client.login_timeout || 0);
-  const [refresh, setRefresh] = useState(client.page_refresh_time / 10 || 0);
+  const client = data 
+ 
+    
+    const [count, setCount] = useState<number>(client.login_timeout || 0);
+  const [refresh, setRefresh] = useState<number>(client.page_refresh_time / 10 || 0);
   const navigate = useNavigate();
 
   // State for Popover
   const [anchorEl, setAnchorEl] = useState(null);
   const [anchorEl2, setAnchorEl2] = useState(null);
 
+
   const openPopover = Boolean(anchorEl);
   const openPopover2 = Boolean(anchorEl2);
 
-  const handleClick = (event: { currentTarget: React.SetStateAction<null>; }) => {
+  
+  const handleClick = (event: any) => {
     setAnchorEl(event.currentTarget);
+
+    
   };
 
-  const handleClick2 = (event: { currentTarget: React.SetStateAction<null>; }) => {
+  const handleClick2 = (event: any) => {
     setAnchorEl2(event.currentTarget);
   };
 
@@ -135,46 +144,49 @@ console.log(data);
   if (count === 1) {
     navigate('/');
   }
-  // const List: React.FC<Props> = ({ client }) => {
-  //   const result: JSX.Element[] = [];
-  
-  //   Object.entries(client).forEach(([key, value]) => {
-  //     if (key === 'gui_config' || key === 'footer') {
-  //       try {
-  //         const allValue: Record<string, any> = JSON.parse(value);
+  const List = ({ client }: { client: Client }) => {
+    const result: JSX.Element[] = [];
+    if (client && typeof client === 'object') {
+    Object.entries(client).forEach(([key, value]) => {
+      if (key === 'gui_config' || key === 'footer') {
+        try {
+          const allValue: Record<string, any> = JSON.parse(String(value));
           
-  //         Object.entries(allValue).forEach(([subKey, subValue]) => {
-  //           if (typeof subValue === 'object' && subValue !== null) {
-  //             result.push(
-  //               <Typography key={subKey}>
-  //                 <strong>{subKey}:</strong> {JSON.stringify(subValue, null, 2)}
-  //               </Typography>
-  //             );
-  //           } else {
-  //             result.push(
-  //               <Typography key={subKey}>
-  //                 <strong>{subKey}:</strong> {subValue}
-  //               </Typography>
-  //             );
-  //           }
-  //         });
-  //       } catch (error) {
-  //         console.error(`Failed to parse JSON for key ${key}`, error);
-  //       }
-  //     } else if (key !== 'client_footer') {
-  //       result.push(
-  //         <Typography key={key}>
-  //           <i>{`${key}: ${value}`}</i>
-  //         </Typography>
-  //       );
-  //     }
-  //   });
-  
-  //   return result;
-  // };
+          Object.entries(allValue).forEach(([subKey, subValue]) => {
+            if (typeof subValue === 'object' && subValue !== null) {
+              result.push(
+                <Typography key={subKey}>
+                  <strong>{subKey}:</strong> {JSON.stringify(subValue, null, 2)}
+                </Typography>
+              );
+            } else {
+              result.push(
+                <Typography key={subKey}>
+                  <strong>{subKey}:</strong> {subValue}
+                </Typography>
+              );
+            }
+          });
+        } catch (error) {
+          console.error(`Failed to parse JSON for key ${key}`, error);
+        }
+      } else if (key !== 'client_footer') {
+        result.push(
+          <Typography key={key}>
+            <i>{`${key}: ${value}`}</i>
+          </Typography>
+        );
+      }
+   
+    });
+  }
+    return result;
+  };
+
   if (!client) {
     return <div>Loading...</div>; // Показуємо повідомлення, поки дані не будуть доступні
   }
+
   return (
     <>
       {
@@ -188,7 +200,7 @@ console.log(data);
                 <Grid container spacing={2} sx={{ color: '#ffffff', marginLeft: "259px" }}>
                   <Grid item xs={2} sx={{ margin: '20px 20px',  color: '#fff'  }}>
                   time
-                    <IconButton onClick={()=> handleClick}>
+                    <IconButton onClick={ handleClick}>
                     TIME <RotatableArrow rotate={String(anchorEl)} style={{ color: '#fff' }} />
                     </IconButton>
                     <Popover
@@ -215,7 +227,7 @@ console.log(data);
                   </Grid>
                   <Grid item xs={2} sx={{ margin: '20px 20px',  color: '#fff' }}>
                   user
-                    <IconButton onClick={()=> handleClick2}>
+                    <IconButton onClick={ handleClick2}>
                       <RotatableArrow rotate={String(anchorEl2)} style={{ color: '#fff' }} />
                     </IconButton>
                     <Popover
@@ -247,7 +259,7 @@ console.log(data);
               <Grid container spacing={2} sx={{ color: '#ffffff', marginLeft: "259px" }}>
                 <Grid item xs={2} sx={{ margin: '20px 20px', color: '#fff' }}>
                 time
-                  <IconButton onClick={()=> handleClick}>
+                  <IconButton onClick={ handleClick}>
                    <RotatableArrow rotate={String(anchorEl)} style={{ color: '#fff' }} />
                   </IconButton>
                   <Popover
@@ -274,7 +286,7 @@ console.log(data);
                 </Grid>
                 <Grid item xs={2} sx={{ margin: '20px 20px', color: '#fff' }}>
                 user
-                  <IconButton onClick={()=> handleClick2}>
+                  <IconButton onClick={ handleClick2}>
                     <RotatableArrow rotate={String(setAnchorEl2)} style={{ color: '#fff' }} />
                   </IconButton>
                   <Popover
@@ -300,7 +312,7 @@ console.log(data);
                 </Grid>
                 <Grid item xs={2} sx={{ margin: '20px 20px', color: '#fff' }}>
                 list
-                  <IconButton onClick={()=> handleClick2}>
+                  <IconButton onClick={ handleClick2}>
             
                    <RotatableArrow rotate={String(setAnchorEl2)} style={{ color: '#fff' }} />
                   </IconButton>
@@ -320,7 +332,7 @@ console.log(data);
                     anchorReference="anchorPosition"
                   >
                     <Box sx={{ p: 2 }}>
-                    {/*   {List()} */ }
+               {List( client )}
                     </Box>
                   </Popover>
                 </Grid>

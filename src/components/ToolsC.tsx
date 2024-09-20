@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { getHealth } from '../api/ApiProvaider';
 import { Container, CircularProgress, Typography } from '@mui/material';
 
-interface HealthData {
+type HealthData = {
   // Визначте структуру даних, які ви очікуєте від getHealth
 }
 

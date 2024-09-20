@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { GetUsers } from '../api/ApiProvaider';
 import { Container, List, ListItem, ListItemText, CircularProgress, Typography } from '@mui/material';
 
-interface User {
+type User = {
   display_name?: string;
   username?: string;
   email: string;

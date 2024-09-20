@@ -12,7 +12,7 @@ import { Gauge, gaugeClasses } from '@mui/x-charts/Gauge';
 import Debug from '../components/DebugPanel';
 import useDebugStore from '../store/DebugStore';
 
-interface StepType {
+type StepType = {
   label: string;
   description: string;
 }

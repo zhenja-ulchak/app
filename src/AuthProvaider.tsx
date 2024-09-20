@@ -6,7 +6,7 @@ import { GetLogin } from './api/ApiProvaider';
 
 import useLoginStore from './store/UserStor'; 
 
-interface AuthContextType {
+type AuthContextType = {
   user: string | null;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
@@ -14,7 +14,7 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-interface AuthProviderProps {
+type AuthProviderProps = {
   children: ReactNode;
 }
 
@@ -33,9 +33,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const login = async (username: string, password: string) => {
     try {
       const res = await GetLogin(username, password);
-      console.log(res);
+      console.log( res?.data?.user?.[0] );
 
-      setData(res.data); // зберігаємо дані користувача в стан
+      setData(res?.data?.user?.[0]); // зберігаємо дані користувача в стан
       if (res.data?.token) { // якщо є токен в даних
         setUser(username); // можна зберігати дані користувача, наприклад, email
         localStorage.setItem('user', username); // зберігаємо в localStorage (тут можна зберігати токен)

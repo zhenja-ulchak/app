@@ -3,11 +3,11 @@ import React, { useEffect, useState } from 'react';
 import { GetTarif } from '../api/ApiProvaider';
 import { Container, List, ListItem, ListItemText, CircularProgress, Typography } from '@mui/material';
 
-interface Tariff {
+type Tariff = {
     // Визначте структуру тарифів тут
 }
 
-interface GetTarifDataResponse {
+type GetTarifDataResponse =  {
     data: {
         data: {
             tariff: Tariff[];
@@ -24,7 +24,7 @@ export const TarifTable = () => {
         const fetchTarif = async () => {
             try {
                 const response = await GetTarif();
-                const dataAll = response.data['data']['tariff'];
+                const dataAll: GetTarifDataResponse[] = response.data['data']['tariff'];
                 
                 setTarif(dataAll);
             } catch (error) {
