@@ -135,7 +135,7 @@ const Debug = ({ open }: any) => {
   return (
     <>
       {
-        count <= 50
+        count <= 290
           ? (
             <>
               <Alert severity="warning" sx={{ width: '86%', marginLeft: '256px', position: "fixed", top: '80px' }}>
@@ -146,7 +146,7 @@ const Debug = ({ open }: any) => {
                   <Grid item xs={2} sx={{ margin: '20px 20px', color: '#fff' }}>
                     time
                     <IconButton onClick={handleClick}>
-                      <RotatableArrow rotate={String(anchorEl)} style={{ color: '#fff' }} />
+                      <RotatableArrow rotate={anchorEl ? 45 : 0} style={{ color: '#fff' }} />
                     </IconButton>
                     <Popover
                       open={openPopover}
@@ -173,7 +173,7 @@ const Debug = ({ open }: any) => {
                   <Grid item xs={2} sx={{ margin: '20px 20px', color: '#fff' }}>
                     user
                     <IconButton onClick={handleClick2}>
-                      <RotatableArrow rotate={String(anchorEl2)} style={{ color: '#fff' }} />
+                      <RotatableArrow rotate={anchorEl2 ? 45 : 0} style={{ color: '#fff' }} />
                     </IconButton>
                     <Popover
                       open={openPopover2}
@@ -200,7 +200,7 @@ const Debug = ({ open }: any) => {
                     list
                     <IconButton onClick={handleClick3}>
 
-                      <RotatableArrow rotate={String(anchorEl3)} style={{ color: '#fff' }} />
+                      <RotatableArrow rotate={anchorEl3 ? 45 : 0} style={{ color: '#fff' }} />
                     </IconButton>
                     <Popover
                       open={openPopover3}
@@ -238,7 +238,7 @@ const Debug = ({ open }: any) => {
                 <Grid item xs={2} sx={{ margin: '20px 20px', color: '#fff' }}>
                   time
                   <IconButton onClick={handleClick}>
-                    <RotatableArrow rotate={String(anchorEl)} style={{ color: '#fff' }} />
+                    <RotatableArrow rotate={anchorEl ? 45 : 0} style={{ color: '#fff' }} />
                   </IconButton>
                   <Popover
                     open={openPopover}
@@ -265,7 +265,7 @@ const Debug = ({ open }: any) => {
                 <Grid item xs={2} sx={{ margin: '20px 20px', color: '#fff' }}>
                   user
                   <IconButton onClick={handleClick2}>
-                    <RotatableArrow rotate={String(setAnchorEl2)} style={{ color: '#fff' }} />
+                    <RotatableArrow rotate={ anchorEl2 ? 45 : 0} style={{ color: '#fff' }} />
                   </IconButton>
                   <Popover
                     open={openPopover2}
@@ -292,7 +292,7 @@ const Debug = ({ open }: any) => {
                   list
                   <IconButton onClick={handleClick3}>
 
-                    <RotatableArrow rotate={String(setAnchorEl3)} style={{ color: '#fff' }} />
+                    <RotatableArrow rotate={ anchorEl3 ? 45 : 0} style={{ color: '#fff' }} />
                   </IconButton>
                   <Popover
                     open={openPopover3}
