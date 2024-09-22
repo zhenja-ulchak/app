@@ -19,9 +19,7 @@ const RotatableArrow = styled(HiArrowDown)(({ rotate }) => ({
   transform: rotate ? 'rotate(180deg)' : 'rotate(0deg)',
 }));
 
-type Client = {
-  [key: string]: any;
-}
+
 
 
 const Debug = ({ open }: any) => {
@@ -137,7 +135,7 @@ const Debug = ({ open }: any) => {
   return (
     <>
       {
-        count <= 290
+        count <= 50
           ? (
             <>
               <Alert severity="warning" sx={{ width: '86%', marginLeft: '256px', position: "fixed", top: '80px' }}>
@@ -223,7 +221,7 @@ const Debug = ({ open }: any) => {
                         {Object.entries(client).map(([key, value], index: number) => (
                          <>
                           <Typography key={index}>
-                            {key}: {value}
+                            <b>{key}</b>: {value}
                           </Typography>
                          </>
                         ))}
@@ -312,7 +310,13 @@ const Debug = ({ open }: any) => {
                     anchorReference="anchorPosition"
                   >
                     <Box sx={{ p: 2 }}>
-                      ghjklkjhg
+                    {Object.entries(client).map(([key, value], index: number) => (
+                         <>
+                          <Typography key={index}>
+                          <b>{key}</b>: {value}
+                          </Typography>
+                         </>
+                        ))}
                     </Box>
                   </Popover>
                 </Grid>
