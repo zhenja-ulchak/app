@@ -48,17 +48,20 @@ const AppContent = () => {
         }}
       >
         <Routes>
+          <Route path="/" element={<Login />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/todo" element={<ProtectedRoute><FormTodo /></ProtectedRoute>} />
-          <Route path="/account" element={ <ProtectedRoute>< AccountPage /></ProtectedRoute>} />
-          <Route path="/" element={<Login />} />
-          <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
-          <Route path="/setting" element={ <ProtectedRoute><SettingPage /></ProtectedRoute>} />
-          <Route path="/details/:id" element={ <ProtectedRoute><ToDoDetails /></ProtectedRoute>} />
-          <Route path="/dashboard" element={ <ProtectedRoute><DashApp /></ProtectedRoute>} />
-          <Route path="/tools" element={ <ProtectedRoute><Tools /></ProtectedRoute>} />
-          <Route path="/users" element={ <ProtectedRoute><Users /></ProtectedRoute>} />
+
+
+          <Route path="/todo" element={<ProtectedRoute><FormTodo /></ProtectedRoute> } />
+          <Route path="/account" element={ <ProtectedRoute><AccountPage /></ProtectedRoute>} />
+          <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute> } />
+          <Route path="/setting" element={<ProtectedRoute><SettingPage /></ProtectedRoute> } />
+          <Route path="/details/:id" element={<ProtectedRoute><ToDoDetails /></ProtectedRoute> } />
+          <Route path="/dashboard" element={<ProtectedRoute><DashApp /></ProtectedRoute> } />
+          <Route path="/tools" element={<ProtectedRoute><Tools /></ProtectedRoute> } />
+          <Route path="/users" element={<ProtectedRoute><Users /></ProtectedRoute> } />
+ 
         </Routes>
       </Box>
 

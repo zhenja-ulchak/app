@@ -27,9 +27,11 @@ const Debug = ({ open }: any) => {
 
   const client : ClientSchemaType = data
 
+
   const login_timeout = !data ? '200' : client.login_timeout
   const page_refresh_time = !data ? '300' : client.page_refresh_time
-
+  const display_name = !data ? 'user' : client["display_name"]
+  const id = !data ? '1' : client["id"]
   const [count, setCount] = useState<number>(Number(login_timeout) );
   const [refresh, setRefresh] = useState<number>(Number(page_refresh_time) );
   const navigate = useNavigate();
@@ -128,14 +130,14 @@ const Debug = ({ open }: any) => {
   }
 
 
-  if (!client) {
-    return <div>Loading...</div>; // Показуємо повідомлення, поки дані не будуть доступні
-  }
+  // if (!client) {
+  //   return <div>Loading...</div>; // Показуємо повідомлення, поки дані не будуть доступні
+  // }
 
   return (
     <>
       {
-        count <= 290
+        count <= 50
           ? (
             <>
               <Alert severity="warning" sx={{ width: '86%', marginLeft: '256px', position: "fixed", top: '80px' }}>
@@ -166,7 +168,7 @@ const Debug = ({ open }: any) => {
                       <Box sx={{ p: 2, marginBottom: '50px' }}>
                         <Typography>timeout : {count}</Typography>
                         <Typography>refresh time: {refresh}</Typography>
-                        <Typography>display name : {client["display_name"]}</Typography>
+                        <Typography>display name : {display_name}</Typography>
                       </Box>
                     </Popover>
                   </Grid>
@@ -191,8 +193,8 @@ const Debug = ({ open }: any) => {
                       anchorReference="anchorPosition"
                     >
                       <Box sx={{ p: 2 }}>
-                        <Typography>display name : {client["display_name"]}</Typography>
-                        <Typography>id : {client["id"]}</Typography>
+                        <Typography>display name : {display_name}</Typography>
+                        <Typography>id : {id}</Typography>
                       </Box>
                     </Popover>
                   </Grid>
@@ -218,10 +220,15 @@ const Debug = ({ open }: any) => {
                       anchorReference="anchorPosition"
                     >
                       <Box sx={{ p: 2 }}>
-                        {Object.entries(client).map(([key, value], index: number) => (
+                      { !data 
+                    ?
+                    'Not Found sorry'
+                    :
+
+                    Object.entries(client).map(([key, value], index: number) => (
                          <>
                           <Typography key={index}>
-                            <b>{key}</b>: {value}
+                          <b>{key}</b>: {value}
                           </Typography>
                          </>
                         ))}
@@ -258,7 +265,7 @@ const Debug = ({ open }: any) => {
                     <Box sx={{ p: 2 }}>
                       <Typography>timeout : {count}</Typography>
                       <Typography>refresh time: {refresh}</Typography>
-                      <Typography>display name : {client["display_name"]}</Typography>
+                      <Typography>display name : {display_name}</Typography>
                     </Box>
                   </Popover>
                 </Grid>
@@ -283,8 +290,8 @@ const Debug = ({ open }: any) => {
                     anchorReference="anchorPosition"
                   >
                     <Box sx={{ p: 2 }}>
-                      <Typography>display name : {client["display_name"]}</Typography>
-                      <Typography>id : {client["id"]}</Typography>
+                      <Typography>display name : {display_name}</Typography>
+                      <Typography>id : {id}</Typography>
                     </Box>
                   </Popover>
                 </Grid>
@@ -310,7 +317,12 @@ const Debug = ({ open }: any) => {
                     anchorReference="anchorPosition"
                   >
                     <Box sx={{ p: 2 }}>
-                    {Object.entries(client).map(([key, value], index: number) => (
+                    { !data 
+                    ?
+                        'Not Found sorry'
+                    :
+
+                    Object.entries(client).map(([key, value], index: number) => (
                          <>
                           <Typography key={index}>
                           <b>{key}</b>: {value}
