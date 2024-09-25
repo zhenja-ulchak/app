@@ -47,8 +47,6 @@ const Debug = ({ open }: any) => {
 
   const handleClick = (event: any) => {
     setAnchorEl(event.currentTarget);
-
-
   };
 
   const handleClick2 = (event: any) => {
