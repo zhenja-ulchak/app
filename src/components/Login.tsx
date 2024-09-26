@@ -7,7 +7,7 @@ import { GetLogin } from 'src/api/ApiProvaider';
 
 const Login: React.FC = () => {
   const router = useRouter(); // Використання useRouter для маршрутизації
-  console.log('login');
+  
   const [username, setUsername] = useState('INDYN\\demo-testa');
   const [password, setPassword] = useState('1234');
 
@@ -15,10 +15,10 @@ const Login: React.FC = () => {
     e.preventDefault(); // Перешкоджаємо перезавантаженню сторінки
    
       try {
-        console.log('login');
+       
         await GetLogin(username, password)
          // Виклик функції логіну
-        router.push("/sidebar"); // Перенаправлення на домашню сторінку після успішного логіну
+        router.push("/home"); // Перенаправлення на домашню сторінку після успішного логіну
       } catch (error) {
         console.error('Login failed:', error); // Обробка помилок
       }

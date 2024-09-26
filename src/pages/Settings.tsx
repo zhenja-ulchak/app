@@ -1,7 +1,7 @@
 
 import { Container, Typography } from '@mui/material';
 import LanguageSwitcher from '../translate/ButtonChengeLang';
-import Debug from '../components/DebugPanel';
+import Debug from '../components/debugpanel';
 import Switch from '@mui/material/Switch';
 import useDebugStore from '../store/DebugStore'; // Імпортуємо сховище
 import Accordion from '@mui/material/Accordion';
@@ -32,7 +32,7 @@ const SettingPage = () => {
     return (
         <>
             <Button
-                onClick={()=>  router.push('sidebar')}
+                onClick={()=>  router.push('home')}
                 sx={{ color: '#000000' }}
             >
                 <FaArrowLeft size={30} />
