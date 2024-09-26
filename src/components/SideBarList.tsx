@@ -6,11 +6,11 @@ import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import { useRouter } from 'next/router'; // Залиште useRouter
 import Logout from '../components/Logout';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'next-i18next';
 import { Url } from 'next/dist/shared/lib/router/router';
 
 const SideBarList = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('common');
   const router = useRouter(); // Ініціалізуйте useRouter
 
   const handleNavigation = (path: Url) => {
@@ -31,7 +31,7 @@ const SideBarList = () => {
             <ListItemIcon>
               <InboxIcon />
             </ListItemIcon>
-            <ListItemText primary={t(`sideBar${path}`)} />
+            <ListItemText primary={t(`${path}`)} />
           </ListItemButton>
         </ListItem>
       ))}

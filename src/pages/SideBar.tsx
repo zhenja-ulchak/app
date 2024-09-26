@@ -6,16 +6,18 @@ import MenuIcon from '@mui/icons-material/Menu';
 import CssBaseline from '@mui/material/CssBaseline';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'next-i18next';
 import Typography from '@mui/material/Typography';
-
+import { GetStaticProps } from 'next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import SideBarList from '../components/SideBarList'
 import { useRouter } from 'next/router';
+import { string } from 'zod';
 
 
 const SideBar = () => {
   const router = useRouter()
-  const { t } = useTranslation();
+  const { t } = useTranslation('common');
 
   const [open, setOpen] = React.useState(false);
 
@@ -66,4 +68,12 @@ const SideBar = () => {
 
 
 }
+
+export const getStaticProps: GetStaticProps = async ({ locale }: any) => {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale , ['common'])), // Додайте ваші простори перекладу
+    },
+  };
+};
 export default SideBar

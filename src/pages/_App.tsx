@@ -1,10 +1,12 @@
 import React from 'react';
+import { appWithTranslation } from 'next-i18next';
 import Debug from '../components/debugpanel';
 import SideBar from './sidebar';
 import { Footer } from './footer';
 import useDebugStore from '../store/DebugStore';
 import { AppProps } from 'next/app';
 import { useRouter } from 'next/router';
+import nextI18NextConfig from '../../next-i18next.config'
 
 const AppContent = () => {
   const isOpen = useDebugStore((state) => state.isOpen); // Отримуємо стан
@@ -39,4 +41,4 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
   );
 };
 
-export default MyApp;
+export default appWithTranslation(MyApp, nextI18NextConfig);

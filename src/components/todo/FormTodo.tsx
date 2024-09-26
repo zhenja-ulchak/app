@@ -29,7 +29,7 @@ import ModalAdd from './components/ModalAddToDo';
 import ModuleUpdate from './components/ModalUpdateToDo';
 import ColumnTooltip from './components/AddColumnTooltip';
 // import useVisibleStore from '../../store/TaskStore';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'next-i18next';
 import { JSX } from 'react/jsx-runtime';
 import { MUIStyledCommonProps } from '@mui/system';
 

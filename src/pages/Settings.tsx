@@ -1,6 +1,6 @@
 
 import { Container, Typography } from '@mui/material';
-import LanguageSwitcher from '../translate/ButtonChengeLang';
+import LanguageSwitcher from '../public/ButtonChengeLang';
 import Debug from '../components/debugpanel';
 import Switch from '@mui/material/Switch';
 import useDebugStore from '../store/DebugStore'; // Імпортуємо сховище
@@ -10,7 +10,7 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Button from '@mui/material/Button';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'next-i18next';
 import { FaArrowLeft } from "react-icons/fa";
 
 

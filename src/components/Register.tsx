@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import {Container, TextField, Button, Box, Typography } from '@mui/material';
+import { useRouter } from 'next/router';
 
-import { useNavigate } from 'react-router-dom';
 
 const Register: React.FC = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -14,7 +14,7 @@ const Register: React.FC = () => {
       // Імітація відповіді, замість реального API запиту
       const response = 'success'; // Тестова відповідь
       if (response) {
-        navigate('/home');
+        router.push('/home');
         alert('Registration successful!');
       }
     } catch (error) {
