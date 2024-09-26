@@ -5,7 +5,7 @@ import Debug from '../components/DebugPanel';
 import Switch from '@mui/material/Switch';
 import useDebugStore from '../store/DebugStore'; // Імпортуємо сховище
 import Accordion from '@mui/material/Accordion';
-
+import { useRouter } from 'next/router';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -13,7 +13,7 @@ import Button from '@mui/material/Button';
 import { useTranslation } from 'react-i18next';
 import { FaArrowLeft } from "react-icons/fa";
 
-import { Link } from 'react-router-dom';
+
 
 
 const AccordionStyle = {
@@ -27,13 +27,12 @@ const SettingPage = () => {
     // @ts-ignore
     const toggleOpen = useDebugStore((state) => state.toggleOpen); // Отримуємо функцію для зміни стану
     // @ts-ignore
-
+    const router = useRouter();
 
     return (
         <>
             <Button
-                component={Link}
-                to="/home"
+                onClick={()=>  router.push('sidebar')}
                 sx={{ color: '#000000' }}
             >
                 <FaArrowLeft size={30} />

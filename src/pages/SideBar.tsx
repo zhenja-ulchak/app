@@ -10,10 +10,11 @@ import { useTranslation } from 'react-i18next';
 import Typography from '@mui/material/Typography';
 
 import SideBarList from '../components/SideBarList'
+import { useRouter } from 'next/router';
 
 
 const SideBar = () => {
- 
+ const router  = useRouter()
   const { t } = useTranslation();
 
   const [open, setOpen] = React.useState(false);
@@ -46,7 +47,7 @@ const SideBar = () => {
 
             <Button
               sx={{  padding: '5px 40px', background: '#ffffff', color: '#000000' }}
-         
+              onClick={()=>  router.push('/settings')}
       
               variant="contained"
             >
