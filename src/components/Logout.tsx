@@ -2,20 +2,20 @@
 import React from 'react';
 // import { signOut } from 'firebase/auth';
 // import { auth } from '../firebaseConfig';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/router';
 // @ts-ignore
 import {Logout as apiLogout} from '../api/ApiProvaider'
 import {  Button,  } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 
 const Logout = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const handleLogout = async () => {
    
      apiLogout()
   
-      navigate('/login');
+     router.push('/login');
    
    
     

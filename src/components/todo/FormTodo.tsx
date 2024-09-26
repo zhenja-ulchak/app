@@ -19,7 +19,7 @@ import {
 import EditIcon from '@mui/icons-material/Edit';
 // @ts-ignore
 import { useTable, usePagination, Column } from 'react-table';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import { FaRegEye } from 'react-icons/fa';
 import { FaPlus } from 'react-icons/fa6';
 import { GiCheckMark } from 'react-icons/gi';
@@ -55,10 +55,12 @@ const TodoApp: React.FC = () => {
   ]);
   // @ts-ignore
   // const { idTask }: { idTask: number } = useVisibleStore();
-  const navigate = useNavigate();
+  const route = useRouter()
   const { t } = useTranslation();
   const menuRef = useRef<HTMLDivElement | null>(null);
   const colorId = useRef<string | null>(null);
+
+
 
   const handleClickOutside = (event: MouseEvent) => {
     if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
@@ -255,7 +257,7 @@ const TodoApp: React.FC = () => {
   );
 
   const handleCellClick = (todoId: number) => {
-    navigate(`/details/${todoId}`);
+    route.push(`/details/${todoId}`);
   };
 
   const handleToggleColumn = (columnId: string) => {

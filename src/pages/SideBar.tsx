@@ -8,7 +8,7 @@ import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import { useTranslation } from 'react-i18next';
 import Typography from '@mui/material/Typography';
-import { Link } from 'react-router-dom';
+
 import SideBarList from '../components/SideBarList'
 
 
@@ -46,8 +46,8 @@ const SideBar = () => {
 
             <Button
               sx={{  padding: '5px 40px', background: '#ffffff', color: '#000000' }}
-              component={Link}
-              to="/setting"
+         
+      
               variant="contained"
             >
               {t('sideBar.SETTING')} 
@@ -55,30 +55,6 @@ const SideBar = () => {
           </Toolbar>
         </AppBar>
       </Box>
-
-
-
-
-      {/* <Drawer
-        sx={{
-          width: drawerWidth,
-          flexShrink: 0,
-          '& .MuiDrawer-paper': {
-            width: drawerWidth,
-            boxSizing: 'border-box',
-          },
-        }}
-        variant="permanent"
-        anchor="left"
-      >
-        <Toolbar
-
-        />
-        <Divider />
-        <SideBarList/>
-        <Divider />
-
-      </Drawer> */}
 
       <Drawer open={open} onClose={toggleDrawer(false)}>
         {DrawerList}

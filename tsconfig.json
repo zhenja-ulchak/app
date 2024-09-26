@@ -17,6 +17,16 @@
     "noEmit": true,
     "incremental": true,
     "resolveJsonModule": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/components/*": [
+        "src/components/*"
+      ],
+      "@/pages/*": [
+        "src/pages/*"
+      ],
+      // Додайте інші шляхи за потреби
+    },
     "isolatedModules": true
   },
   "include": [

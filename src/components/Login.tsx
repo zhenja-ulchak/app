@@ -1,26 +1,29 @@
 import { useState } from 'react';
-// import { AuthForm } from '../types/LoginResponseType'
-import { useNavigate } from "react-router-dom";
-import { useAuth } from '../AuthProvaider';
+
+
 import { TextField, Button, Container, Typography, Box } from '@mui/material';
+import { useRouter } from 'next/router';
+import { GetLogin } from 'src/api/ApiProvaider';
 
-
-
-const Login = () => {
-  const navigate = useNavigate()
-  const { login}: any = useAuth();
-  const [email, setEmail] = useState('INDYN\\demo-testa');
+const Login: React.FC = () => {
+  const router = useRouter(); // Використання useRouter для маршрутизації
+  console.log('login');
+  const [username, setUsername] = useState('INDYN\\demo-testa');
   const [password, setPassword] = useState('1234');
 
-  const handleLogin = async (e: { preventDefault: () => void; }) => {
-    e.preventDefault();
-
-
-    await login(email, password);
-    navigate("/home");
-
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault(); // Перешкоджаємо перезавантаженню сторінки
+   
+      try {
+        console.log('login');
+        await GetLogin(username, password)
+         // Виклик функції логіну
+        router.push("/sidebar"); // Перенаправлення на домашню сторінку після успішного логіну
+      } catch (error) {
+        console.error('Login failed:', error); // Обробка помилок
+      }
+   
   };
-
 
   return (
     <Container maxWidth="sm">
@@ -39,8 +42,8 @@ const Login = () => {
           <TextField
             label="Username"
             type="text"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
             placeholder="text"
             fullWidth
             margin="normal"

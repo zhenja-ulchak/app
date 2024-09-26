@@ -12,7 +12,7 @@ import { styled } from '@mui/material/styles';
 // @ts-ignore
 import { GetLoginRefresh } from '../api/ApiProvaider'
 import {ClientSchemaType} from '../types/ClientType'
-
+import { useRouter } from 'next/router';
 
 const RotatableArrow = styled(HiArrowDown)(({ rotate }) => ({
   transition: 'transform 0.3s ease',
@@ -24,7 +24,7 @@ const RotatableArrow = styled(HiArrowDown)(({ rotate }) => ({
 
 const Debug = ({ open }: any) => {
   const { data }: any = useLoginStore();
-
+  const route = useRouter()
   const client : ClientSchemaType = data
 
 
@@ -34,7 +34,7 @@ const Debug = ({ open }: any) => {
   const id = !data ? '1' : client["id"]
   const [count, setCount] = useState<number>(Number(login_timeout) );
   const [refresh, setRefresh] = useState<number>(Number(page_refresh_time) );
-  const navigate = useNavigate();
+
 
   // State for Popover
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
@@ -124,7 +124,8 @@ const Debug = ({ open }: any) => {
   }, [handleMouseMove]);
 
   if (count === 1) {
-    navigate('/');
+    // navigate('/');
+    route.push('/')
   }
 
 
