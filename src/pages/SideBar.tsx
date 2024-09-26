@@ -14,7 +14,7 @@ import { useRouter } from 'next/router';
 
 
 const SideBar = () => {
- const router  = useRouter()
+  const router = useRouter()
   const { t } = useTranslation();
 
   const [open, setOpen] = React.useState(false);
@@ -26,7 +26,7 @@ const SideBar = () => {
 
   const DrawerList = (
     <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
-  <SideBarList/>
+      <SideBarList />
     </Box>
   );
 
@@ -35,23 +35,23 @@ const SideBar = () => {
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      <Box sx={{ flexGrow: 1 , width:'100%'}}>
+      <Box sx={{ flexGrow: 1, width: '100%' }}>
         <AppBar position="static">
           <Toolbar>
-            <Button onClick={toggleDrawer(true)}>  <MenuIcon sx={{color: '#fff'}}/></Button>
+            <Button onClick={toggleDrawer(true)}>  <MenuIcon sx={{ color: '#fff' }} /></Button>
 
 
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                       {t('sideBar.TASK')} 
+              {t('sideBar.TASK')}
             </Typography>
 
             <Button
-              sx={{  padding: '5px 40px', background: '#ffffff', color: '#000000' }}
-              onClick={()=>  router.push('/settings')}
-      
+              sx={{ padding: '5px 40px', background: '#ffffff', color: '#000000' }}
+              onClick={() => router.push('/settings')}
+
               variant="contained"
             >
-              {t('sideBar.SETTING')} 
+              {t('sideBar.SETTING')}
             </Button>
           </Toolbar>
         </AppBar>
