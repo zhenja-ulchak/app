@@ -1,17 +1,19 @@
 import React from 'react';
-import { appWithTranslation } from 'next-i18next';
+import { IntlProvider } from 'next-intl';
 import Debug from '../components/debugpanel';
 import SideBar from './sidebar';
 import { Footer } from './footer';
 import useDebugStore from '../store/DebugStore';
 import { AppProps } from 'next/app';
 import { useRouter } from 'next/router';
-import nextI18NextConfig from '../../next-i18next.config'
+
+
+
 
 const AppContent = () => {
   const isOpen = useDebugStore((state) => state.isOpen); // Отримуємо стан
   const router = useRouter();
- // Отримуємо шлях
+  
 
   // Перелік маршрутів, на яких не потрібно відображати SideBar
   const hideSideBarRoutes = ['/register', '/login','/index','/'];
@@ -32,13 +34,17 @@ console.log(pathname);
 };
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
-
+  const { locale, messages } = pageProps;
+  console.log('Locale:', locale);
+  console.log('Messages:', messages);
   return (
     <>
-      <AppContent />
+     <IntlProvider locale={locale} messages={messages}>
+      <AppContent {...pageProps} />
       <Component {...pageProps} /> {/* Відображаємо вміст сторінки */}
+      </IntlProvider>
     </>
   );
 };
 
-export default appWithTranslation(MyApp, nextI18NextConfig);
+export default MyApp;

@@ -1,6 +1,6 @@
 
 import { Container, Typography } from '@mui/material';
-import LanguageSwitcher from '../public/ButtonChengeLang';
+// import LanguageSwitcher from '../public/ButtonChengeLang';
 import Debug from '../components/debugpanel';
 import Switch from '@mui/material/Switch';
 import useDebugStore from '../store/DebugStore'; // Імпортуємо сховище
@@ -51,7 +51,7 @@ const SettingPage = () => {
                     </AccordionSummary>
                     <AccordionDetails>
                         <div style={{ float: 'right' }}>
-                        <LanguageSwitcher  />
+                        {/* <LanguageSwitcher  /> */}
 
                         </div>
                         

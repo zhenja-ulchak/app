@@ -1,22 +1,14 @@
-import i18n from 'i18next';
-import { initReactI18next } from 'react-i18next';
-import HttpApi from 'i18next-http-backend';
-import LanguageDetector from 'i18next-browser-languagedetector';
+// import i18n from 'i18next';
+// import { initReactI18next } from 'react-i18next';
 
-// Ініціалізуйте i18next
-i18n
-  .use(HttpApi) // Підключення бекенду для завантаження перекладів
-  .use(LanguageDetector) // Автоматичне визначення мови
-  .use(initReactI18next) // Інтеграція з React
-  .init({
-    fallbackLng: 'en', // Резервна мова
-    debug: process.env.NODE_ENV === 'development',
-    interpolation: {
-      escapeValue: false, // React автоматично екранує значення
-    },
-    backend: {
-      loadPath: '/locales/{{lng}}/{{ns}}.json', // Шлях до файлів перекладу
-    },
-  });
+// i18n
+//   .use(initReactI18next) // Ініціалізація з react-i18next
+//   .init({
+//     fallbackLng: 'en', // Мова за замовчуванням
+//     supportedLngs: ['en', 'ua'], // Доступні мови
+//     interpolation: {
+//       escapeValue: false, // React вже виконує екранування
+//     },
+//   });
 
-export default i18n;
+// export default i18n;

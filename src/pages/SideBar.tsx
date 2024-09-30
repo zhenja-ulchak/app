@@ -6,25 +6,21 @@ import MenuIcon from '@mui/icons-material/Menu';
 import CssBaseline from '@mui/material/CssBaseline';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
-import { useTranslation } from 'next-i18next';
 import Typography from '@mui/material/Typography';
 import { GetStaticProps } from 'next';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import SideBarList from '../components/SideBarList'
+import { messages } from '../../locales/messages'; // Ваш файл з повідомленнями
+import { useTranslations } from 'next-intl';
+import SideBarList from '../components/SideBarList';
 import { useRouter } from 'next/router';
-import { string } from 'zod';
-
 
 const SideBar = () => {
-  const router = useRouter()
-  const { t } = useTranslation('common');
-
+  const router = useRouter();
+  const t = useTranslations();
   const [open, setOpen] = React.useState(false);
 
-  const toggleDrawer = (newOpen: boolean | ((prevState: boolean) => boolean)) => () => {
+  const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
   };
-
 
   const DrawerList = (
     <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
@@ -32,48 +28,42 @@ const SideBar = () => {
     </Box>
   );
 
-
-
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
       <Box sx={{ flexGrow: 1, width: '100%' }}>
         <AppBar position="static">
           <Toolbar>
-            <Button onClick={toggleDrawer(true)}>  <MenuIcon sx={{ color: '#fff' }} /></Button>
-
-
+            <Button onClick={toggleDrawer(true)}>
+              <MenuIcon sx={{ color: '#fff' }} />
+            </Button>
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              {t('sideBar.TASK')}
+              {t('TASK')}
             </Typography>
-
             <Button
               sx={{ padding: '5px 40px', background: '#ffffff', color: '#000000' }}
               onClick={() => router.push('/settings')}
-
               variant="contained"
             >
-              {t('sideBar.SETTING')}
+              {t('SETTING')}
             </Button>
           </Toolbar>
         </AppBar>
       </Box>
-
       <Drawer open={open} onClose={toggleDrawer(false)}>
         {DrawerList}
       </Drawer>
-
     </Box>
   );
+};
 
-
-}
-
-export const getStaticProps: GetStaticProps = async ({ locale }: any) => {
+export const getStaticProps: GetStaticProps = async ({ locale }) => {
   return {
     props: {
-      ...(await serverSideTranslations(locale , ['common'])), // Додайте ваші простори перекладу
+      locale,
+      messages: messages[locale as keyof typeof messages], // Повертаємо повідомлення для обраної мови
     },
   };
 };
-export default SideBar
+
+export default SideBar;
